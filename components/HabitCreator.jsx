@@ -8,6 +8,7 @@ import icons from '../constants/icons'
 import { FlatList } from 'react-native-web'
 import tailwindConfig from '../tailwind.config'
 import ColorSwatch from './ColorSwatch'
+import { useSQLiteContext } from 'expo-sqlite'
 
 const habitColors = tailwindConfig.theme.extend.colors['habitColors']
 
@@ -16,18 +17,32 @@ const HabitCreator = ({ isVisible, onClose }) => {
     const [habitName, setHabitName] = useState("")
     const [habitType, setHabitType] = useState("build")
     const [selectedColor, setSelectedColor] = useState(habitColors[Object.keys(habitColors)[0]])
+
+    const [goalType, setGoalType] = useState("")
+    const [goalLabel, setGoalLabel] = useState("")
+    const [goalRepeat, setGoalRepeat] = useState("")
+
+    const [openMenu, setOpenMenu] = useState(0)
     
+    const database = useSQLiteContext()
 
     const RenderHabitTypePage = useCallback(() => {
         switch (habitType) {
             case 'build':
-                return <MemorizedBuildScreen />
+                return <BuildScreen />
             case 'quit':
-                return <MemorizedQuitScreen />
+                return <QuitScreen />
+            case 'tally':
+                return <TallyScreen />
             default:
                 return <Text>Select an option</Text>
         }
-    }, [habitType])
+    }, [habitType, goalType, goalLabel, goalRepeat, openMenu])
+
+    const createHabit = () => {
+        database.execAsync('INSERT INTO')
+    }
+
 
     const handlePress = (newState) => {
         setHabitType(newState)
@@ -39,6 +54,89 @@ const HabitCreator = ({ isVisible, onClose }) => {
 
     const setColor = (color) => {
         setSelectedColor(color)
+    }
+
+
+    const setType = (value) => {
+        setGoalType(value)
+        setOpenMenu(0)
+    }
+
+    const setLabel = (value) => {
+        setGoalLabel(value)
+        setOpenMenu(0)
+    }
+
+    const setRepeat = (value) => {
+        setGoalRepeat(value)
+        setOpenMenu(0)
+    }
+
+    
+    const handleOpen = (id) => {
+        console.log("open")
+        setOpenMenu(id === openMenu ? 0 : id)
+    }
+
+
+
+    const BuildScreen = () => {
+       
+        return(
+            <View className="p-5 gap-4">
+                <View>
+                    <Text className="text-highlight-80">Establish a goal of building your habit with the following rules:</Text>
+                    
+                </View>
+                <View className="flex-row items-center gap-4">
+                    <Text className="text-xl text-highlight-60">do</Text>
+                    <DropdownMenu value={goalType} onChange={setType} options={goalOption} handleOpen={handleOpen} isOpen={openMenu === 1} id={1}/>
+                </View>
+                <View className="flex-row items-center gap-4">
+                    <BuildInput placeholder="#" keyboardType="numeric" inputStyles={"w-[100px] rounded-2xl text-3xl text-center"}/>
+                    <DropdownMenu value={goalLabel} onChange={setLabel} options={labelOption} handleOpen={handleOpen} isOpen={openMenu === 2} id={2}/>
+                </View>
+                <View className="flex-row items-center gap-4">
+                    <Text className="text-xl text-highlight-60">every</Text>
+                    <DropdownMenu value={goalRepeat} onChange={setRepeat} options={repeatOption} handleOpen={handleOpen} isOpen={openMenu === 3} id={3}/>
+                </View>
+                
+            </View>
+        )
+    }
+    
+    const QuitScreen = () => {
+        return(
+            <View className="p-5 gap-4">
+                <View>
+                    <Text className="text-highlight-80">Track how long it has been since you stopped a bad habit:</Text>
+                </View>
+                <View className="flex-row items-center gap-4">
+                    <Text className="text-xl text-highlight-60">Start time:</Text>
+                    
+                </View>
+    
+            </View>
+        )
+    }
+    
+    const TallyScreen = () => {
+        return(
+            <View className="p-5 gap-4">
+                <View>
+                    <Text className="text-highlight-80">Count how much you do without a specific goal:</Text>
+                </View>
+                <View className="flex-row items-center gap-4">
+                    <Text className="text-xl text-highlight-60">count</Text>
+                    <DropdownMenu options={labelOption} handleOpen={handleOpen} isOpen={openMenu === 2} id={2}/>
+                </View>
+                <View className="flex-row items-center gap-4">
+                    <Text className="text-xl text-highlight-60">every</Text>
+                    <DropdownMenu options={repeatOption} handleOpen={handleOpen} isOpen={openMenu === 3} id={3}/>
+                </View>
+    
+            </View>
+        )
     }
 
 
@@ -84,7 +182,7 @@ const HabitCreator = ({ isVisible, onClose }) => {
                 
                 <View className="flex-row gap-4 mb-3">
                     <TextButton text="Cancel" onPress={onClose} containerStyles="flex-1 bg-background-80"/>
-                    <TextButton text="Create" onPress={onClose} containerStyles={`flex-1`} specialStyles={{backgroundColor: selectedColor}}/>
+                    <TextButton text="Create" onPress={createHabit} containerStyles={`flex-1`} specialStyles={{backgroundColor: selectedColor}}/>
                 </View>
             </View>
         </Modal>
@@ -139,53 +237,7 @@ const labelOption = [
     }
 ]
 
-const BuildScreen = () => {
 
-    const [openMenu, setOpenMenu] = useState(0)
-
-    const handleOpen = (id) => {
-        setOpenMenu(id)
-    }
-
-    return(
-        <View className="p-5 gap-4">
-            <View>
-                <Text className="text-highlight-80">Establish a goal of building your habit with the following rules:</Text>
-                <View className="flex-row items-center gap-4">
-                    <Text className="text-xl text-highlight-60">do</Text>
-                    <DropdownMenu options={goalOption} handleOpen={handleOpen} isOpen={openMenu === 1} id={1}/>
-                </View>
-            </View>
-            <View className="flex-row items-center gap-4">
-                <BuildInput placeholder="#" keyboardType="numeric" inputStyles={"w-[100px] rounded-2xl text-3xl text-center"}/>
-                <DropdownMenu options={labelOption} handleOpen={handleOpen} isOpen={openMenu === 2} id={2}/>
-            </View>
-            <View className="flex-row items-center gap-4">
-                <Text className="text-xl text-highlight-60">every</Text>
-                <DropdownMenu options={repeatOption} handleOpen={handleOpen} isOpen={openMenu === 3} id={3}/>
-            </View>
-
-        </View>
-    )
-}
-
-const QuitScreen = () => {
-    return(
-        <View className="p-5 gap-4">
-            <View>
-                <Text className="text-highlight-80">Track how long it has been since you stopped a bad habit:</Text>
-            </View>
-            <View className="flex-row items-center gap-4">
-                <Text className="text-xl text-highlight-60">Start time:</Text>
-                
-            </View>
-
-        </View>
-    )
-}
-
-const MemorizedQuitScreen = memo(QuitScreen)
-const MemorizedBuildScreen = memo(BuildScreen)
 
 
 export default HabitCreator

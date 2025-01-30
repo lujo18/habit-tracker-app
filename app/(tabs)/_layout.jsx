@@ -2,11 +2,9 @@ import { Image, Text, View } from 'react-native'
 import { Tabs } from 'expo-router'
 
 import icons from '../../constants/icons'
-import { SQLiteDatabase, SQLiteProvider } from 'expo-sqlite'
 import tailwindConfig from '../../tailwind.config'
 
 const tailwindColors = tailwindConfig.theme.extend.colors
-
 
 const TabIcon = ({icon, color, name, focused}) => {
   return (
@@ -23,16 +21,10 @@ const TabIcon = ({icon, color, name, focused}) => {
 }
 
 const TabsLayout = () => {
-  const createDbIfNeeded = async(db) => {
-    console.log("Created database if needed")
-    await db.execAsync(
-      "CREATE TABLE IF NOT EXISTS habits (id INTEGER PRIMARY KEY AUTOINCREMENT, name varchar(255), unit varchar(255), current INTEGER, goal INTEGER, color varchar(255));"
-    )
-  }
 
   return (
-    <>
-      <SQLiteProvider databaseName='habits.db' onInit={createDbIfNeeded}>
+    <> 
+      
         <Tabs
           screenOptions={{
             tabBarShowLabel: false,
@@ -125,7 +117,7 @@ const TabsLayout = () => {
                 }}
             />
         </Tabs>
-      </SQLiteProvider>
+     
     </>
   )
 }

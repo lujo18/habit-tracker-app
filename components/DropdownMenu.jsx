@@ -6,25 +6,21 @@ import { Portal } from 'react-native-paper'
 
 
 
-const DropdownMenu = memo(function DropdownMenu ({options, handleOpen, id, isOpen}) {
-    const [selectedOption, setSelectedOption] = useState("Select an option")
+const DropdownMenu = memo(function DropdownMenu ({value, onChange, options, handleOpen, id, isOpen}) {
+
+    console.log(value)
+    console.log(isOpen)
 
     const toggleDropdown = () => {
-        handleOpen(isOpen ? 0 : id)
-    }
-
-    const selectOption = (option) => {
-
-        setSelectedOption(option)
-        
-        handleOpen(0)
+        console.log("handle open")
+        handleOpen(id)
     }
 
     return (
         <View className="relative flex-1">
             <TouchableOpacity className="flex-row p-4 bg-background-80 items-center justify-between rounded-xl relative" onPress={toggleDropdown}>
                 
-                <Text className="text-highlight-90 text-xl">{selectedOption}</Text>
+                <Text className="text-highlight-90 text-xl">{value ? value : "Select an option"}</Text>
                 <Image
                     source={icons.dropdown}
                     className={`h-8 w-8 ${isOpen ? "rotate-180" : "rotate-0"}`}
@@ -44,7 +40,7 @@ const DropdownMenu = memo(function DropdownMenu ({options, handleOpen, id, isOpe
                                     className="p-3 bg-background-70 items-center rounded-xl flex-row gap-2 top-0"
                                     onPress={(e) => {
                                         e.stopPropagation()
-                                        selectOption(item.name)
+                                        onChange(item.name)
                                         
                                     }}
                                 >

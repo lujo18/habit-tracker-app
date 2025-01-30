@@ -1,16 +1,18 @@
 import { View, Text, Image, FlatList, TouchableOpacity } from 'react-native'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import icons from '../../constants/icons'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import Habit from '../../components/Habit'
 import tailwindConfig from '../../tailwind.config'
 import HabitCreator from '../../components/HabitCreator'
+import { useSQLiteContext } from 'expo-sqlite'
 
 
 const tailwindColors = tailwindConfig.theme.extend.colors
 
 const Home = () => {
   const [showCreateHabit, setShowCreateHabit] = useState(false)
+  const [habits, setHabits] = useState([])
 
   const onModalClose = () => {
     setShowCreateHabit(false)
@@ -20,7 +22,21 @@ const Home = () => {
     setShowCreateHabit(true)
   }
 
-  const habits = [
+
+  const db = useSQLiteContext()
+
+  useEffect(() => {
+    async function getHabits() {
+      const results = await db.getAllAsync('SELECT * FROM habits')
+      setHabits(results)
+    }
+    getHabits()
+    console.log(habits)
+  }, [])
+
+
+
+  const habitss = [
     {
       id: 1,
       name: "Workout",

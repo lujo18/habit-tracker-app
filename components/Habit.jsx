@@ -10,14 +10,35 @@ import tailwindConfig from '../tailwind.config'
 
 const Habit = ({data}) => {
     const [amount, setAmount] = useState(0)
-
+    const timer = useRef(null)
+    const curAmount = useRef(null)
 
     const {name, type, unit, color, goal} = data
 
     const addMetric = () => {
-        if (amount < goal) {
-            setAmount(amount + 1)
+        if (curAmount.current < goal) {
+            setAmount((prev) => prev + 1)
         }
+        else {
+            if (timer.current) clearInterval(timer.current)
+        }
+    }
+
+    useEffect(() => {
+        curAmount.current = amount
+    }, [amount])
+
+    const longPressAdd = () => {
+
+        if (timer.current) clearInterval(timer.current)
+
+        timer.current = setInterval(() => {
+            addMetric()
+        }, 200)
+    }
+
+    const stopTimer = () => {
+        clearInterval(timer.current)
     }
 
     const [canvasSize, setCanvasSize] = useState({ width: 0, height: 0 })
@@ -56,7 +77,7 @@ const Habit = ({data}) => {
                             </Text>
                         </View>
                     </View>
-                    <TouchableOpacity onPress={addMetric} className={`w-16 h-16 overflow-hidden rounded-2xl justify-center items-center ${amount < goal ? "bg-background-80" : "bg-highlight-60"}`} disabled={amount===goal}>
+                    <TouchableOpacity onPressOut={stopTimer} delayLongPress={500} onLongPress={() => {longPressAdd()}} onPress={addMetric} className={`w-16 h-16 overflow-hidden rounded-2xl justify-center items-center ${amount < goal ? "bg-background-80" : "bg-highlight-60"}`} disabled={amount===goal}>
                         <Image
                             source={amount < goal ? icons.addBox : icons.check}
                             resizeMode='cover'
