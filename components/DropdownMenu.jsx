@@ -8,11 +8,7 @@ import { Portal } from 'react-native-paper'
 
 const DropdownMenu = memo(function DropdownMenu ({value, onChange, options, handleOpen, id, isOpen}) {
 
-    console.log(value)
-    console.log(isOpen)
-
     const toggleDropdown = () => {
-        console.log("handle open")
         handleOpen(id)
     }
 

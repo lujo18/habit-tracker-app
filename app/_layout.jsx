@@ -15,10 +15,29 @@ const RootLayout = () => {
   const createDbIfNeeded = async(db) => {
 
     console.log("Created database if needed")
-    await db.execAsync(
-      "CREATE TABLE IF NOT EXISTS habits (id INTEGER PRIMARY KEY AUTOINCREMENT, name varchar(255), unit varchar(255), current INTEGER, goal INTEGER, color varchar(255));"
-    )
+    try {
+      await db.execAsync(
+        `CREATE TABLE IF NOT EXISTS habits (
+          id INTEGER PRIMARY KEY AUTOINCREMENT,
+          name TEXT,
+          setting TEXT,
+          repeat TEXT,
+          label TEXT,
+          limitType TEXT,
+          current INTEGER,
+          goal INTEGER,
+          color TEXT
+        );`
+      )
+
+      console.log("Successfully created table")
+    } catch (error) {
+      console.log("Error creating table", error)
+    }
   } 
+
+
+
 
 
   return (

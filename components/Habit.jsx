@@ -13,7 +13,7 @@ const Habit = ({data}) => {
     const timer = useRef(null)
     const curAmount = useRef(null)
 
-    const {name, type, unit, color, goal} = data
+    const {name, setting, repeat, type, label, color, goal} = data
 
     const addMetric = () => {
         if (curAmount.current < goal) {
@@ -44,13 +44,44 @@ const Habit = ({data}) => {
     const [canvasSize, setCanvasSize] = useState({ width: 0, height: 0 })
 
     const progressValue = useSharedValue(amount)
-    const borderColor = tailwindConfig.theme.extend.colors["habitColors"][color]
+    const borderColor = color
     const backgroundColor = tailwindConfig.theme.extend.colors["background"]["90"]
     const tailwindColors = tailwindConfig.theme.extend.colors
 
     useEffect(() => {
         progressValue.set(amount)
     }, [amount])
+
+
+    const RenderButton = () => {
+        switch(setting) {
+            case 'build':
+                return <AddButton />
+            case 'quit':
+                return <ResetButton />
+            case 'tally':
+                return <AddButton />
+            default:
+                return <AddButton />
+        }
+    }
+
+    const AddButton = () => {
+        return (
+            <TouchableOpacity onPressOut={stopTimer} delayLongPress={500} onLongPress={() => {longPressAdd()}} onPress={addMetric} className={`w-16 h-16 overflow-hidden rounded-2xl justify-center items-center ${amount < goal ? "bg-background-80" : "bg-highlight-60"}`} disabled={amount===goal}>
+                <Image
+                    source={amount < goal ? icons.addBox : icons.check}
+                    resizeMode='cover'
+                    className="w-[3rem] h-[3rem]"
+                    tintColor={amount < goal ? tailwindColors['highlight']['80'] : tailwindColors['background']['90']}
+                />
+            </TouchableOpacity>  
+        )
+    }
+
+    const ResetButton = () => {
+
+    }
 
     return (
         <>
@@ -61,30 +92,40 @@ const Habit = ({data}) => {
                     setCanvasSize(layout)
                 }}
             >
-                <View className={`${amount < goal ? "bg-background-90" : `bg-${color}`} flex-row w-full p-5 gap-3 rounded-2xl z-10`}>
+                <View className={`${amount < goal ? "bg-background-90" : `bg-[${color}]`} flex-row w-full p-5 gap-3 rounded-2xl z-10`}>
                     <View className="flex-1">
                         <Text className="text-highlight text-2xl">
                             {name}
                         </Text>
                         <Text className="text-highlight-80">
-                            {amount} / {goal} {unit}
+                            {amount} / {goal} {label}
                         </Text>
                     </View>
                     <View>
                         <View className={` p-2 rounded-2xl`}>
                             <Text className="text-highlight-60">
-                                Daily
+                                {
+                                    (() => {
+                                        switch(repeat) {
+                                            case 'day':
+                                                return "Daily"
+                                            case 'week':
+                                                return "Weekly"
+                                            case 'month':
+                                                return "Monthly"
+                                            case 'year':
+                                                return "Yearly"
+                                            default: 
+                                                return "None"
+                                        }
+                                    })()
+                                }
                             </Text>
                         </View>
                     </View>
-                    <TouchableOpacity onPressOut={stopTimer} delayLongPress={500} onLongPress={() => {longPressAdd()}} onPress={addMetric} className={`w-16 h-16 overflow-hidden rounded-2xl justify-center items-center ${amount < goal ? "bg-background-80" : "bg-highlight-60"}`} disabled={amount===goal}>
-                        <Image
-                            source={amount < goal ? icons.addBox : icons.check}
-                            resizeMode='cover'
-                            className="w-[3rem] h-[3rem]"
-                            tintColor={amount < goal ? tailwindColors['highlight']['80'] : tailwindColors['background']['90']}
-                        />
-                    </TouchableOpacity>  
+                    
+                    <RenderButton />
+                    
                 </View>
                 <Canvas style={{ flex: 1, position: 'absolute', top:0, left:0, width:canvasSize.width, height:canvasSize.height}}>
                     <Rect x={0} y={0} width={canvasSize.width} height={canvasSize.height}>

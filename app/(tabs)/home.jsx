@@ -16,6 +16,7 @@ const Home = () => {
 
   const onModalClose = () => {
     setShowCreateHabit(false)
+    getHabits()
   }
 
   const onAddHabit = () => {
@@ -25,13 +26,29 @@ const Home = () => {
 
   const db = useSQLiteContext()
 
-  useEffect(() => {
-    async function getHabits() {
+  async function getHabits() {
+    try {
       const results = await db.getAllAsync('SELECT * FROM habits')
+      console.log("Fetched results:", results)
       setHabits(results)
+
+    } catch (error) {
+      console.log("Error fetching habits:", error)
     }
+    
+  }
+
+  const dropTable = async () => {
+    try {
+      await db.runAsync(`DROP TABLE IF EXISTS habits`)
+    } catch (error) {
+      console.log("Error dropping table", error)
+    }
+  }
+
+  useEffect(() => {
     getHabits()
-    console.log(habits)
+    
   }, [])
 
 
@@ -91,21 +108,49 @@ const Home = () => {
             tintColor={tailwindColors["highlight"]["90"]}
           />
         </TouchableOpacity>
+        {/*<TouchableOpacity onPress={dropTable} className="w-10 h-10 bg-slate-600"><Text>DROP TABLE Habits</Text></TouchableOpacity>*/}
         <HabitCreator isVisible={showCreateHabit} onClose={onModalClose} />
       </View>
       
       <FlatList
-        data={habits}
-        keyExtractor={(item) => item.id}
-        renderItem={({ item }) => (
-          <Habit data={item}/> 
+        data={[
+          {
+            label: "Daily",
+            type: "day"
+          },
+          {
+            label: "Weekly",
+            type: "week"
+          },
+          {
+            label: "Monthly",
+            type: "month"
+          },
+          {
+            label: "Yearly",
+            type: "year"
+          },
+        ]}
+        keyExtractor={(item) => item.type}
+        renderItem={({item: group}) => (
+
+          <FlatList
+            data={habits.filter(habit => habit.repeat === group.type)}
+            keyExtractor={(item) => item.id}
+            renderItem={({ item }) => (
+              <Habit data={item}/> 
+            )}
+            ListHeaderComponent={() => (
+              <Text className="text-white">{group.label} Habits</Text>
+            )}
+            ListEmptyComponent={() => {
+              <Text className="text-white">No Item</Text>
+            }}
+          />
+
         )}
-        ListHeaderComponent={() => (
-          <Text className="text-white">Your Habits</Text>
-        )}
-        ListEmptyComponent={() => {
-          <Text className="text-white">No Item</Text>
-        }}
+
+        
       />
     </SafeAreaView>
   )

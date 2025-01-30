@@ -1,4 +1,4 @@
-import { View, Text, Modal, StyleSheet, ScrollView, TouchableOpacity } from 'react-native'
+import { View, Text, Modal, StyleSheet, ScrollView, TouchableOpacity, Alert } from 'react-native'
 import React, { memo, useCallback, useState } from 'react'
 import TextButton from './TextButton'
 import { SafeAreaView } from 'react-native-safe-area-context'
@@ -15,19 +15,22 @@ const habitColors = tailwindConfig.theme.extend.colors['habitColors']
 
 const HabitCreator = ({ isVisible, onClose }) => {
     const [habitName, setHabitName] = useState("")
-    const [habitType, setHabitType] = useState("build")
+    const [habitSetting, setHabitSetting] = useState("build")
     const [selectedColor, setSelectedColor] = useState(habitColors[Object.keys(habitColors)[0]])
 
-    const [goalType, setGoalType] = useState("")
-    const [goalLabel, setGoalLabel] = useState("")
-    const [goalRepeat, setGoalRepeat] = useState("")
+    const [habitGoal, setHabitGoal] = useState("")
+
+    const [habitLimit, setHabitLimit] = useState("")
+    const [habitLabel, setHabitLabel] = useState("")
+    const [habitRepeat, setHabitRepeat] = useState("")
 
     const [openMenu, setOpenMenu] = useState(0)
     
-    const database = useSQLiteContext()
+    const db = useSQLiteContext()
 
-    const RenderHabitTypePage = useCallback(() => {
-        switch (habitType) {
+    const RenderhabitSettingPage = () => {
+        console.log('reload')
+        switch (habitSetting) {
             case 'build':
                 return <BuildScreen />
             case 'quit':
@@ -37,15 +40,59 @@ const HabitCreator = ({ isVisible, onClose }) => {
             default:
                 return <Text>Select an option</Text>
         }
-    }, [habitType, goalType, goalLabel, goalRepeat, openMenu])
+    }
 
-    const createHabit = () => {
-        database.execAsync('INSERT INTO')
+    const createHabit = async () => {
+        console.log("create habit")
+        console.log("TEST",
+            habitName,
+            habitSetting,
+            habitRepeat,
+            habitLabel,
+            habitLimit,
+            0,
+            habitGoal,
+            selectedColor
+        )
+
+        if (!habitName) {
+            Alert.alert("Error", "Name is required!")
+            return
+        }
+
+        try {
+            const results = await db.runAsync(
+                `INSERT INTO habits (name, setting, repeat, label, limitType, current, goal, color) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
+                [
+                    habitName,
+                    habitSetting,
+                    habitRepeat,
+                    habitLabel,
+                    habitLimit,
+                    0,
+                    habitGoal,
+                    selectedColor
+                ]
+            )
+            console.log("results", results)
+            console.log("Success", "Habit inserted successfully!")
+        } catch (error) {
+            console.log("Insert error", error)
+        }
+
+        onClose()
+        
+        setHabitName('')
+        setHabitSetting('build')
+        setHabitGoal('')
+        setHabitLimit('')
+        setHabitLabel('')
+        setHabitRepeat('')
     }
 
 
     const handlePress = (newState) => {
-        setHabitType(newState)
+        setHabitSetting(newState)
     }
 
     const changeHabitName = (value) => {
@@ -56,25 +103,26 @@ const HabitCreator = ({ isVisible, onClose }) => {
         setSelectedColor(color)
     }
 
+    const changeHabitGoal = (value) => {
+        setHabitGoal(value)
+    }
 
     const setType = (value) => {
-        setGoalType(value)
+        setHabitLimit(value)
         setOpenMenu(0)
     }
 
     const setLabel = (value) => {
-        setGoalLabel(value)
+        setHabitLabel(value)
         setOpenMenu(0)
     }
 
     const setRepeat = (value) => {
-        setGoalRepeat(value)
+        setHabitRepeat(value)
         setOpenMenu(0)
     }
-
     
     const handleOpen = (id) => {
-        console.log("open")
         setOpenMenu(id === openMenu ? 0 : id)
     }
 
@@ -90,15 +138,15 @@ const HabitCreator = ({ isVisible, onClose }) => {
                 </View>
                 <View className="flex-row items-center gap-4">
                     <Text className="text-xl text-highlight-60">do</Text>
-                    <DropdownMenu value={goalType} onChange={setType} options={goalOption} handleOpen={handleOpen} isOpen={openMenu === 1} id={1}/>
+                    <DropdownMenu value={habitLimit} onChange={setType} options={goalOption} handleOpen={handleOpen} isOpen={openMenu === 1} id={1}/>
                 </View>
                 <View className="flex-row items-center gap-4">
-                    <BuildInput placeholder="#" keyboardType="numeric" inputStyles={"w-[100px] rounded-2xl text-3xl text-center"}/>
-                    <DropdownMenu value={goalLabel} onChange={setLabel} options={labelOption} handleOpen={handleOpen} isOpen={openMenu === 2} id={2}/>
+                    <BuildInput value={habitGoal} handleChange={changeHabitGoal} placeholder="#" keyboardType="numeric" inputStyles={"w-[100px] rounded-2xl text-3xl text-center"}/>
+                    <DropdownMenu value={habitLabel} onChange={setLabel} options={labelOption} handleOpen={handleOpen} isOpen={openMenu === 2} id={2}/>
                 </View>
                 <View className="flex-row items-center gap-4">
                     <Text className="text-xl text-highlight-60">every</Text>
-                    <DropdownMenu value={goalRepeat} onChange={setRepeat} options={repeatOption} handleOpen={handleOpen} isOpen={openMenu === 3} id={3}/>
+                    <DropdownMenu value={habitRepeat} onChange={setRepeat} options={repeatOption} handleOpen={handleOpen} isOpen={openMenu === 3} id={3}/>
                 </View>
                 
             </View>
@@ -160,18 +208,18 @@ const HabitCreator = ({ isVisible, onClose }) => {
                 <ScrollView >
                     <View className="flex-1 h-[100vh] justify-start">
                         <View className="my-6">
-                            <BuildInput value={habitName} handleChange={(e) => changeHabitName(e.value)} placeholder="Your new habit"/>
+                            <BuildInput value={habitName} handleChange={changeHabitName} placeholder="Your new habit"/>
                         </View>
                         <View className="gap-2 flex-1">
                             <Text className="text-md text-highlight-60 mb-2 border-b border-background-80">Habit Type</Text>  
                             <View className="flex-row gap-4">
-                                <TextButton text="Build"  containerStyles={`${habitType === 'build' ? "bg-habitColors-hBlue" : "bg-background-90 border-2 border-habitColors-hBlue"} flex-1`} onPress={() => handlePress('build')}/>
-                                <TextButton text="Quit" containerStyles={`${habitType === 'quit' ? "bg-habitColors-hRed" : "bg-background-90 border-2 border-habitColors-hRed"} flex-1`} onPress={() => handlePress('quit')}/>
-                                <TextButton text="Tally" containerStyles={`${habitType === 'tally' ? "bg-background-70" : "bg-background-90 border-2 border-background-70"} flex-1`} onPress={() => handlePress('tally')}/>
+                                <TextButton text="Build"  containerStyles={`${habitSetting === 'build' ? "bg-habitColors-hBlue" : "bg-background-90 border-2 border-habitColors-hBlue"} flex-1`} onPress={() => handlePress('build')}/>
+                                <TextButton text="Quit" containerStyles={`${habitSetting === 'quit' ? "bg-habitColors-hRed" : "bg-background-90 border-2 border-habitColors-hRed"} flex-1`} onPress={() => handlePress('quit')}/>
+                                <TextButton text="Tally" containerStyles={`${habitSetting === 'tally' ? "bg-background-70" : "bg-background-90 border-2 border-background-70"} flex-1`} onPress={() => handlePress('tally')}/>
                             </View>
                 
                         
-                            <RenderHabitTypePage />
+                            <RenderhabitSettingPage />
                         </View>
                         <Text className="text-md text-highlight-60 mb-2 border-b border-background-80">Habit Style</Text>
                         <View className="flex-1">
