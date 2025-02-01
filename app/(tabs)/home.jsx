@@ -6,36 +6,25 @@ import Habit from '../../components/Habit'
 import tailwindConfig from '../../tailwind.config'
 import HabitCreator from '../../components/HabitCreator'
 import { useSQLiteContext } from 'expo-sqlite'
+import { getHabits } from '../../sqliteManager'
 
 
 const tailwindColors = tailwindConfig.theme.extend.colors
 
+
+
 const Home = () => {
   const [showCreateHabit, setShowCreateHabit] = useState(false)
   const [habits, setHabits] = useState([])
+  const db = useSQLiteContext()
 
-  const onModalClose = () => {
+  const onModalClose = async () => {
     setShowCreateHabit(false)
-    getHabits()
+    setHabits(await getHabits(db))
   }
 
   const onAddHabit = () => {
     setShowCreateHabit(true)
-  }
-
-
-  const db = useSQLiteContext()
-
-  async function getHabits() {
-    try {
-      const results = await db.getAllAsync('SELECT * FROM habits')
-      console.log("Fetched results:", results)
-      setHabits(results)
-
-    } catch (error) {
-      console.log("Error fetching habits:", error)
-    }
-    
   }
 
   const dropTable = async () => {
@@ -46,50 +35,14 @@ const Home = () => {
     }
   }
 
+  const retrieve = async() => {
+    setHabits(await getHabits(db))
+  }
+
   useEffect(() => {
-    getHabits()
+    retrieve()
     
   }, [])
-
-
-
-  const habitss = [
-    {
-      id: 1,
-      name: "Workout",
-      goal: 30,
-      unit: "minutes",
-      color: "hRed"
-    },
-    {
-      id: 2,
-      name: "Journal",
-      goal: 2,
-      unit: "pages",
-      color: "hBlue"
-    },
-    {
-      id: 3,
-      name: "Meditate",
-      goal: 15,
-      unit: "minutes",
-      color: "hGreen"
-    },
-    {
-      id: 4,
-      name: "Read",
-      goal: 10,
-      unit: "pages",
-      color: "hPurple"
-    },
-    {
-      id: 5,
-      name: "Walk",
-      goal: 15,
-      unit: "minutes",
-      color: "hYellow"
-    }
-  ]
 
   return (
     <SafeAreaView className="bg-background h-full w-full px-4 flex-1">
@@ -108,7 +61,7 @@ const Home = () => {
             tintColor={tailwindColors["highlight"]["90"]}
           />
         </TouchableOpacity>
-        {/*<TouchableOpacity onPress={dropTable} className="w-10 h-10 bg-slate-600"><Text>DROP TABLE Habits</Text></TouchableOpacity>*/}
+        <TouchableOpacity onPress={dropTable} className="w-10 h-10 bg-slate-600"><Text>DROP TABLE Habits</Text></TouchableOpacity>
         <HabitCreator isVisible={showCreateHabit} onClose={onModalClose} />
       </View>
       
@@ -132,23 +85,25 @@ const Home = () => {
           },
         ]}
         keyExtractor={(item) => item.type}
-        renderItem={({item: group}) => (
-
-          <FlatList
-            data={habits.filter(habit => habit.repeat === group.type)}
-            keyExtractor={(item) => item.id}
-            renderItem={({ item }) => (
-              <Habit data={item}/> 
-            )}
-            ListHeaderComponent={() => (
-              <Text className="text-white">{group.label} Habits</Text>
-            )}
-            ListEmptyComponent={() => {
-              <Text className="text-white">No Item</Text>
-            }}
-          />
-
-        )}
+        renderItem={({item: group}) => {
+            const filteredHabits = habits.filter(habit => {return habit.repeat === group.type; })
+          
+            if (filteredHabits.length > 0) {
+              return (
+                <FlatList
+                  data={filteredHabits}
+                  keyExtractor={(item) => item.id.toString()}
+                  renderItem={({ item }) => (
+                    <Habit data={item}/> 
+                  )}
+                  ListHeaderComponent={() => (
+                    <Text className="text-white">{group.label} Habits</Text>
+                  )}
+                />
+              )
+            }
+          
+        }}
 
         
       />

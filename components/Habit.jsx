@@ -9,6 +9,8 @@ import tailwindConfig from '../tailwind.config'
 
 
 const Habit = ({data}) => {
+    console.log('rerendered')
+
     const [amount, setAmount] = useState(0)
     const timer = useRef(null)
     const curAmount = useRef(null)
@@ -68,7 +70,7 @@ const Habit = ({data}) => {
 
     const AddButton = () => {
         return (
-            <TouchableOpacity onPressOut={stopTimer} delayLongPress={500} onLongPress={() => {longPressAdd()}} onPress={addMetric} className={`w-16 h-16 overflow-hidden rounded-2xl justify-center items-center ${amount < goal ? "bg-background-80" : "bg-highlight-60"}`} disabled={amount===goal}>
+            <TouchableOpacity onPressOut={() => {stopTimer()}} delayLongPress={500} onLongPress={() => {longPressAdd()}} onPress={addMetric} className={`w-16 h-16 overflow-hidden rounded-2xl justify-center items-center ${amount < goal ? "bg-background-80" : "bg-highlight-60"}`} disabled={amount===goal}>
                 <Image
                     source={amount < goal ? icons.addBox : icons.check}
                     resizeMode='cover'
@@ -77,10 +79,6 @@ const Habit = ({data}) => {
                 />
             </TouchableOpacity>  
         )
-    }
-
-    const ResetButton = () => {
-
     }
 
     return (

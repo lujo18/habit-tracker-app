@@ -1,16 +1,24 @@
 import { View, Text, TouchableOpacity, Image, ScrollView } from 'react-native'
-import React, { memo, useState } from 'react'
+import React, { memo, useEffect, useState } from 'react'
 import icons from '../constants/icons'
 import { Portal } from 'react-native-paper'
 
 
 
 
-const DropdownMenu = memo(function DropdownMenu ({value, onChange, options, handleOpen, id, isOpen}) {
+const DropdownMenu = ({value, onChange, options, handleOpen, id, isOpen}) => {
 
     const toggleDropdown = () => {
         handleOpen(id)
     }
+
+
+    useEffect(() => {
+
+        console.log(isOpen)
+        
+        return () => console.log('unmounted'); 
+    }); 
 
     return (
         <View className="relative flex-1">
@@ -62,6 +70,6 @@ const DropdownMenu = memo(function DropdownMenu ({value, onChange, options, hand
             )}
         </View>
     )
-})
+}
 
-export default DropdownMenu
+export default memo(DropdownMenu)
