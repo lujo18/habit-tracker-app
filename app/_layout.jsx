@@ -17,7 +17,7 @@ const RootLayout = () => {
     console.log("Created database if needed")
     try {
       await db.execAsync(
-        `CREATE TABLE IF NOT EXISTS habits (
+        `CREATE TABLE IF NOT EXISTS Habits (
           id INTEGER PRIMARY KEY AUTOINCREMENT,
           name TEXT,
           setting TEXT,
@@ -27,6 +27,17 @@ const RootLayout = () => {
           current INTEGER,
           goal INTEGER,
           color TEXT
+        );`
+      )
+      
+      await db.execAsync(
+        `CREATE TABLE IF NOT EXISTS HabitHistory (
+          id INTEGER PRIMARY KEY AUTOINCREMENT,
+          habitId INTEGER NOT NULL,
+          completion INTEGER,
+          goal INTEGER,
+          date DATE,
+          FOREIGN KEY (habitId) REFERENCES Habits(id)
         );`
       )
 
