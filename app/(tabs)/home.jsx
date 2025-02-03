@@ -1,5 +1,5 @@
 import { View, Text, Image, FlatList, TouchableOpacity } from 'react-native'
-import React, { useEffect, useState } from 'react'
+import React, { memo, useCallback, useEffect, useState } from 'react'
 import icons from '../../constants/icons'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import Habit from '../../components/Habit'
@@ -41,7 +41,20 @@ const Home = () => {
 
   useEffect(() => {
     retrieve()
-    
+  }, [])
+
+  const RepeatHeaders = useCallback(({ group }) => {
+    console.log("Headers re rendered")
+    return (
+      <View className="flex-row items-center gap-2">
+        <Image
+          source={group.icon}
+          className="w-8 h-8"
+          resizeMode='contain'
+        />
+        <Text className="text-white">{group.label} Habits</Text>
+      </View>
+    )
   }, [])
 
   return (
@@ -69,19 +82,23 @@ const Home = () => {
         data={[
           {
             label: "Daily",
-            type: "day"
+            type: "day",
+            icon: icons.habitDaily
           },
           {
             label: "Weekly",
-            type: "week"
+            type: "week",
+            icon: icons.habitWeekly
           },
           {
             label: "Monthly",
-            type: "month"
+            type: "month",
+            icon: icons.habitMonthly
           },
           {
             label: "Yearly",
-            type: "year"
+            type: "year",
+            icon: icons.habitYearly
           },
         ]}
         keyExtractor={(item) => item.type}
@@ -97,7 +114,7 @@ const Home = () => {
                     <Habit data={item}/> 
                   )}
                   ListHeaderComponent={() => (
-                    <Text className="text-white">{group.label} Habits</Text>
+                    <RepeatHeaders group={group} />
                   )}
                 />
               )
@@ -110,5 +127,7 @@ const Home = () => {
     </SafeAreaView>
   )
 }
+
+
 
 export default Home

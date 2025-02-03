@@ -28,6 +28,7 @@ const DropdownMenu = ({value, onChange, options, handleOpen, id, isOpen}) => {
                 <Image
                     source={icons.dropdown}
                     className={`h-8 w-8 ${isOpen ? "rotate-180" : "rotate-0"}`}
+                    resizeMode='contain'
                 />
                
             </TouchableOpacity>
@@ -52,6 +53,7 @@ const DropdownMenu = ({value, onChange, options, handleOpen, id, isOpen}) => {
                                         <Image
                                             source={item.icon}
                                             className="w-8 h-8"
+                                            resizeMode='contain'
                                         />
                                     </View>)}
                                     <View className="gap-1">
