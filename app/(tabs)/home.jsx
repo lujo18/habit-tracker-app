@@ -29,7 +29,7 @@ const Home = () => {
 
   const dropTable = async () => {
     try {
-      await db.runAsync(`DROP TABLE IF EXISTS habits`)
+      await db.runAsync(`DROP TABLE IF EXISTS Habits`)
     } catch (error) {
       console.log("Error dropping table", error)
     }
@@ -40,8 +40,7 @@ const Home = () => {
   }
 
   useEffect(() => {
-    retrieve()
-    
+    retrieve() 
   }, [])
 
   return (
@@ -65,7 +64,7 @@ const Home = () => {
         <HabitCreator isVisible={showCreateHabit} onClose={onModalClose} />
       </View>
       
-      <FlatList
+      {/*<FlatList
         data={[
           {
             label: "Daily",
@@ -105,6 +104,14 @@ const Home = () => {
           
         }}
 
+        
+      />*/}
+      <FlatList
+        data={habits}
+        keyExtractor={(item) => item.id.toString()}
+        renderItem={({ item }) => (
+          <Habit data={item}/> 
+        )}
         
       />
     </SafeAreaView>
