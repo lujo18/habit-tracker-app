@@ -13,13 +13,13 @@ const DropdownMenu = ({value, onChange, options, handleOpen, id, isOpen}) => {
     }
 
 
-    useEffect(() => {
+    /*useEffect(() => {
 
         console.log(isOpen)
         
         return () => console.log('unmounted'); 
-    }); 
-
+    }); */
+    
     return (
         <View className="relative flex-1">
             <TouchableOpacity className="flex-row p-4 bg-background-80 items-center justify-between rounded-xl relative" onPress={toggleDropdown}>

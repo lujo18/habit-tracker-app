@@ -24,7 +24,6 @@ const RootLayout = () => {
           repeat TEXT,
           label TEXT,
           limitType TEXT,
-          current INTEGER,
           goal INTEGER,
           color TEXT
         );`

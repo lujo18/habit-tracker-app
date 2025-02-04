@@ -5,17 +5,40 @@ import icons from '../constants/icons'
 import { Canvas, Rect, SweepGradient, TwoPointConicalGradient, Skia, Shader, vec, rotate } from '@shopify/react-native-skia'
 import Animated, { interpolate, useSharedValue, withReanimatedTimer, withRepeat, withTiming, Easing, withSpring } from 'react-native-reanimated'
 import tailwindConfig from '../tailwind.config'
-
+import { getCompletion, setCompletion } from '../sqliteManager'
+import { useSQLiteContext } from 'expo-sqlite'
 
 
 const Habit = ({data}) => {
-    console.log('rerendered')
+    const db = useSQLiteContext()
 
     const [amount, setAmount] = useState(0)
     const timer = useRef(null)
     const curAmount = useRef(null)
 
-    const {name, setting, repeat, type, label, color, goal} = data
+    const {id, name, setting, repeat, type, label, color, goal} = data
+
+    const [canvasSize, setCanvasSize] = useState({ width: 0, height: 0 })
+
+    const progressValue = useSharedValue(amount)
+    const borderColor = color
+    const backgroundColor = tailwindConfig.theme.extend.colors["background"]["90"]
+    const tailwindColors = tailwindConfig.theme.extend.colors
+
+    const fetchCompletion = async () => {
+        setAmount(await getCompletion(db, id))
+    }
+
+    useEffect(() => {
+        fetchCompletion()
+    }, [])
+
+    useEffect(() => {
+        console.log("amount", amount)
+        curAmount.current = amount
+        setCompletion(db, id, curAmount.current)
+        progressValue.set(amount)
+    }, [amount])
 
     const addMetric = () => {
         if (curAmount.current < goal) {
@@ -25,10 +48,6 @@ const Habit = ({data}) => {
             if (timer.current) clearInterval(timer.current)
         }
     }
-
-    useEffect(() => {
-        curAmount.current = amount
-    }, [amount])
 
     const longPressAdd = () => {
 
@@ -42,18 +61,6 @@ const Habit = ({data}) => {
     const stopTimer = () => {
         clearInterval(timer.current)
     }
-
-    const [canvasSize, setCanvasSize] = useState({ width: 0, height: 0 })
-
-    const progressValue = useSharedValue(amount)
-    const borderColor = color
-    const backgroundColor = tailwindConfig.theme.extend.colors["background"]["90"]
-    const tailwindColors = tailwindConfig.theme.extend.colors
-
-    useEffect(() => {
-        progressValue.set(amount)
-    }, [amount])
-
 
     const RenderButton = () => {
         switch(setting) {
@@ -93,7 +100,7 @@ const Habit = ({data}) => {
                 <View className={`${amount < goal ? "bg-background-90" : `bg-[${color}]`} flex-row w-full p-5 gap-3 rounded-2xl z-10`}>
                     <View className="flex-1">
                         <Text className="text-highlight text-2xl">
-                            {name}
+                            {name} {id}
                         </Text>
                         <Text className="text-highlight-80">
                             {amount} / {goal} {label}

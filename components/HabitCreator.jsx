@@ -97,14 +97,13 @@ const HabitCreator = ({ isVisible, onClose }) => {
 
     try {
       const results = await db.runAsync(
-        `INSERT INTO Habits (name, setting, repeat, label, limitType, current, goal, color) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
+        `INSERT INTO Habits (name, setting, repeat, label, limitType, goal, color) VALUES (?, ?, ?, ?, ?, ?, ?)`,
         [
           habitName,
           habitSetting,
           habitRepeat,
           habitLabel,
           habitLimit,
-          0,
           habitGoal,
           selectedColor,
         ]

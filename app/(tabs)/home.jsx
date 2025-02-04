@@ -6,7 +6,7 @@ import Habit from '../../components/Habit'
 import tailwindConfig from '../../tailwind.config'
 import HabitCreator from '../../components/HabitCreator'
 import { useSQLiteContext } from 'expo-sqlite'
-import { getHabits } from '../../sqliteManager'
+import { dateToSQL, getHabits } from '../../sqliteManager'
 
 
 const tailwindColors = tailwindConfig.theme.extend.colors
@@ -18,9 +18,11 @@ const Home = () => {
   const [habits, setHabits] = useState([])
   const db = useSQLiteContext()
 
+  const [date, setDate] = useState('')
+
   const onModalClose = async () => {
     setShowCreateHabit(false)
-    setHabits(await getHabits(db))
+    setHabits(await getHabits(db, date))
   }
 
   const onAddHabit = () => {
@@ -30,13 +32,15 @@ const Home = () => {
   const dropTable = async () => {
     try {
       await db.runAsync(`DROP TABLE IF EXISTS Habits`)
+      await db.runAsync(`DROP TABLE IF EXISTS HabitHistory`)
     } catch (error) {
       console.log("Error dropping table", error)
     }
   }
 
   const retrieve = async() => {
-    setHabits(await getHabits(db))
+    setDate(await dateToSQL(new Date()))
+    setHabits(await getHabits(db, date))
   }
 
   useEffect(() => {
