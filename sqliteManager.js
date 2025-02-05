@@ -1,10 +1,13 @@
 import { useSQLiteContext } from "expo-sqlite"
 
+
 async function determineRepetition(repeat, date) {
-  const today = await dateToSQL(new Date())
+
+  const today = await dateToSQL(new Date());
 
   if (repeat === "day") {
     if (date.split('-')[2] != today.split('-')[2]) {
+      console.log("DAYS NOT EQUAL: ", date.split('-')[2], today.split('-')[2])
       return true;
     }
   }
@@ -36,7 +39,7 @@ export async function createLogs(results, db) {
         [
           habit.id,
           0,
-          habit.goal,
+          habit.referenceGoal,
           await dateToSQL(new Date())
         ]
       )
@@ -44,13 +47,28 @@ export async function createLogs(results, db) {
   }
 }
 
+async function queryHabits(db, date) {
+  const habits = await db.getAllAsync(
+    `SELECT Habits.*, b.completion, b.goal, b.date
+    FROM Habits
+    LEFT JOIN HabitHistory AS b 
+    ON Habits.id = b.habitId
+    AND b.date = (
+      SELECT date
+      FROM HabitHistory
+      WHERE HabitHistory.habitId = Habits.id
+      AND date <= ?
+      ORDER BY date DESC
+      LIMIT 1
+    )`, [Date(date)]
+  )
+
+  return habits
+}
+
 export async function getHabits(db, date) {
   try {
-    const results = await db.getAllAsync(
-      `SELECT Habits.*, b.date
-      FROM Habits
-      LEFT JOIN HabitHistory AS b ON Habits.id = b.habitId`
-    )
+    const results = await queryHabits(db, date)
 
     await createLogs(results, db)
 
@@ -60,22 +78,13 @@ export async function getHabits(db, date) {
 
     console.log("HISTORY", history)
 
-    const habits = await db.getAllAsync(
-      `SELECT Habits.*, b.completion, b.goal, b.date
-      FROM Habits
-      LEFT JOIN HabitHistory AS b 
-      ON Habits.id = b.habitId
-      AND b.date = (
-        SELECT MAX(date)
-        FROM HabitHistory
-        WHERE HabitHistory.habitId = Habits.id AND date <= ?
-      )`, [date]
-    )
+    const updatedResults = await queryHabits(db, date)
+    
 
     //await checkDates(results)
 
-    console.log("Fetched results:", habits)
-    return habits
+    console.log("Fetched results:", updatedResults)
+    return updatedResults
 
   } catch (error) {
     console.log("Error fetching habits:", error)
@@ -92,7 +101,7 @@ export async function dateToSQL(date) {
 }
 
 
-export async function setCompletion (db, id, value) {
+export async function setCompletion (db, id, value, date) {
   console.log("set completion", value)
   await db.runAsync(
     `UPDATE HabitHistory
@@ -103,14 +112,22 @@ export async function setCompletion (db, id, value) {
   )
 }
 
-export async function getCompletion (db, id) {
+export async function getCompletion (db, id, date) {
   console.log("get completion")
   try {
     const results = await db.getAllAsync(
       `SELECT completion
       FROM HabitHistory
-      WHERE habitId = ?`,
-      [id]
+      WHERE habitId = ?
+      AND date = (
+        SELECT date
+        FROM HabitHistory
+        WHERE habitId = ?
+        AND date <= ?
+        ORDER BY date DESC
+        LIMIT 1
+      )`,
+      [id, id, Date(date)]
       
     )
 

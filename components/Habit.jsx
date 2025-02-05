@@ -1,5 +1,5 @@
 import { View, Text, Image, TouchableOpacity } from 'react-native'
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useContext, useEffect, useRef, useState } from 'react'
 import icons from '../constants/icons'
 
 import { Canvas, Rect, SweepGradient, TwoPointConicalGradient, Skia, Shader, vec, rotate } from '@shopify/react-native-skia'
@@ -7,6 +7,7 @@ import Animated, { interpolate, useSharedValue, withReanimatedTimer, withRepeat,
 import tailwindConfig from '../tailwind.config'
 import { getCompletion, setCompletion } from '../sqliteManager'
 import { useSQLiteContext } from 'expo-sqlite'
+import { DateContext } from '../app/(tabs)/home'
 
 
 const Habit = ({data}) => {
@@ -25,9 +26,14 @@ const Habit = ({data}) => {
     const backgroundColor = tailwindConfig.theme.extend.colors["background"]["90"]
     const tailwindColors = tailwindConfig.theme.extend.colors
 
+    const selectedDate = useContext(DateContext)
+
     const fetchCompletion = async () => {
-        setAmount(await getCompletion(db, id))
+        setAmount(await getCompletion(db, id, selectedDate))
+        curAmount.current = amount
     }
+
+   
 
     useEffect(() => {
         fetchCompletion()
@@ -36,7 +42,7 @@ const Habit = ({data}) => {
     useEffect(() => {
         console.log("amount", amount)
         curAmount.current = amount
-        setCompletion(db, id, curAmount.current)
+        setCompletion(db, id, curAmount.current, selectedDate)
         progressValue.set(amount)
     }, [amount])
 
