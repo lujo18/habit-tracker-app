@@ -13,12 +13,8 @@ class Database {
 
         Database.instance = await SQLite.openDatabaseAsync('habits.db');
 
-        // Enable WAL mode. Improves performance
-        await Database.instance.execAsync('PRAGMA journal_mode = WAL;');
-
-        // Enforce foreign key contraints
-        await Database.instance.execAsync('PRAGMA foreign_keys = ON;');
-
+        await Database.instance.execAsync('PRAGMA journal_mode = WAL;'); // Enable WAL mode. Improves performance
+        await Database.instance.execAsync('PRAGMA foreign_keys = ON;'); // Enforce foreign key contraints
         await Database.instance.execAsync(SCHEMA_SQL)
 
         //console.log("Successfully created Database instance")
@@ -35,35 +31,73 @@ class BaseRepository {
   constructor () {
     this.db = Database.getInstance();
   }
-
-
+  
   async executeQuery (query, params) {
     try {
-      console.log("Executing query ", query)
-
       const db = await this.db
-      const result = await db.getAllAsync(query, params)
 
-      console.log("Query rows:", result);
-      
+      const result = await db.execAsync(query, params)
+
       return result
     } catch (error) {
       console.log("Failed to executeQuery", error)
+    }
+    
+  }
+
+  async getAllQuery (query, params) {
+    try {
+      const db = await this.db
+      const result = await db.getAllAsync(query, params)
+
+      console.log("getAllQuery rows:", result);
+      
+      return result
+    } catch (error) {
+      console.log("Failed to getAllQuery", error)
       
     }
     
   }
+  
 }
 
+export class DevRepository extends BaseRepository {
+  async DropTables() {
+    try {
+      
+      const db = await this.db
+      await db.runAsync(`DROP TABLE IF EXISTS Habits`)
+      await db.runAsync(`DROP TABLE IF EXISTS HabitHistory`)
+      await db.runAsync(`DROP TABLE IF EXISTS HabitLabel`)
+      await db.runAsync(`DROP TABLE IF EXISTS HabitLocation`)
+
+      console.log("Successfuly dropped tables")
+    } catch (error) {
+      console.log("Failed to drop tables", error)
+    }
+  }
+
+  async TestQuery() {
+    const query = `SELECT * FROM HabitHistory`
+
+    const result = await this.getAllQuery(query)
+
+    console.log("SIMPLE QUERY RESULT", result)
+    
+    return result;
+  }
+}
 export class HabitsRepository extends BaseRepository {
 
   async createHabit(data) {
     query = `--sql
-    INSERT INTO Habits (name, setting, repeat, label, limitType, referenceGoal, color) 
-    VALUES (?, ?, ?, ?, ?, ?, ?)
+    INSERT INTO Habits (name, setting, repeat, label, limitType, referenceGoal, color, location) VALUES (?, ?, ?, ?, ?, ?, ?, ?)
     `
 
     params = data;
+
+    console.log("params", params)
 
     /* Data array
         habitName,
@@ -73,34 +107,32 @@ export class HabitsRepository extends BaseRepository {
         habitLimit,
         habitGoal,
         selectedColor,
+        habitLocation
     */
 
-    return this.executeQuery(query, params)
+    try {
+      await this.executeQuery(query, ["ygh", "build", "day", "minutes", "atleast", "2", "#882C40", "bedroom"])
+    } catch (error) {
+      console.log("Failed to insert habit")
+    }
   }
 
   async initializeHabits(date) {
     try {
 
       const results = await this.queryHabits(date)
-      console.log("CHECKPOINT 2")
-      console.log("Results post C2:", results)
   
       await this.createLogs(results)
 
-      console.log("CHECKPOINT 1")
-  
       const history = await this.executeQuery(
         `SELECT * FROM HabitHistory`
       )
   
-      console.log("HISTORY", history)
-  
       const updatedResults = await this.queryHabits(date)
       
-  
       //await checkDates(results)
   
-      console.log("Fetched results:", updatedResults)
+      //console.log("Fetched results:", updatedResults)
       return updatedResults
   
     } catch (error) {
@@ -110,7 +142,7 @@ export class HabitsRepository extends BaseRepository {
 
   
   async queryHabits(date) {
-    const query = `
+    const query = `--sql
       SELECT Habits.*, b.completion, b.goal, b.date
       FROM Habits
       LEFT JOIN HabitHistory AS b 
@@ -128,7 +160,7 @@ export class HabitsRepository extends BaseRepository {
       date
     ]
 
-    return this.executeQuery(query, params)
+    return this.getAllQuery(query, params)
   }
 
   async createLogs(habits) {
@@ -158,6 +190,120 @@ export class HabitsRepository extends BaseRepository {
     }
   }
 
+}
+
+export class HabitHistoryRepository extends BaseRepository {
+  async setCompletion (id, value, date) {
+    console.log("set completion", value)
+
+    const query = `--sql
+      UPDATE HabitHistory
+      SET completion = ?
+      WHERE habitId = ?
+    `
+
+    const params = [value ? value : 0, id]
+
+    return this.executeQuery(query, params)
+  }
+  
+  async getCompletion (id, date) {
+    console.log("get completion")
+
+    const query = `--sql
+      SELECT completion
+      FROM HabitHistory
+      WHERE habitId = ?
+      AND date = (
+        SELECT date
+        FROM HabitHistory
+        WHERE habitId = ?
+        AND date <= ?
+        ORDER BY date DESC
+        LIMIT 1
+      )
+    `
+
+    const params = [id, id, Date(date)]
+
+    try {
+      const results = await this.getAllQuery(query, params)
+       
+      console.log("completion history", results[0]['completion'])
+      return results[0]['completion']
+    } catch (error) {
+      console.log("Failed to fetch completion history", error)
+    }
+  }
+}
+
+export class HabitSettingRepository extends BaseRepository {
+
+  async getHabitLabels () {
+    const query = `--sql
+      SELECT name
+      FROM HabitLabel
+    `
+
+    try {
+      return this.getAllQuery(query);
+    }
+    catch (error) {
+      console.log("Failed to get habit labels", error)
+    }
+  }
+  
+  async getHabitLocations () {
+    const query = `--sql
+      SELECT name
+      FROM HabitLocation
+    `
+
+    try {
+      const db = await this.db
+
+      return this.getAllQuery(query);
+    }
+    catch (error) {
+      console.log("Failed to get habit locations", error)
+    }
+  }
+  
+  
+  
+  addHabitLabel = async (value) => {
+    query = `--sql
+      INSERT INTO HabitLabel (name) 
+      VALUES (?)
+    `
+
+    params = [value]
+
+    console.log("new ", params)
+
+    try {
+      await this.executeQuery(query, params)
+      console.log("Successfully added label: ", params)
+    } catch (error) {
+      console.log("Failed to add new label ", error)
+    }
+  }
+  
+  
+  addHabitLocation = async (value) => {
+    query = `--sql
+      INSERT INTO HabitLocation (name)
+      VALUES (?)
+    `
+
+    params = [value]
+
+    try {
+      await this.executeQuery(query, params)
+    } catch (error) {
+      console.log("Failed to add new location ", error)
+    }
+  }
 }
 
 async function determineRepetition(repeat, date) {
@@ -197,94 +343,5 @@ export async function dateToSQL(date) {
   return `${year}-${month}-${day}`
 }
 
-export async function setCompletion (db, id, value, date) {
-  console.log("set completion", value)
-  await db.runAsync(
-    `UPDATE HabitHistory
-    SET completion = ?
-    WHERE habitId = ?
-    `,
-  [value ? value : 0, id]
-  )
-}
-
-export async function getCompletion (db, id, date) {
-  console.log("get completion")
-  try {
-    const results = await db.getAllAsync(
-      `SELECT completion
-      FROM HabitHistory
-      WHERE habitId = ?
-      AND date = (
-        SELECT date
-        FROM HabitHistory
-        WHERE habitId = ?
-        AND date <= ?
-        ORDER BY date DESC
-        LIMIT 1
-      )`,
-      [id, id, Date(date)]
-      
-    )
-
-    console.log("completion history", results[0]['completion'])
-    return results[0]['completion']
-  } catch (error) {
-    console.log("Failed to fetch completion history", error)
-  }
-}
-
-export async function getHabitLabels (db) {
-  try {
-    const results = await db.getAllAsync(
-      `SELECT name
-      FROM HabitLabel`
-    )
-    
-    console.log("Habit Labels: ", results)
-    return results;
-  }
-  catch (error) {
-    console.log("Failed to get habit labels", error)
-  }
-}
-
-export async function getHabitLocations (db) {
-  try {
-    const results = await db.getAllAsync(
-      `SELECT name
-      FROM HabitLocation`
-    )
-    
-    console.log("Habit Locations: ", results)
-    return results;
-  }
-  catch (error) {
-    console.log("Failed to get habit locations", error)
-  }
-}
 
 
-
-export async function addHabitLabel (db, value) {
-  try {
-    db.runAsync(
-      `INSERT INTO HabitLabel (name) VALUES (?)`,
-      [value]
-    )
-  } catch (error) {
-    console.log("Failed to add new label ", error)
-  }
-}
-
-
-export async function addHabitLocation (db, value) {
-  try {
-    db.runAsync(
-      `INSERT INTO HabitLocation (name) VALUES (?)`,
-      [value]
-    )
-  } catch (error) {
-    console.log("Failed to add new location ", error)
-  }
-}

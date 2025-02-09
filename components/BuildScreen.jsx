@@ -2,9 +2,10 @@ import { View, Text } from "react-native";
 import React, { memo, useCallback, useState } from "react";
 import DropdownMenu from "./DropdownMenu";
 import BuildInput from "./BuildInput";
-import { addHabitLabel, addHabitLocation } from "../db/sqliteManager";
+import { HabitSettingRepository } from "../db/sqliteManager";
 
 const GoalInput = memo(({ onGoalChange, habitGoal }) => {
+
   const [localGoal, setLocalGoal] = useState(habitGoal);
 
   const handleChange = useCallback(
@@ -45,6 +46,8 @@ const BuildScreen = memo(
     repeatOption,
     locationOption
   }) => {
+    const habitSettingRepo = new HabitSettingRepository();
+
     return (
       <View className="p-5 gap-4">
         <View>
@@ -65,7 +68,7 @@ const BuildScreen = memo(
             isOpen={openMenu === 2}
             id={2}
             isCustom={true}
-            handleCreateNew={addHabitLabel()}
+            handleCreateNew={habitSettingRepo.addHabitLabel}
           />
         </View>
         <View className="flex-row items-center gap-4">
@@ -90,7 +93,7 @@ const BuildScreen = memo(
             isOpen={openMenu === 1}
             id={1}
             isCustom={true}
-            handleCreateNew={addHabitLocation()}
+            handleCreateNew={habitSettingRepo.addHabitLocation}
           />
         </View>
       </View>

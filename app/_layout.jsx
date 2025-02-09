@@ -41,6 +41,8 @@ const RootLayout = () => {
     initializeDatabase();
   }, [])*/
 
+  console.log("\n\nNEW RUN " + "\n\n")
+
   return (
     
     <Stack>

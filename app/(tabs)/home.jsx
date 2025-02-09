@@ -5,7 +5,7 @@ import { SafeAreaView } from 'react-native-safe-area-context'
 import Habit from '../../components/Habit'
 import tailwindConfig from '../../tailwind.config'
 import HabitCreator from '../../components/HabitCreator'
-import { dateToSQL, getHabits, HabitsRepository } from '../../db/sqliteManager'
+import { dateToSQL, DevRepository, HabitsRepository } from '../../db/sqliteManager'
 
 
 const tailwindColors = tailwindConfig.theme.extend.colors
@@ -14,6 +14,7 @@ export const DateContext = createContext('')
 
 const Home = () => {
   const habitsRepo = new HabitsRepository();
+  const devRepo = new DevRepository() //DELETE THIS
   
 
   const [showCreateHabit, setShowCreateHabit] = useState(false)
@@ -42,6 +43,8 @@ const Home = () => {
   }*/
 
   const retrieve = async() => {
+    devRepo.TestQuery()
+
     setDate(await dateToSQL(new Date()))
     
     setHabits(await habitsRepo.initializeHabits(date))
@@ -86,6 +89,7 @@ const Home = () => {
               tintColor={tailwindColors["highlight"]["90"]}
             />
           </TouchableOpacity>
+          <TouchableOpacity className="w-10 h-10 bg-red-50" onPress={() => {devRepo.DropTables()}}><Text>Drop Table</Text></TouchableOpacity>
           
           <HabitCreator isVisible={showCreateHabit} onClose={onModalClose} />
         </View>

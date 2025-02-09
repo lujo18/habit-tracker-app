@@ -7,7 +7,7 @@ import SingleInputModal from './SingleInputModal'
 
 
 
-const DropdownMenu = ({value, onChange, options, handleOpen, id, isOpen, isCustom, ...props}) => {
+const DropdownMenu = ({value, onChange, options, handleOpen, id, isOpen, isCustom, handleCreateNew}) => {
 
     const toggleDropdown = () => {
         handleOpen(id)
@@ -99,7 +99,7 @@ const DropdownMenu = ({value, onChange, options, handleOpen, id, isOpen, isCusto
                                     header="Create new option"
                                     placeholder="Enter name"
                                     submitValue="Create"
-                                    handleSubmit={props.handleCreateNew}
+                                    handleSubmit={handleCreateNew}
                                 />
                             </View>
 

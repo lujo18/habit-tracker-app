@@ -7,8 +7,9 @@ import TextButton from './TextButton'
 const SingleInputModal = ({isVisible, header, handleModalOpen, placeholder, submitValue, handleSubmit}) => {
   const [inputValue, setInputValue] = useState("")
 
-  const changeValue = (e) => {
-    setInputValue(e.value);
+  const changeValue = (value) => {
+    setInputValue(value);
+    console.log("INPUT VAL", inputValue)
   } 
 
   return (
@@ -32,7 +33,7 @@ const SingleInputModal = ({isVisible, header, handleModalOpen, placeholder, subm
             <TextButton
               text={submitValue}
               containerStyles={`flex-1 bg-habitColors-hBlue`}
-              onPress={handleSubmit}
+              onPress={() => {if(inputValue) handleSubmit(inputValue)}}
             />
           </View>
         </View>

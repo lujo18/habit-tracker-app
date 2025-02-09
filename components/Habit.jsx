@@ -5,12 +5,12 @@ import icons from '../constants/icons'
 import { Canvas, Rect, SweepGradient, TwoPointConicalGradient, Skia, Shader, vec, rotate } from '@shopify/react-native-skia'
 import Animated, { interpolate, useSharedValue, withReanimatedTimer, withRepeat, withTiming, Easing, withSpring } from 'react-native-reanimated'
 import tailwindConfig from '../tailwind.config'
-import { getCompletion, setCompletion } from '../db/sqliteManager'
+import { HabitHistoryRepository } from '../db/sqliteManager'
 import { DateContext } from '../app/(tabs)/home'
 
 
 const Habit = ({data}) => {
-
+    const historyRepo = new HabitHistoryRepository()
 
     const [amount, setAmount] = useState(0)
     const timer = useRef(null)
@@ -20,6 +20,7 @@ const Habit = ({data}) => {
 
     const [canvasSize, setCanvasSize] = useState({ width: 0, height: 0 })
 
+    // Tailwind colors
     const progressValue = useSharedValue(amount)
     const borderColor = color
     const backgroundColor = tailwindConfig.theme.extend.colors["background"]["90"]
@@ -28,7 +29,7 @@ const Habit = ({data}) => {
     const selectedDate = useContext(DateContext)
 
     const fetchCompletion = async () => {
-        setAmount(await getCompletion(db, id, selectedDate))
+        setAmount(await historyRepo.getCompletion(id, selectedDate))
         curAmount.current = amount
     }
 
@@ -41,7 +42,7 @@ const Habit = ({data}) => {
     useEffect(() => {
         console.log("amount", amount)
         curAmount.current = amount
-        setCompletion(db, id, curAmount.current, selectedDate)
+        historyRepo.setCompletion(id, curAmount.current, selectedDate)
         progressValue.set(amount)
     }, [amount])
 

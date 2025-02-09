@@ -8,7 +8,8 @@ export const SCHEMA_SQL = `--sql
     label TEXT,
     limitType TEXT,
     referenceGoal INTEGER,
-    color TEXT
+    color TEXT,
+    location TEXT
   );
 
 

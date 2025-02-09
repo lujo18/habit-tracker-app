@@ -17,9 +17,9 @@ import BuildScreen from "./BuildScreen";
 import QuitScreen from "./QuitScreen";
 import TallyScreen from "./TallyScreen";
 import ColorPicker from "./ColorPicker";
-import { getHabitLabels, getHabitLocations } from "../db/sqliteManager";
+import { DevRepository, getHabitLabels, getHabitLocations,  } from "../db/sqliteManager";
 
-import { HabitsRepository } from "../db/sqliteManager";
+import { HabitsRepository, HabitSettingRepository } from "../db/sqliteManager";
 
 const habitColors = tailwindConfig.theme.extend.colors["habitColors"];
 
@@ -65,6 +65,8 @@ const repeatOption = [
 const HabitCreator = ({ isVisible, onClose }) => {
   // Database repo connection
   const habitRepo = new HabitsRepository()
+  const habitSettingRepo = new HabitSettingRepository()
+  const devRepo = new DevRepository()
 
 
   const [habitName, setHabitName] = useState("");
@@ -84,8 +86,8 @@ const HabitCreator = ({ isVisible, onClose }) => {
   const [locationOption, setLocationOption] = useState([])
 
   const retrieveOptions = async () => {
-    setLabelOption(await getHabitLabels(db));
-    setLocationOption(await getHabitLocations(db));
+    setLabelOption(await habitSettingRepo.getHabitLabels());
+    setLocationOption(await habitSettingRepo.getHabitLocations());
   }
 
   useEffect(() => {
@@ -110,14 +112,13 @@ const HabitCreator = ({ isVisible, onClose }) => {
         habitSetting,
         habitRepeat,
         habitLabel,
-        habitLimit,
+        "atleast",
         habitGoal,
         selectedColor,
+        habitLocation
       ])
 
-    
-      console.log("results", results);
-      console.log("Success", "Habit inserted successfully!");
+      console.log("\n\nSuccess", "Habit inserted successfully!\n\n");
     } catch (error) {
       console.log("Insert error", error);
     }
