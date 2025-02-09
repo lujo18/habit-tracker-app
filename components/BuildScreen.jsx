@@ -2,6 +2,7 @@ import { View, Text } from "react-native";
 import React, { memo, useCallback, useState } from "react";
 import DropdownMenu from "./DropdownMenu";
 import BuildInput from "./BuildInput";
+import { addHabitLabel, addHabitLocation } from "../db/sqliteManager";
 
 const GoalInput = memo(({ onGoalChange, habitGoal }) => {
   const [localGoal, setLocalGoal] = useState(habitGoal);
@@ -31,15 +32,18 @@ const BuildScreen = memo(
     habitLabel,
     habitRepeat,
     habitGoal,
+    habitLocation,
     onGoalChange,
     handleOpen,
     openMenu,
     setType,
     setLabel,
     setRepeat,
+    setLocation,
     goalOption,
     labelOption,
     repeatOption,
+    locationOption
   }) => {
     return (
       <View className="p-5 gap-4">
@@ -49,15 +53,7 @@ const BuildScreen = memo(
           </Text>
         </View>
         <View className="flex-row items-center gap-4">
-          <Text className="text-xl text-highlight-60">do</Text>
-          <DropdownMenu
-            value={habitLimit}
-            onChange={setType}
-            options={goalOption}
-            handleOpen={handleOpen}
-            isOpen={openMenu === 1}
-            id={1}
-          />
+          <Text className="text-xl text-highlight-60">I will do</Text>
         </View>
         <View className="flex-row items-center gap-4">
           <GoalInput onGoalChange={onGoalChange} habitGoal={habitGoal}/>
@@ -68,6 +64,8 @@ const BuildScreen = memo(
             handleOpen={handleOpen}
             isOpen={openMenu === 2}
             id={2}
+            isCustom={true}
+            handleCreateNew={addHabitLabel()}
           />
         </View>
         <View className="flex-row items-center gap-4">
@@ -79,6 +77,20 @@ const BuildScreen = memo(
             handleOpen={handleOpen}
             isOpen={openMenu === 3}
             id={3}
+            
+          />
+        </View>
+        <View className="flex-row items-center gap-4">
+          <Text className="text-xl text-highlight-60">at</Text>
+          <DropdownMenu
+            value={habitLocation}
+            onChange={setLocation}
+            options={locationOption}
+            handleOpen={handleOpen}
+            isOpen={openMenu === 1}
+            id={1}
+            isCustom={true}
+            handleCreateNew={addHabitLocation()}
           />
         </View>
       </View>

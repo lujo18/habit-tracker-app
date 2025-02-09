@@ -5,8 +5,7 @@ import { SafeAreaView } from 'react-native-safe-area-context'
 import Habit from '../../components/Habit'
 import tailwindConfig from '../../tailwind.config'
 import HabitCreator from '../../components/HabitCreator'
-import { useSQLiteContext } from 'expo-sqlite'
-import { dateToSQL, getHabits } from '../../sqliteManager'
+import { dateToSQL, getHabits, HabitsRepository } from '../../db/sqliteManager'
 
 
 const tailwindColors = tailwindConfig.theme.extend.colors
@@ -14,33 +13,40 @@ const tailwindColors = tailwindConfig.theme.extend.colors
 export const DateContext = createContext('')
 
 const Home = () => {
+  const habitsRepo = new HabitsRepository();
+  
+
   const [showCreateHabit, setShowCreateHabit] = useState(false)
   const [habits, setHabits] = useState([])
-  const db = useSQLiteContext()
 
   const [date, setDate] = useState('')
 
   const onModalClose = async () => {
     setShowCreateHabit(false)
-    setHabits(await getHabits(db, date))
+    retrieve()
   }
 
   const onAddHabit = () => {
     setShowCreateHabit(true)
   }
 
-  const dropTable = async () => {
+  /*const dropTable = async () => {
     try {
       await db.runAsync(`DROP TABLE IF EXISTS Habits`)
       await db.runAsync(`DROP TABLE IF EXISTS HabitHistory`)
+      await db.runAsync(`DROP TABLE IF EXISTS HabitLabel`)
+      await db.runAsync(`DROP TABLE IF EXISTS HabitLocation`)
     } catch (error) {
       console.log("Error dropping table", error)
     }
-  }
+  }*/
 
   const retrieve = async() => {
     setDate(await dateToSQL(new Date()))
-    setHabits(await getHabits(db, date))
+    
+    setHabits(await habitsRepo.initializeHabits(date))
+
+    console.log("Todays SQL date: ", date)
     console.log("Habits retrieved:", habits)
   }
 
@@ -80,7 +86,7 @@ const Home = () => {
               tintColor={tailwindColors["highlight"]["90"]}
             />
           </TouchableOpacity>
-          <TouchableOpacity onPress={dropTable} className="w-10 h-10 bg-slate-600"><Text>DROP TABLE Habits</Text></TouchableOpacity>
+          
           <HabitCreator isVisible={showCreateHabit} onClose={onModalClose} />
         </View>
         

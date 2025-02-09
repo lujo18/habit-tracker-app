@@ -5,20 +5,24 @@ import {
   ScrollView,
   Alert,
 } from "react-native";
-import React, {memo, useCallback, useState } from "react";
+import React, {memo, useCallback, useEffect, useState } from "react";
 import TextButton from "./TextButton";
 import BuildInput from "./BuildInput";
 import icons from "../constants/icons";
 import tailwindConfig from "../tailwind.config";
 import ColorSwatch from "./ColorSwatch";
-import { useSQLiteContext } from "expo-sqlite";
+
 
 import BuildScreen from "./BuildScreen";
 import QuitScreen from "./QuitScreen";
 import TallyScreen from "./TallyScreen";
 import ColorPicker from "./ColorPicker";
+import { getHabitLabels, getHabitLocations } from "../db/sqliteManager";
+
+import { HabitsRepository } from "../db/sqliteManager";
 
 const habitColors = tailwindConfig.theme.extend.colors["habitColors"];
+
 
 const goalOption = [
   {
@@ -56,19 +60,13 @@ const repeatOption = [
   },
 ];
 
-const labelOption = [
-  {
-    name: "minutes",
-  },
-  {
-    name: "hours",
-  },
-  {
-    name: "pages",
-  },
-];
+
   
 const HabitCreator = ({ isVisible, onClose }) => {
+  // Database repo connection
+  const habitRepo = new HabitsRepository()
+
+
   const [habitName, setHabitName] = useState("");
   const [habitSetting, setHabitSetting] = useState("build");
   const [selectedColor, setSelectedColor] = useState(
@@ -78,10 +76,21 @@ const HabitCreator = ({ isVisible, onClose }) => {
   const [habitLimit, setHabitLimit] = useState("");
   const [habitLabel, setHabitLabel] = useState("");
   const [habitRepeat, setHabitRepeat] = useState("");
+  const [habitLocation, setHabitLocation] = useState("");
   const [openMenu, setOpenMenu] = useState(0);
 
-  const db = useSQLiteContext();
 
+  const [labelOption, setLabelOption] = useState([])
+  const [locationOption, setLocationOption] = useState([])
+
+  const retrieveOptions = async () => {
+    setLabelOption(await getHabitLabels(db));
+    setLocationOption(await getHabitLocations(db));
+  }
+
+  useEffect(() => {
+    retrieveOptions()
+  }, [])
 
   const changeHabitGoal = useCallback((value) => {
     setHabitGoal(value);
@@ -96,18 +105,17 @@ const HabitCreator = ({ isVisible, onClose }) => {
     }
 
     try {
-      const results = await db.runAsync(
-        `INSERT INTO Habits (name, setting, repeat, label, limitType, referenceGoal, color) VALUES (?, ?, ?, ?, ?, ?, ?)`,
-        [
-          habitName,
-          habitSetting,
-          habitRepeat,
-          habitLabel,
-          habitLimit,
-          habitGoal,
-          selectedColor,
-        ]
-      );
+      await habitRepo.createHabit([
+        habitName,
+        habitSetting,
+        habitRepeat,
+        habitLabel,
+        habitLimit,
+        habitGoal,
+        selectedColor,
+      ])
+
+    
       console.log("results", results);
       console.log("Success", "Habit inserted successfully!");
     } catch (error) {
@@ -151,6 +159,11 @@ const HabitCreator = ({ isVisible, onClose }) => {
     setOpenMenu(0);
   };
 
+  const setLocation = (value) => {
+    setHabitLocation(value);
+    setOpenMenu(0);
+  };
+
   const handleOpen = (id) => {
     setOpenMenu(id === openMenu ? 0 : id);
   };
@@ -166,15 +179,18 @@ const HabitCreator = ({ isVisible, onClose }) => {
             habitLabel={habitLabel}
             habitRepeat={habitRepeat}
             habitGoal={habitGoal}
+            habitLocation={habitLocation}
             onGoalChange={changeHabitGoal}
             openMenu={openMenu}
             handleOpen={handleOpen}
             setType={setType}
             setLabel={setLabel}
             setRepeat={setRepeat}
+            setLocation={setLocation}
             goalOption={goalOption}
             repeatOption={repeatOption}
             labelOption={labelOption}
+            locationOption={locationOption}
           />
         );
       case "quit":
@@ -204,7 +220,6 @@ const HabitCreator = ({ isVisible, onClose }) => {
         <View className="justify-center items-center">
           <Text className="text-highlight text-2xl">Create Habit</Text>
         </View>
-
         <ScrollView>
           <View className="flex-1 h-[100vh] justify-start">
             <View className="my-6">
@@ -215,7 +230,7 @@ const HabitCreator = ({ isVisible, onClose }) => {
                 inputStyles="text-lg"
               />
             </View>
-            <View className="gap-2 flex-1">
+            <View className="gap-2">
               <Text className="text-md text-highlight-60 mb-2 border-b border-background-80">
                 Habit Type
               </Text>
@@ -248,14 +263,15 @@ const HabitCreator = ({ isVisible, onClose }) => {
                   onPress={() => handlePress("tally")}
                 />
               </View>
-                  
+                
+            </View>
+            <View>
               <RenderHabitSettingPage />
-              
             </View>
             <Text className="text-md text-highlight-60 mb-2 border-b border-background-80">
-              Habit Style
+              Color Theme
             </Text>
-            <View className="flex-1">
+            <View className="">
 
               <ColorPicker
                 habitColors={habitColors}

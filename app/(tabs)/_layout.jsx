@@ -3,9 +3,8 @@ import { Tabs } from 'expo-router'
 
 import icons from '../../constants/icons'
 import tailwindConfig from '../../tailwind.config'
-import { useSQLiteContext } from 'expo-sqlite'
 import { useEffect } from 'react'
-import { checkDates } from '../../sqliteManager'
+
 
 const tailwindColors = tailwindConfig.theme.extend.colors
 

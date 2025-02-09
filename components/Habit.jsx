@@ -5,13 +5,12 @@ import icons from '../constants/icons'
 import { Canvas, Rect, SweepGradient, TwoPointConicalGradient, Skia, Shader, vec, rotate } from '@shopify/react-native-skia'
 import Animated, { interpolate, useSharedValue, withReanimatedTimer, withRepeat, withTiming, Easing, withSpring } from 'react-native-reanimated'
 import tailwindConfig from '../tailwind.config'
-import { getCompletion, setCompletion } from '../sqliteManager'
-import { useSQLiteContext } from 'expo-sqlite'
+import { getCompletion, setCompletion } from '../db/sqliteManager'
 import { DateContext } from '../app/(tabs)/home'
 
 
 const Habit = ({data}) => {
-    const db = useSQLiteContext()
+
 
     const [amount, setAmount] = useState(0)
     const timer = useRef(null)
@@ -36,7 +35,7 @@ const Habit = ({data}) => {
    
 
     useEffect(() => {
-        fetchCompletion()
+         fetchCompletion()
     }, [])
 
     useEffect(() => {

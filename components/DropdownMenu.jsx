@@ -1,17 +1,24 @@
 import { View, Text, TouchableOpacity, Image, ScrollView } from 'react-native'
 import React, { memo, useEffect, useState } from 'react'
 import icons from '../constants/icons'
-import { Portal } from 'react-native-paper'
+import SingleInputModal from './SingleInputModal'
 
 
 
 
-const DropdownMenu = ({value, onChange, options, handleOpen, id, isOpen}) => {
+
+const DropdownMenu = ({value, onChange, options, handleOpen, id, isOpen, isCustom, ...props}) => {
 
     const toggleDropdown = () => {
         handleOpen(id)
     }
 
+    const [modalOpen, setModalOpen] = useState(false)
+
+
+    const handleModalOpen = () => {
+        setModalOpen(!modalOpen)
+    }
 
     /*useEffect(() => {
 
@@ -63,6 +70,40 @@ const DropdownMenu = ({value, onChange, options, handleOpen, id, isOpen}) => {
                                 </TouchableOpacity>
                             ))
                         }
+                        { isCustom && (
+                            <View>
+                                <TouchableOpacity
+                                    key={'custom'}
+                                    className="mb-2 p-3 bg-habitColors-hBlue items-center justify-center rounded-xl flex-row gap-2 top-0"
+                                    onPress={(e) => {
+                                        e.stopPropagation()
+                                        handleModalOpen()
+                                    }}
+                                >
+                                    <View>
+                                        <Image
+                                            source={icons.add}
+                                            className="w-8 h-8"
+                                            resizeMode='contain'
+                                            style={{tintColor:"#fff"}}
+                                        />
+                                    </View>
+                                    <View className="gap-1">
+                                        <Text className="text-highlight-90 text-xl">Add Option</Text>
+                                
+                                    </View>
+                                </TouchableOpacity>
+                                <SingleInputModal 
+                                    isVisible={modalOpen}
+                                    handleModalOpen={handleModalOpen}
+                                    header="Create new option"
+                                    placeholder="Enter name"
+                                    submitValue="Create"
+                                    handleSubmit={props.handleCreateNew}
+                                />
+                            </View>
+
+                        )}
                 
                     </View>
                 </ScrollView>
