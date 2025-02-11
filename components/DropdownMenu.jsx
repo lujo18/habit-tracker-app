@@ -98,7 +98,7 @@ const DropdownMenu = ({value, onChange, options, handleOpen, id, isOpen, isCusto
                                     handleModalOpen={handleModalOpen}
                                     header="Create new option"
                                     placeholder="Enter name"
-                                    submitValue="Create"
+                                    submitButtonText="Create"
                                     handleSubmit={handleCreateNew}
                                 />
                             </View>

@@ -44,7 +44,9 @@ const BuildScreen = memo(
     goalOption,
     labelOption,
     repeatOption,
-    locationOption
+    locationOption,
+    addHabitLabel,
+    addHabitLocation
   }) => {
     const habitSettingRepo = new HabitSettingRepository();
 
@@ -68,7 +70,7 @@ const BuildScreen = memo(
             isOpen={openMenu === 2}
             id={2}
             isCustom={true}
-            handleCreateNew={habitSettingRepo.addHabitLabel}
+            handleCreateNew={addHabitLabel}
           />
         </View>
         <View className="flex-row items-center gap-4">
@@ -93,7 +95,7 @@ const BuildScreen = memo(
             isOpen={openMenu === 1}
             id={1}
             isCustom={true}
-            handleCreateNew={habitSettingRepo.addHabitLocation}
+            handleCreateNew={addHabitLocation}
           />
         </View>
       </View>

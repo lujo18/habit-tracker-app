@@ -1,16 +1,30 @@
 import { View, Text, Modal } from 'react-native'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import BuildInput from './BuildInput'
 import TextButton from './TextButton'
 
 
-const SingleInputModal = ({isVisible, header, handleModalOpen, placeholder, submitValue, handleSubmit}) => {
+const SingleInputModal = ({isVisible, header, handleModalOpen, placeholder, submitButtonText, handleSubmit}) => {
   const [inputValue, setInputValue] = useState("")
 
   const changeValue = (value) => {
     setInputValue(value);
-    console.log("INPUT VAL", inputValue)
   } 
+
+  const submitValue = async () => {
+
+    if (!inputValue) {
+      return;
+    }
+    
+    try {
+      await handleSubmit(inputValue)
+    } catch (error) {
+      console.log("Failed to submit SingleInputModal,", error)
+    }
+    await handleModalOpen()
+    
+  }
 
   return (
     <Modal animationType='fade' transparent={true} visible={isVisible}>
@@ -31,9 +45,9 @@ const SingleInputModal = ({isVisible, header, handleModalOpen, placeholder, subm
               containerStyles="flex-1 bg-background-80"
             />
             <TextButton
-              text={submitValue}
+              text={submitButtonText}
               containerStyles={`flex-1 bg-habitColors-hBlue`}
-              onPress={() => {if(inputValue) handleSubmit(inputValue)}}
+              onPress={() => submitValue()}
             />
           </View>
         </View>

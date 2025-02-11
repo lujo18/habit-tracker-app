@@ -32,11 +32,14 @@ class BaseRepository {
     this.db = Database.getInstance();
   }
   
-  async executeQuery (query, params) {
+  async executeQuery (query, ...params) {
+    console.log("EQ, Query: ", query)
+    console.log("EQ, Params: ", params)
+
     try {
       const db = await this.db
 
-      const result = await db.execAsync(query, params)
+      const result = await db.runAsync(query, ...params)
 
       return result
     } catch (error) {
@@ -242,7 +245,7 @@ export class HabitSettingRepository extends BaseRepository {
   async getHabitLabels () {
     const query = `--sql
       SELECT name
-      FROM HabitLabel
+      FROM HabitLabel;
     `
 
     try {
@@ -256,11 +259,10 @@ export class HabitSettingRepository extends BaseRepository {
   async getHabitLocations () {
     const query = `--sql
       SELECT name
-      FROM HabitLocation
+      FROM HabitLocation;
     `
 
     try {
-      const db = await this.db
 
       return this.getAllQuery(query);
     }
@@ -272,12 +274,14 @@ export class HabitSettingRepository extends BaseRepository {
   
   
   addHabitLabel = async (value) => {
-    query = `--sql
+    const query = `--sql
       INSERT INTO HabitLabel (name) 
-      VALUES (?)
+      VALUES (?);
     `
 
-    params = [value]
+    console.log("VAL", value)
+
+    const params = value
 
     console.log("new ", params)
 
@@ -291,15 +295,15 @@ export class HabitSettingRepository extends BaseRepository {
   
   
   addHabitLocation = async (value) => {
-    query = `--sql
+    const query = `--sql
       INSERT INTO HabitLocation (name)
-      VALUES (?)
+      VALUES (?);
     `
 
-    params = [value]
+    const params = value
 
     try {
-      await this.executeQuery(query, params)
+      return this.executeQuery(query, params)
     } catch (error) {
       console.log("Failed to add new location ", error)
     }

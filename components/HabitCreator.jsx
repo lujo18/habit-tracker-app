@@ -88,6 +88,8 @@ const HabitCreator = ({ isVisible, onClose }) => {
   const retrieveOptions = async () => {
     setLabelOption(await habitSettingRepo.getHabitLabels());
     setLocationOption(await habitSettingRepo.getHabitLocations());
+
+    
   }
 
   useEffect(() => {
@@ -169,6 +171,16 @@ const HabitCreator = ({ isVisible, onClose }) => {
     setOpenMenu(id === openMenu ? 0 : id);
   };
 
+  const addHabitLabel = async (value) => {
+    await habitSettingRepo.addHabitLabel(value)
+    retrieveOptions()
+  }
+
+  const addHabitLocation = async (value) => {
+    await habitSettingRepo.addHabitLocation(value)
+    retrieveOptions()
+  }
+
 
   const RenderHabitSettingPage = useCallback(() => {
     console.log("reload");
@@ -192,6 +204,8 @@ const HabitCreator = ({ isVisible, onClose }) => {
             repeatOption={repeatOption}
             labelOption={labelOption}
             locationOption={locationOption}
+            addHabitLabel={addHabitLabel}
+            addHabitLocation={addHabitLocation}
           />
         );
       case "quit":
@@ -212,7 +226,7 @@ const HabitCreator = ({ isVisible, onClose }) => {
       default:
         return <Text>Select an option</Text>;
     }
-  }, [habitSetting, habitLimit, habitLabel, habitRepeat, openMenu]);  
+  }, [habitSetting, habitLimit, habitLabel, habitRepeat, openMenu, labelOption, locationOption]);  
 
 
   return (
