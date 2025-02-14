@@ -40,7 +40,7 @@ const Habit = ({data}) => {
     }, [])
 
     useEffect(() => {
-        console.log("amount", amount)
+        //console.log("amount", amount)
         curAmount.current = amount
         historyRepo.setCompletion(id, curAmount.current, selectedDate)
         progressValue.set(amount)

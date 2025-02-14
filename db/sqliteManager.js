@@ -33,8 +33,8 @@ class BaseRepository {
   }
   
   async executeQuery (query, ...params) {
-    console.log("EQ, Query: ", query)
-    console.log("EQ, Params: ", params)
+    //console.log("EQ, Query: ", query)
+    //console.log("EQ, Params: ", params)
 
     try {
       const db = await this.db
@@ -48,12 +48,12 @@ class BaseRepository {
     
   }
 
-  async getAllQuery (query, params) {
+  async getAllQuery (query, ...params) {
     try {
       const db = await this.db
-      const result = await db.getAllAsync(query, params)
+      const result = await db.getAllAsync(query, ...params)
 
-      console.log("getAllQuery rows:", result);
+      //console.log("getAllQuery rows:", result);
       
       return result
     } catch (error) {
@@ -70,6 +70,10 @@ export class DevRepository extends BaseRepository {
     try {
       
       const db = await this.db
+      await db.runAsync(`DELETE FROM HabitHistory`)
+      await db.runAsync(`DELETE FROM Habits`)
+      await db.runAsync(`DELETE FROM HabitLabel`)
+      await db.runAsync(`DELETE FROM HabitLocation`)
       await db.runAsync(`DROP TABLE IF EXISTS Habits`)
       await db.runAsync(`DROP TABLE IF EXISTS HabitHistory`)
       await db.runAsync(`DROP TABLE IF EXISTS HabitLabel`)
@@ -100,7 +104,7 @@ export class HabitsRepository extends BaseRepository {
 
     params = data;
 
-    console.log("params", params)
+    console.log("Create Habit Params", params)
 
     /* Data array
         habitName,
@@ -114,7 +118,7 @@ export class HabitsRepository extends BaseRepository {
     */
 
     try {
-      await this.executeQuery(query, ["ygh", "build", "day", "minutes", "atleast", "2", "#882C40", "bedroom"])
+      await this.executeQuery(query, params)
     } catch (error) {
       console.log("Failed to insert habit")
     }
@@ -127,15 +131,17 @@ export class HabitsRepository extends BaseRepository {
   
       await this.createLogs(results)
 
-      const history = await this.executeQuery(
+      const history = await this.getAllQuery(
         `SELECT * FROM HabitHistory`
       )
+      
+      console.log("HABIT HISTORY: ", history)
   
       const updatedResults = await this.queryHabits(date)
       
       //await checkDates(results)
   
-      //console.log("Fetched results:", updatedResults)
+      console.log("Fetched results:", updatedResults)
       return updatedResults
   
     } catch (error) {
@@ -145,6 +151,8 @@ export class HabitsRepository extends BaseRepository {
 
   
   async queryHabits(date) {
+    console.log("Query date: ", date)
+
     const query = `--sql
       SELECT Habits.*, b.completion, b.goal, b.date
       FROM Habits
@@ -163,7 +171,13 @@ export class HabitsRepository extends BaseRepository {
       date
     ]
 
-    return this.getAllQuery(query, params)
+    
+
+    try {
+      return this.getAllQuery(query, params)
+    } catch (error) {
+      console.log("Failed to retrieve habits ", error)
+    }
   }
 
   async createLogs(habits) {
@@ -184,9 +198,6 @@ export class HabitsRepository extends BaseRepository {
             habit.referenceGoal,
             await dateToSQL(new Date())
         ]
-
-        console.log("Query", query)
-        console.log("Params", params)
       
         return this.executeQuery(query, params)
       }
@@ -197,7 +208,7 @@ export class HabitsRepository extends BaseRepository {
 
 export class HabitHistoryRepository extends BaseRepository {
   async setCompletion (id, value, date) {
-    console.log("set completion", value)
+    //console.log("set completion", value)
 
     const query = `--sql
       UPDATE HabitHistory
@@ -206,6 +217,8 @@ export class HabitHistoryRepository extends BaseRepository {
     `
 
     const params = [value ? value : 0, id]
+
+    console.log("params", ...params)
 
     return this.executeQuery(query, params)
   }
@@ -271,19 +284,13 @@ export class HabitSettingRepository extends BaseRepository {
     }
   }
   
-  
-  
   addHabitLabel = async (value) => {
     const query = `--sql
       INSERT INTO HabitLabel (name) 
       VALUES (?);
     `
 
-    console.log("VAL", value)
-
     const params = value
-
-    console.log("new ", params)
 
     try {
       await this.executeQuery(query, params)

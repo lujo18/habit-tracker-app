@@ -18,8 +18,10 @@ export const SCHEMA_SQL = `--sql
     habitId INTEGER NOT NULL,
     completion INTEGER,
     goal INTEGER,
-    date DATE UNIQUE,
+    date DATE,
     FOREIGN KEY (habitId) REFERENCES Habits(id)
+
+    UNIQUE (habitId, date)
   );
 
   CREATE TABLE IF NOT EXISTS HabitLabel (

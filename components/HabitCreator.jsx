@@ -81,6 +81,8 @@ const HabitCreator = ({ isVisible, onClose }) => {
   const [habitLocation, setHabitLocation] = useState("");
   const [openMenu, setOpenMenu] = useState(0);
 
+  const [startTime, setStartTime] = useState(new Date());
+
 
   const [labelOption, setLabelOption] = useState([])
   const [locationOption, setLocationOption] = useState([])
@@ -167,6 +169,10 @@ const HabitCreator = ({ isVisible, onClose }) => {
     setOpenMenu(0);
   };
 
+  const setQuitStart = (value) => {
+    setStartTime(value)
+  }
+
   const handleOpen = (id) => {
     setOpenMenu(id === openMenu ? 0 : id);
   };
@@ -209,7 +215,12 @@ const HabitCreator = ({ isVisible, onClose }) => {
           />
         );
       case "quit":
-        return <QuitScreen />;
+        return (
+          <QuitScreen 
+            startTime={startTime}
+            setStartTime={setQuitStart}
+          />
+        )
       case "tally":
         return (
           <TallyScreen

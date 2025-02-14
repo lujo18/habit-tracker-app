@@ -19,6 +19,7 @@ const Home = () => {
 
   const [showCreateHabit, setShowCreateHabit] = useState(false)
   const [habits, setHabits] = useState([])
+  const [isLoading, setIsLoading] = useState(true)
 
   const [date, setDate] = useState('')
 
@@ -43,7 +44,7 @@ const Home = () => {
   }*/
 
   const retrieve = async() => {
-    devRepo.TestQuery()
+    setIsLoading(true)
 
     setDate(await dateToSQL(new Date()))
     
@@ -51,14 +52,18 @@ const Home = () => {
 
     console.log("Todays SQL date: ", date)
     console.log("Habits retrieved:", habits)
+
+    setIsLoading(false)
   }
 
   useEffect(() => {
+  
     retrieve()
+     
   }, [])
 
   const RepeatHeaders = useCallback(({ group }) => {
-    console.log("Headers re rendered")
+    //console.log("Headers re rendered")
     return (
       <View className="flex-row items-center gap-2">
         <Image
@@ -70,6 +75,12 @@ const Home = () => {
       </View>
     )
   }, [])
+
+  if (isLoading) {
+    return (
+      <Text>Loading</Text>
+    )
+  }
 
   return (
     <DateContext.Provider value={date}>
@@ -94,7 +105,7 @@ const Home = () => {
           <HabitCreator isVisible={showCreateHabit} onClose={onModalClose} />
         </View>
         
-        {/*<FlatList
+        <FlatList
           data={[
             {
               label: "Daily",
@@ -139,15 +150,8 @@ const Home = () => {
           }}
 
           
-        />*/}
-        <FlatList
-          data={habits}
-          keyExtractor={(item) => item.id.toString()}
-          renderItem={({ item }) => (
-            <Habit data={item}/> 
-          )}
-          
         />
+      
       </SafeAreaView>
     </DateContext.Provider>
   )

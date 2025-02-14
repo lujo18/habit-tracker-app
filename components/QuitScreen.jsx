@@ -1,7 +1,10 @@
-import { View, Text } from 'react-native'
-import React, { memo } from 'react'
+import { View, Text} from 'react-native'
+import React, { memo, useState } from 'react'
+import DatePicker from 'react-native-date-picker'
 
-const QuitScreen = memo(() => {
+const QuitScreen = memo((startTime, setStartTime) => {
+
+    const [date, setDate] = useState(new Date())
     return(
         <View className="p-5 gap-4">
             <View>
@@ -9,7 +12,7 @@ const QuitScreen = memo(() => {
             </View>
             <View className="flex-row items-center gap-4">
                 <Text className="text-xl text-highlight-60">Start time:</Text>
-                
+                <DatePicker mode="datetime" date={date} onDateChange={setDate} />
             </View>
 
         </View>
