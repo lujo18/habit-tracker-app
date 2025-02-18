@@ -98,13 +98,13 @@ export class DevRepository extends BaseRepository {
 export class HabitsRepository extends BaseRepository {
 
   async createHabit(data) {
-    query = `--sql
+    const query = `--sql
     INSERT INTO Habits (name, setting, repeat, label, limitType, referenceGoal, color, location) VALUES (?, ?, ?, ?, ?, ?, ?, ?)
     `
 
-    params = data;
+    const params = data;
 
-    console.log("Create Habit Params", params)
+    //console.log("Create Habit Params", params)
 
     /* Data array
         habitName,
@@ -136,6 +136,7 @@ export class HabitsRepository extends BaseRepository {
       )
       
       console.log("HABIT HISTORY: ", history)
+      //console.log("Date: ", date)
   
       const updatedResults = await this.queryHabits(date)
       
@@ -151,7 +152,7 @@ export class HabitsRepository extends BaseRepository {
 
   
   async queryHabits(date) {
-    console.log("Query date: ", date)
+    //console.log("Query date: ", date)
 
     const query = `--sql
       SELECT Habits.*, b.completion, b.goal, b.date
@@ -171,8 +172,6 @@ export class HabitsRepository extends BaseRepository {
       date
     ]
 
-    
-
     try {
       return this.getAllQuery(query, params)
     } catch (error) {
@@ -182,10 +181,9 @@ export class HabitsRepository extends BaseRepository {
 
   async createLogs(habits) {
     for (let habit of habits) {
-      console.log('Checkpoint 3')
-
+      
       if (habit.date == null || await determineRepetition(habit.repeat, habit.date)) {
-        console.log("No history", habit)
+        //console.log("No history", habit)
 
         const query = `--sql
           INSERT OR IGNORE INTO HabitHistory (habitId, completion, goal, date)
@@ -199,11 +197,15 @@ export class HabitsRepository extends BaseRepository {
             await dateToSQL(new Date())
         ]
       
-        return this.executeQuery(query, params)
+        try {
+          return this.executeQuery(query, params)
+        }
+        catch (error) {
+          console.log("Failed to create habit log", error)
+        }
       }
     }
   }
-
 }
 
 export class HabitHistoryRepository extends BaseRepository {
@@ -213,18 +215,18 @@ export class HabitHistoryRepository extends BaseRepository {
     const query = `--sql
       UPDATE HabitHistory
       SET completion = ?
-      WHERE habitId = ?
+      WHERE habitId = ? AND date = ?
     `
 
-    const params = [value ? value : 0, id]
+    const params = [value ? value : 0, id, date]
 
-    console.log("params", ...params)
+    //console.log("params", ...params)
 
     return this.executeQuery(query, params)
   }
   
   async getCompletion (id, date) {
-    console.log("get completion")
+    //console.log("get completion")
 
     const query = `--sql
       SELECT completion
@@ -240,12 +242,11 @@ export class HabitHistoryRepository extends BaseRepository {
       )
     `
 
-    const params = [id, id, Date(date)]
+    const params = [id, id, date]
 
     try {
       const results = await this.getAllQuery(query, params)
-       
-      console.log("completion history", results[0]['completion'])
+      //console.log("completion history", results[0]['completion'])
       return results[0]['completion']
     } catch (error) {
       console.log("Failed to fetch completion history", error)
@@ -317,18 +318,43 @@ export class HabitSettingRepository extends BaseRepository {
   }
 }
 
+function isInNextWeek(date, today) {
+  const start1 = startOfWeek(date);
+  const start2 = startOfWeek(today);
+
+  const oneWeekMs = 7 * 24 * 60 * 60 * 1000;
+
+  console.log("Previous Date: ", start1);
+  console.log("Current date: ", start2)
+  console.log("Difference: ", start2 - start1)
+  console.log("One week ms: ", oneWeekMs)
+
+  
+  // Checks if the difference is exactly 7 days (in milliseconds)
+  return start2 - start1 == oneWeekMs;
+}
+
+const startOfWeek = (date) => {
+  const d = new Date(date);
+
+  const day = d.getDay() === 0 ? 7 : d.getDay() // Treats Sunday (0) as 7
+  d.setHours(0, 0, 0, 0); // Clears out all time values
+
+  d.setDate(d.getDate() - (day - 1)); // Subtracts (day - 1) to get to Monday
+  return d;
+}
+
 async function determineRepetition(repeat, date) {
 
   const today = await dateToSQL(new Date());
 
   if (repeat === "day") {
     if (date.split('-')[2] != today.split('-')[2]) {
-      console.log("DAYS NOT EQUAL: ", date.split('-')[2], today.split('-')[2])
       return true;
     }
   }
   else if (repeat === "week") {
-    if (Math.floor(date.split('-')[2] / 7) != Math.floor(today.split('-')[2] / 7)) {
+    if (await isInNextWeek(date, today)) {
       console.log("returned true in weekly")
       return true;
     }

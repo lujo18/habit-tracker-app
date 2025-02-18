@@ -6,16 +6,22 @@ import Habit from '../../components/Habit'
 import tailwindConfig from '../../tailwind.config'
 import HabitCreator from '../../components/HabitCreator'
 import { dateToSQL, DevRepository, HabitsRepository } from '../../db/sqliteManager'
+import DateSelector from '../../components/DateSelector'
 
 
 const tailwindColors = tailwindConfig.theme.extend.colors
 
 export const DateContext = createContext('')
 
+
 const Home = () => {
   const habitsRepo = new HabitsRepository();
   const devRepo = new DevRepository() //DELETE THIS
   
+  const yearToMs = 365 * 24 * 60 * 60 * 1000;
+  const oneYearAgo = new Date(Date.now() - yearToMs);
+  const oneYearAhead = new Date(Date.now() + yearToMs);
+
 
   const [showCreateHabit, setShowCreateHabit] = useState(false)
   const [habits, setHabits] = useState([])
@@ -23,9 +29,17 @@ const Home = () => {
 
   const [date, setDate] = useState('')
 
+  const setCurrentDate = async (value) => {
+    setDate(await dateToSQL(value))
+  }
+
+  useEffect(() => {
+    queryHabits(date)
+  }, [date]);
+
   const onModalClose = async () => {
     setShowCreateHabit(false)
-    retrieve()
+    queryHabits(date)
   }
 
   const onAddHabit = () => {
@@ -43,23 +57,24 @@ const Home = () => {
     }
   }*/
 
+  const queryHabits = async (date) => {
+    setHabits(await habitsRepo.initializeHabits(date))
+  }
+
   const retrieve = async() => {
     setIsLoading(true)
 
-    setDate(await dateToSQL(new Date()))
-    
-    setHabits(await habitsRepo.initializeHabits(date))
-
-    console.log("Todays SQL date: ", date)
-    console.log("Habits retrieved:", habits)
+    const sqlDate = await dateToSQL(new Date())
+    setDate(sqlDate)
+    queryHabits(sqlDate)
+    //console.log("Todays SQL date: ", date)
+    //console.log("Habits retrieved:", habits)
 
     setIsLoading(false)
   }
 
   useEffect(() => {
-  
     retrieve()
-     
   }, [])
 
   const RepeatHeaders = useCallback(({ group }) => {
@@ -103,6 +118,10 @@ const Home = () => {
           <TouchableOpacity className="w-10 h-10 bg-red-50" onPress={() => {devRepo.DropTables()}}><Text>Drop Table</Text></TouchableOpacity>
           
           <HabitCreator isVisible={showCreateHabit} onClose={onModalClose} />
+        </View>
+
+        <View>
+          <DateSelector start={oneYearAgo} end={oneYearAhead} currentDate={date} setDate={setCurrentDate} />
         </View>
         
         <FlatList

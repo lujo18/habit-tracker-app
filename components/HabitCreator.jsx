@@ -122,7 +122,7 @@ const HabitCreator = ({ isVisible, onClose }) => {
         habitLocation
       ])
 
-      console.log("\n\nSuccess", "Habit inserted successfully!\n\n");
+      console.log("Success", "Habit inserted successfully!");
     } catch (error) {
       console.log("Insert error", error);
     }
@@ -189,7 +189,7 @@ const HabitCreator = ({ isVisible, onClose }) => {
 
 
   const RenderHabitSettingPage = useCallback(() => {
-    console.log("reload");
+    //console.log("reload");
     switch (habitSetting) {
       case "build":
         return (

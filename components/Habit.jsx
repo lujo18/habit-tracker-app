@@ -33,17 +33,18 @@ const Habit = ({data}) => {
         curAmount.current = amount
     }
 
-   
-
     useEffect(() => {
          fetchCompletion()
     }, [])
 
-    useEffect(() => {
-        //console.log("amount", amount)
+    async function updateHabitCompletion() {
         curAmount.current = amount
-        historyRepo.setCompletion(id, curAmount.current, selectedDate)
+        await historyRepo.setCompletion(id, curAmount.current, selectedDate)
         progressValue.set(amount)
+    }
+
+    useEffect(() => {
+        updateHabitCompletion()
     }, [amount])
 
     const addMetric = () => {
