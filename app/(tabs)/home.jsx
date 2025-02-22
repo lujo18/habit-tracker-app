@@ -6,12 +6,13 @@ import Habit from '../../components/Habit'
 import tailwindConfig from '../../tailwind.config'
 import HabitCreator from '../../components/HabitCreator'
 import { dateToSQL, DevRepository, HabitsRepository } from '../../db/sqliteManager'
-import DateSelector from '../../components/DateSelector'
-
+import DateSelector from '../../components/DateSelector' 
+import { useLoading } from '../../components/LoadingProvider'
 
 const tailwindColors = tailwindConfig.theme.extend.colors
 
 export const DateContext = createContext('')
+
 
 
 const Home = () => {
@@ -20,22 +21,19 @@ const Home = () => {
   
   const yearToMs = 365 * 24 * 60 * 60 * 1000;
   const oneYearAgo = new Date(Date.now() - yearToMs);
-  const oneYearAhead = new Date(Date.now() + yearToMs);
+  const oneYearAhead = new Date(Date.now());
 
+  const { showLoading, hideLoading, isLoading } = useLoading();
+  
 
   const [showCreateHabit, setShowCreateHabit] = useState(false)
   const [habits, setHabits] = useState([])
-  const [isLoading, setIsLoading] = useState(true)
 
-  const [date, setDate] = useState('')
+  const [date, setDate] = useState("")
 
   const setCurrentDate = async (value) => {
     setDate(await dateToSQL(value))
   }
-
-  useEffect(() => {
-    queryHabits(date)
-  }, [date]);
 
   const onModalClose = async () => {
     setShowCreateHabit(false)
@@ -46,36 +44,37 @@ const Home = () => {
     setShowCreateHabit(true)
   }
 
-  /*const dropTable = async () => {
-    try {
-      await db.runAsync(`DROP TABLE IF EXISTS Habits`)
-      await db.runAsync(`DROP TABLE IF EXISTS HabitHistory`)
-      await db.runAsync(`DROP TABLE IF EXISTS HabitLabel`)
-      await db.runAsync(`DROP TABLE IF EXISTS HabitLocation`)
-    } catch (error) {
-      console.log("Error dropping table", error)
-    }
-  }*/
-
   const queryHabits = async (date) => {
+    showLoading()
+
     setHabits(await habitsRepo.initializeHabits(date))
-  }
 
-  const retrieve = async() => {
-    setIsLoading(true)
-
-    const sqlDate = await dateToSQL(new Date())
-    setDate(sqlDate)
-    queryHabits(sqlDate)
-    //console.log("Todays SQL date: ", date)
-    //console.log("Habits retrieved:", habits)
-
-    setIsLoading(false)
+    setTimeout(() => {
+      hideLoading()
+    }, 500);
   }
 
   useEffect(() => {
-    retrieve()
-  }, [])
+    const initialize = async() => {
+      const initDate = async () => {
+        const sqlDate = await dateToSQL(new Date())
+        setDate(sqlDate)  
+      }
+
+      if (!date) {
+        console.log("INIT DATE")
+        await initDate()
+      }
+      else {
+        console.log("INITIALIZE")
+        await queryHabits(date);
+      }
+    }
+
+    initialize()
+  }, [date]);
+
+
 
   const RepeatHeaders = useCallback(({ group }) => {
     //console.log("Headers re rendered")
@@ -91,11 +90,6 @@ const Home = () => {
     )
   }, [])
 
-  if (isLoading) {
-    return (
-      <Text>Loading</Text>
-    )
-  }
 
   return (
     <DateContext.Provider value={date}>
@@ -157,18 +151,16 @@ const Home = () => {
                     data={filteredHabits}
                     keyExtractor={(item) => item.id.toString()}
                     renderItem={({ item }) => (
-                      <Habit data={item}/> 
+                      <Habit key={item.id.toString()} data={item}/> 
                     )}
                     ListHeaderComponent={() => (
-                      <RepeatHeaders group={group} />
+                      <RepeatHeaders group={group}/>
                     )}
                   />
                 )
               }
             
           }}
-
-          
         />
       
       </SafeAreaView>

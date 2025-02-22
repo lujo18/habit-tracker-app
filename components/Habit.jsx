@@ -1,5 +1,5 @@
-import { View, Text, Image, TouchableOpacity } from 'react-native'
-import React, { useContext, useEffect, useRef, useState } from 'react'
+import { View, Text, Image, TouchableOpacity, ActivityIndicator } from 'react-native'
+import React, { memo, useContext, useEffect, useRef, useState } from 'react'
 import icons from '../constants/icons'
 
 import { Canvas, Rect, SweepGradient, TwoPointConicalGradient, Skia, Shader, vec, rotate } from '@shopify/react-native-skia'
@@ -7,16 +7,18 @@ import Animated, { interpolate, useSharedValue, withReanimatedTimer, withRepeat,
 import tailwindConfig from '../tailwind.config'
 import { HabitHistoryRepository } from '../db/sqliteManager'
 import { DateContext } from '../app/(tabs)/home'
+import { useLoading } from './LoadingProvider'
 
 
-const Habit = ({data}) => {
-    const historyRepo = new HabitHistoryRepository()
 
-    const [amount, setAmount] = useState(0)
-    const timer = useRef(null)
-    const curAmount = useRef(null)
+const Habit = memo(({data}) => {
+    const historyRepo = new HabitHistoryRepository();
 
-    const {id, name, setting, repeat, type, label, color, goal} = data
+    const [amount, setAmount] = useState(0);
+    const timer = useRef(null); // FIX ME
+    const curAmount = useRef(null); 
+
+    const {id, name, completion, setting, repeat, type, label, color, goal, location, date} = data
 
     const [canvasSize, setCanvasSize] = useState({ width: 0, height: 0 })
 
@@ -27,15 +29,24 @@ const Habit = ({data}) => {
     const tailwindColors = tailwindConfig.theme.extend.colors
 
     const selectedDate = useContext(DateContext)
-
-    const fetchCompletion = async () => {
-        setAmount(await historyRepo.getCompletion(id, selectedDate))
-        curAmount.current = amount
-    }
+    const { isLoading } = useLoading();
 
     useEffect(() => {
-         fetchCompletion()
-    }, [])
+        const fetchCompletion = async () => {
+            try {
+                setAmount(await historyRepo.getCompletion(id, selectedDate))
+                curAmount.current = amount;
+            } 
+            catch (error) {
+                console.log("Failed to fetch completion:", error);
+            }
+        }
+
+        if (!isLoading) {
+            fetchCompletion()   
+        }
+        
+    }, [isLoading])
 
     async function updateHabitCompletion() {
         curAmount.current = amount
@@ -47,6 +58,8 @@ const Habit = ({data}) => {
         updateHabitCompletion()
     }, [amount])
 
+
+
     const addMetric = () => {
         if (curAmount.current < goal) {
             setAmount((prev) => prev + 1)
@@ -56,8 +69,8 @@ const Habit = ({data}) => {
         }
     }
 
+    // TODO FIX THIS FUNCTIONALITY
     const longPressAdd = () => {
-
         if (timer.current) clearInterval(timer.current)
 
         timer.current = setInterval(() => {
@@ -82,18 +95,26 @@ const Habit = ({data}) => {
         }
     }
 
-    const AddButton = () => {
+    const AddButton = memo(() => {
         return (
             <TouchableOpacity onPressOut={() => {stopTimer()}} delayLongPress={500} onLongPress={() => {longPressAdd()}} onPress={addMetric} className={`w-16 h-16 overflow-hidden rounded-2xl justify-center items-center ${amount < goal ? "bg-background-80" : "bg-highlight-60"}`} disabled={amount===goal}>
-                <Image
-                    source={amount < goal ? icons.addBox : icons.check}
-                    resizeMode='cover'
-                    className="w-[3rem] h-[3rem]"
-                    tintColor={amount < goal ? tailwindColors['highlight']['80'] : tailwindColors['background']['90']}
-                />
+                {
+                    isLoading ? (
+                        <ActivityIndicator size="large" />
+                    ) : (
+                        <Image
+                            source={amount < goal ? icons.addBox : icons.check}
+                            resizeMode='cover'
+                            className="w-[3rem] h-[3rem]"
+                            tintColor={amount < goal ? tailwindColors['highlight']['80'] : tailwindColors['background']['90']}
+                        />
+                    )
+                }
+                
             </TouchableOpacity>  
         )
-    }
+    })
+
 
     return (
         <>
@@ -107,7 +128,7 @@ const Habit = ({data}) => {
                 <View className={`${amount < goal ? "bg-background-90" : `bg-[${color}]`} flex-row w-full p-5 gap-3 rounded-2xl z-10`}>
                     <View className="flex-1">
                         <Text className="text-highlight text-2xl">
-                            {name} {id}
+                            {name}
                         </Text>
                         <Text className="text-highlight-80">
                             {amount} / {goal} {label}
@@ -161,6 +182,6 @@ const Habit = ({data}) => {
             
         </>
     )
-}
+}) 
 
 export default Habit

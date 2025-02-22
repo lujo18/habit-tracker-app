@@ -125,26 +125,25 @@ export class HabitsRepository extends BaseRepository {
   }
 
   async initializeHabits(date) {
+
+    console.log("initializeHabits date: ", date)
     try {
 
       const results = await this.queryHabits(date)
   
-      await this.createLogs(results)
+      await this.createLogs(results, date)
 
-      const history = await this.getAllQuery(
+      const history = await this.getAllQuery( // FIX ME : REMOVE ME LATER
         `SELECT * FROM HabitHistory`
       )
       
-      console.log("HABIT HISTORY: ", history)
-      //console.log("Date: ", date)
+      console.log("HABIT HISTORY: ", history) // UNCOMMENT
   
       const updatedResults = await this.queryHabits(date)
-      
-      //await checkDates(results)
   
-      console.log("Fetched results:", updatedResults)
+      //console.log("Fetched results:", updatedResults) //UNCOMMENT
+
       return updatedResults
-  
     } catch (error) {
       console.log("Error fetching habits:", error)
     }
@@ -179,11 +178,40 @@ export class HabitsRepository extends BaseRepository {
     }
   }
 
-  async createLogs(habits) {
+  async createLogs(habits, date) {
+    console.log("createLogs date: ", date)
+
     for (let habit of habits) {
+
+      //console.log("Habit Name: ", habit.name);
       
-      if (habit.date == null || await determineRepetition(habit.repeat, habit.date)) {
-        //console.log("No history", habit)
+      if (habit.date == null || await determineRepetition(habit.repeat, habit.date, date)) {
+        console.log("Couldn't find history OR the date doesn't match the history: ", habit)
+
+        console.log("DATE", date)
+        console.log("HABIT REPEAT", habit.repeat)
+
+        let logCreationDate;
+        switch (habit.repeat) {
+          case "day":
+            logCreationDate = date
+            break
+          case "week":
+            logCreationDate = await dateToSQL(await startOfWeek(date))
+            break
+          case "month":
+            logCreationDate = await dateToSQL(await startOfMonth(date))
+            break
+          case "year":
+            logCreationDate = await dateToSQL(await startOfYear(date))
+            break
+          default:
+            logCreationDate = date
+        }
+
+        console.log("LOG CREATION DATE ", logCreationDate)
+
+
 
         const query = `--sql
           INSERT OR IGNORE INTO HabitHistory (habitId, completion, goal, date)
@@ -194,15 +222,18 @@ export class HabitsRepository extends BaseRepository {
             habit.id,
             0,
             habit.referenceGoal,
-            await dateToSQL(new Date())
+            logCreationDate
         ]
       
         try {
-          return this.executeQuery(query, params)
+          this.executeQuery(query, params)
         }
         catch (error) {
           console.log("Failed to create habit log", error)
         }
+      }
+      else {
+        //console.log("History already exists OR it the date matches previous history") // UNCOMMENT (Maybe)
       }
     }
   }
@@ -215,10 +246,18 @@ export class HabitHistoryRepository extends BaseRepository {
     const query = `--sql
       UPDATE HabitHistory
       SET completion = ?
-      WHERE habitId = ? AND date = ?
+      WHERE habitId = ? 
+      AND date = (
+        SELECT date
+        FROM HabitHistory
+        WHERE habitId = ?
+        AND date <= ?
+        ORDER BY date DESC
+        LIMIT 1
+      )
     `
 
-    const params = [value ? value : 0, id, date]
+    const params = [value ? value : 0, id, id, date]
 
     //console.log("params", ...params)
 
@@ -318,9 +357,9 @@ export class HabitSettingRepository extends BaseRepository {
   }
 }
 
-function isInNextWeek(date, today) {
-  const start1 = startOfWeek(date);
-  const start2 = startOfWeek(today);
+async function isInNextWeek(date, today) {
+  const start1 = await startOfWeek(date);
+  const start2 = await startOfWeek(today);
 
   const oneWeekMs = 7 * 24 * 60 * 60 * 1000;
 
@@ -334,7 +373,7 @@ function isInNextWeek(date, today) {
   return start2 - start1 == oneWeekMs;
 }
 
-const startOfWeek = (date) => {
+const startOfWeek = async (date) => {
   const d = new Date(date);
 
   const day = d.getDay() === 0 ? 7 : d.getDay() // Treats Sunday (0) as 7
@@ -344,34 +383,50 @@ const startOfWeek = (date) => {
   return d;
 }
 
-async function determineRepetition(repeat, date) {
+const startOfMonth = async (date) => {
+  date = new Date(date)
+  const start = new Date(date.getFullYear(), date.getMonth(), 1)
+  return start
+}
 
-  const today = await dateToSQL(new Date());
+const startOfYear = async (date) => {
+  date = new Date(date)
+  const start = new Date(date.getFullYear(), 0, 1)
+  return start
+}
+
+async function determineRepetition(repeat, date, selectedDate) {
+
 
   if (repeat === "day") {
-    if (date.split('-')[2] != today.split('-')[2]) {
+    if (date.split('-')[2] != selectedDate.split('-')[2]) {
       return true;
     }
   }
   else if (repeat === "week") {
-    if (await isInNextWeek(date, today)) {
+    if (await isInNextWeek(date, selectedDate)) {
       console.log("returned true in weekly")
       return true;
     }
   }
   else if (repeat === "month") {
-    if (date.split('-')[1] != today.split('-')[1]) {
+    if (date.split('-')[1] != selectedDate.split('-')[1]) {
       return true;
     }
   }
   else if (repeat === "year") {
-    if (date.split('-')[0] != today.split('-')[0]) {
+    if (date.split('-')[0] != selectedDate.split('-')[0]) {
       return true;
     }
   }
   return false
 }
 
+/**
+ * Converts a standard JS Date() to the SQLite format YYYY-MM-DD
+ * @param {*} date the JS Date()
+ * @returns JS Date() in YYYY-MM-DD format
+ */
 export async function dateToSQL(date) {
   const year = date.getFullYear()
   const month = String(date.getMonth() + 1).padStart(2, '0')

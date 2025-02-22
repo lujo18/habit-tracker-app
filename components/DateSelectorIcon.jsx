@@ -5,6 +5,10 @@ import { dateToSQL } from '../db/sqliteManager'
 const DateSelectorIcon = ({date, currentDate, setDate}) => {
   const dayAbrev = new Date(date).toLocaleString('en-US', { weekday: 'short' })
   const dayOfMonth = new Date(date).toLocaleString('en-US', { day: '2-digit' })
+  const monthAbrev = new Date(date).toLocaleString('en-US', { month: 'short'})
+  const yearAbrev = new Date(date).toLocaleString('en-US', {year: "numeric"})
+
+  const presentDate = new Date();
 
   const getDate = async () => {
     return await dateToSQL(date)
@@ -12,10 +16,22 @@ const DateSelectorIcon = ({date, currentDate, setDate}) => {
 
   return (
     <TouchableOpacity 
-      className={`w-16 h-16 items-center justify-center bg-background-70 ${new Date(`${currentDate}T00:00:00`).toDateString() === new Date(date).toDateString() && "bg-red-800"}`}
+      className={`w-16 h-16 items-center justify-center bg-background-90 rounded-xl ${new Date(`${currentDate}T00:00:00`).toDateString() === new Date(date).toDateString() && "bg-habitColors-hBlue"}`}
       onPress={() => {setDate(date)}}  
     >
-      <Text className="text-white">{dayAbrev}</Text>
+      {
+        presentDate.getMonth() != date.getMonth() ? (
+          presentDate.getFullYear() != date.getFullYear() ? (
+            <Text className="text-white">{date.getFullYear()}</Text>
+          ) : (
+            <Text className="text-white">{monthAbrev}</Text>
+          )
+        ) : (
+          <Text className="text-white">{dayAbrev}</Text>
+        )
+      }
+
+      
       <Text className="text-white text-2xl">{dayOfMonth}</Text>
     </TouchableOpacity>
   )

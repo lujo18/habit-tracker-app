@@ -19,13 +19,6 @@ const DropdownMenu = ({value, onChange, options, handleOpen, id, isOpen, isCusto
     const handleModalOpen = () => {
         setModalOpen(!modalOpen)
     }
-
-    /*useEffect(() => {
-
-        console.log(isOpen)
-        
-        return () => console.log('unmounted'); 
-    }); */
     
     return (
         <View className="relative flex-1">

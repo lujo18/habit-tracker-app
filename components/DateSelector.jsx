@@ -1,8 +1,18 @@
 import { View, Text, FlatList } from 'react-native'
-import React, { useCallback, useMemo } from 'react'
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import DateSelectorIcon from './DateSelectorIcon'
 
 const DateSelector = ({ start, end, currentDate, setDate }) => {
+
+  const flatListRef = useRef(null);
+
+  useEffect(() => {
+    if (flatListRef.current) {
+      setTimeout(() => {
+        flatListRef.current.scrollToEnd({ animated: false });
+      }, 0);
+    }
+  }, [dates]);
 
   const generateDates = (startDate, endDate) => {
     const dates = [];
@@ -24,12 +34,13 @@ const DateSelector = ({ start, end, currentDate, setDate }) => {
         <DateSelectorIcon date={item} currentDate={currentDate} setDate={setDate} />
       </View>
     )
-  }, [])
+  }, [currentDate])
 
   return (
     <View className="pt-2 pb-2">
       <FlatList
-        data={dates}
+        data={[...dates].reverse()}
+        inverted
         keyExtractor={item => item.getTime().toString()}
         renderItem={renderItem}
         horizontal
@@ -39,5 +50,6 @@ const DateSelector = ({ start, end, currentDate, setDate }) => {
     </View>
   )
 }
+
 
 export default DateSelector

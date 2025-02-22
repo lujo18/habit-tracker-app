@@ -1,57 +1,24 @@
-import { SplashScreen, Stack } from 'expo-router'
-import * as SQLite from 'expo-sqlite'
-import "../global.css"
+import { SplashScreen, Stack } from "expo-router";
 
-import { SCHEMA_SQL } from '../db/createTables'
+import "../global.css";
 
+import { LoadingProvider } from "../components/LoadingProvider";
 
+SplashScreen.preventAutoHideAsync();
 
-
-SplashScreen.preventAutoHideAsync()
-
-SplashScreen.hide()
+SplashScreen.hide();
 
 const RootLayout = () => {
-  
+  console.log("\n\nNEW RUN " + "\n\n");
 
-  /*const createDbIfNeeded = async(db) => {
+  return ( 
+    <LoadingProvider>
+      <Stack>
+        <Stack.Screen name="index" options={{ headerShown: false }} />
+        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+      </Stack>
+    </LoadingProvider> 
+  );
+};
 
-    console.log("Created database if needed")
-    try {
-      await db.execAsync(SCHEMA_SQL)
-
-      console.log("Successfully created table")
-    } catch (error) {
-      console.log("Error creating table", error)
-    }
-  } */
-
-
-  /*useEffect(() => {
-    async function initializeDatabase() {
-      try {
-
-        Database
-
-      } catch (error) {
-        
-      }
-    }
-
-    initializeDatabase();
-  }, [])*/
-
-  console.log("\n\nNEW RUN " + "\n\n")
-
-  return (
-    
-    <Stack>
-        <Stack.Screen name='index' options={{ headerShown: false }} />
-        <Stack.Screen name='(tabs)' options={{ headerShown: false }} />
-    </Stack>
-
-  )
-}
-
-export default RootLayout
-
+export default RootLayout;
