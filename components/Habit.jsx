@@ -18,7 +18,10 @@ const Habit = memo(({data}) => {
     const timer = useRef(null); // FIX ME
     const curAmount = useRef(null); 
 
-    const {id, name, completion, setting, repeat, type, label, color, goal, location, date} = data
+    const [isCompleted, setIsCompleted] = useState(0)
+    const [currentStreak, setCurrentStreak] = useState(0)
+
+    const {id, name, completion, setting, repeat, type, label, color, goal, location, date, streak, completed} = data
 
     const [canvasSize, setCanvasSize] = useState({ width: 0, height: 0 })
 
@@ -43,19 +46,27 @@ const Habit = memo(({data}) => {
         }
 
         if (!isLoading) {
-            fetchCompletion()   
+            fetchCompletion()
+            setCurrentStreak(streak)
+            setIsCompleted(completed)
         }
         
     }, [isLoading])
 
     async function updateHabitCompletion() {
         curAmount.current = amount
-        await historyRepo.setCompletion(id, curAmount.current, selectedDate)
+        await historyRepo.setCompletion(id, amount, selectedDate, goal, repeat)
         progressValue.set(amount)
     }
 
     useEffect(() => {
-        updateHabitCompletion()
+        if (!isLoading) {
+            if (!isCompleted && amount >= goal) {
+                setIsCompleted(true)
+                setCurrentStreak(currentStreak + 1)
+            }
+            updateHabitCompletion()
+        }   
     }, [amount])
 
 
@@ -126,10 +137,26 @@ const Habit = memo(({data}) => {
                 }}
             >
                 <View className={`${amount < goal ? "bg-background-90" : `bg-[${color}]`} flex-row w-full p-5 gap-3 rounded-2xl z-10`}>
-                    <View className="flex-1">
-                        <Text className="text-highlight text-2xl">
-                            {name}
-                        </Text>
+                    <View className="flex-1 gap-2">
+                        <View className="flex-row items-center gap-4">
+                            <Text className="text-highlight text-2xl">
+                                {name}
+                            </Text>
+                            <View className="flex-row items-center justify-start">
+                                
+                                <Text className={`text-xl ${isCompleted ? "text-highlight" : "text-background-70"} `}>
+                                    {currentStreak}
+                                </Text>
+                                
+                                
+                                <Image 
+                                    source={icons.streakFire}
+                                    resizeMode='contain'
+                                    className="h-6 w-6"
+                                    tintColor={isCompleted ? tailwindColors['highlight']['80'] : tailwindColors['background']['70']}
+                                />
+                            </View>
+                        </View>
                         <Text className="text-highlight-80">
                             {amount} / {goal} {label}
                         </Text>

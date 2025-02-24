@@ -7,6 +7,7 @@ import settings from "../assets/icons/sound-module-fill.png"
 import addBox from "../assets/icons/add-box-fill.png"
 import fillCheck from "../assets/icons/checkbox-fill-2.png"
 import dropdown from "../assets/icons/dropdown-arrow.png"
+import streakFire from "../assets/icons/streak-fire.png"
 
 // Habit Options
 import habitDaily from "../assets/icons/habit-daily.png"
@@ -31,5 +32,6 @@ export default {
     habitWeekly,
     habitMonthly,
     habitYearly,
-    dropdown
+    dropdown,
+    streakFire
 }

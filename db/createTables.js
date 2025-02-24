@@ -9,16 +9,20 @@ export const SCHEMA_SQL = `--sql
     limitType TEXT,
     referenceGoal INTEGER,
     color TEXT,
-    location TEXT
+    location TEXT,
+    currentStreak INTEGER,
+    highestStreak INTEGER
   );
 
 
   CREATE TABLE IF NOT EXISTS HabitHistory (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     habitId INTEGER NOT NULL,
-    completion INTEGER,
+    completionCount INTEGER,
+    completed BIT DEFAULT 0 NOT NULL,
     goal INTEGER,
     date DATE,
+    streak INTEGER,
     FOREIGN KEY (habitId) REFERENCES Habits(id)
 
     UNIQUE (habitId, date)

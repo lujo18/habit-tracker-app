@@ -114,7 +114,9 @@ export class HabitsRepository extends BaseRepository {
         habitLimit,
         habitGoal,
         selectedColor,
-        habitLocation
+        habitLocation,
+        currentStreak,
+        highestStreak
     */
 
     try {
@@ -125,19 +127,14 @@ export class HabitsRepository extends BaseRepository {
   }
 
   async initializeHabits(date) {
-
-    console.log("initializeHabits date: ", date)
     try {
-
       const results = await this.queryHabits(date)
-  
       await this.createLogs(results, date)
 
       const history = await this.getAllQuery( // FIX ME : REMOVE ME LATER
         `SELECT * FROM HabitHistory`
       )
-      
-      console.log("HABIT HISTORY: ", history) // UNCOMMENT
+      //console.log("HABIT HISTORY: ", history) // UNCOMMENT
   
       const updatedResults = await this.queryHabits(date)
   
@@ -151,10 +148,8 @@ export class HabitsRepository extends BaseRepository {
 
   
   async queryHabits(date) {
-    //console.log("Query date: ", date)
-
     const query = `--sql
-      SELECT Habits.*, b.completion, b.goal, b.date
+      SELECT Habits.*, b.completionCount, b.goal, b.date, b.streak, b.completed
       FROM Habits
       LEFT JOIN HabitHistory AS b 
       ON Habits.id = b.habitId
@@ -178,97 +173,179 @@ export class HabitsRepository extends BaseRepository {
     }
   }
 
-  async createLogs(habits, date) {
-    console.log("createLogs date: ", date)
+  async getPreviousLog(date) {
+    const query = `--sql
+      SELECT Habits.*, b.completionCount, b.goal, b.date, b.streak, b.completed
+      FROM Habits
+      LEFT JOIN HabitHistory AS b 
+      ON Habits.id = b.habitId
+      AND b.date = (
+        SELECT date
+        FROM HabitHistory
+        WHERE HabitHistory.habitId = Habits.id
+        AND date <= ?
+        ORDER BY date DESC
+        LIMIT 1
+        OFFSET 1
+      )
+    `
+    const params = [
+      date
+    ]
 
+    try {
+      return this.getAllQuery(query, params)
+    } catch (error) {
+      console.log("Failed to retrieve habits ", error)
+    }
+  }
+
+  async createLogs(habits, currentDate) {
+
+    console.log("\n\n RAN CREATE LOGS \n\n")
     for (let habit of habits) {
+      const logDate = await convertDateByRepetition(habit.repeat, currentDate);
 
-      //console.log("Habit Name: ", habit.name);
+      const logDifference = await determineRepetition(habit.repeat, habit.date, logDate) 
       
-      if (habit.date == null || await determineRepetition(habit.repeat, habit.date, date)) {
+      if (habit.date == null || logDifference > 0) {
         console.log("Couldn't find history OR the date doesn't match the history: ", habit)
 
-        console.log("DATE", date)
-        console.log("HABIT REPEAT", habit.repeat)
+        const streak = logDifference > 1 || !habit.completed ? 0 : habit.streak ?? 0
 
-        let logCreationDate;
-        switch (habit.repeat) {
-          case "day":
-            logCreationDate = date
-            break
-          case "week":
-            logCreationDate = await dateToSQL(await startOfWeek(date))
-            break
-          case "month":
-            logCreationDate = await dateToSQL(await startOfMonth(date))
-            break
-          case "year":
-            logCreationDate = await dateToSQL(await startOfYear(date))
-            break
-          default:
-            logCreationDate = date
-        }
+        console.log("Log diff: ", logDifference, habit.name, streak, habit.completed)
 
-        console.log("LOG CREATION DATE ", logCreationDate)
+        console.log("Habit: ", habit.name)
+        console.log("Log Difference: ", logDifference)
 
-
+        console.log("Current Streak: ", streak)
 
         const query = `--sql
-          INSERT OR IGNORE INTO HabitHistory (habitId, completion, goal, date)
-          VALUES (?, ?, ?, ?)
+          INSERT OR IGNORE INTO HabitHistory (habitId, completionCount, goal, date, streak)
+          VALUES (?, ?, ?, ?, ?)
         `;
         
+        console.log("LOG DATE, ", logDate)
         const params = [
             habit.id,
             0,
             habit.referenceGoal,
-            logCreationDate
+            logDate,
+            streak
         ]
       
         try {
-          this.executeQuery(query, params)
+          await this.executeQuery(query, params)
         }
         catch (error) {
           console.log("Failed to create habit log", error)
         }
       }
-      else {
-        //console.log("History already exists OR it the date matches previous history") // UNCOMMENT (Maybe)
-      }
+      /*else {
+          
+          console.log("UPDATING HABIT STREAK")
+          const [prev] = await this.getPreviousLog(currentDate);
+
+          const streak = !habit.completed ? (prev.completed ? prev.streak ?? 0 : 0) : (prev.completed ? prev.streak + 1 : habit.streak)
+
+          console.log("Already existing diff: ", logDifference, habit.name, streak, prev.completed, habit.streak, prev.streak)
+
+          console.log("Previous log's streak: ", prev)
+          console.log("New current streak: ", streak)
+
+          const query = `--sql
+            UPDATE HabitHistory
+            SET streak = ?
+            WHERE habitId = ?
+            AND date = (
+              SELECT date
+              FROM HabitHistory
+              WHERE habitId = ?
+              AND date <= ?
+              ORDER BY date DESC
+              LIMIT 1
+            )
+          `
+
+          const params = [streak, habit.id, habit.id, currentDate]
+
+          try {
+            await this.executeQuery(query, params)
+          }
+          catch (error) {
+            console.log("Failed to update habit streak: ", error)
+          }
+        
+      }*/
     }
   }
 }
 
 export class HabitHistoryRepository extends BaseRepository {
-  async setCompletion (id, value, date) {
-    //console.log("set completion", value)
+
+  validProperties = [
+    "completionCount",
+    "completed",
+    "goal",
+    "streak"
+  ]
+
+  isValidProperty(property) {
+    return this.validProperties.includes(property)
+  }
+
+  /**
+   * Set the property of the most recent habit history (to date given)
+   * @param {string} property Name of the column/property that is being changed
+   * @param {string|integer|boolean} value Value that will be replacing previous history value
+   * @param {string} habitId Id of the habit who's history is changed
+   * @param {string} date Date in form of dateToSQL "YYYY-MM-DD"
+   * 
+   * @example set("completionCount", 2, 1, "2025-02-14")
+   * set("completionCount", value, id, date)
+   */
+  async set(property, value, habitId, date) {
+    // Validates property to prevent SQL injection
+    if (!this.isValidProperty(property)) {
+      throw new Error(`Invalid property: ${property}`);
+    }
 
     const query = `--sql
       UPDATE HabitHistory
-      SET completion = ?
+      SET ${property} = ?
       WHERE habitId = ? 
       AND date = (
-        SELECT date
+        SELECT MAX(date)
         FROM HabitHistory
         WHERE habitId = ?
         AND date <= ?
-        ORDER BY date DESC
-        LIMIT 1
       )
-    `
+    `;
 
-    const params = [value ? value : 0, id, id, date]
+    const params = [value ?? 0, habitId, habitId, date];
+    try {
+      await this.executeQuery(query, params);
+    }
+    catch (error) {
+      console.log(`Failed to set ${property} to ${value}: `, error)
+    }
+    
+  } 
 
-    //console.log("params", ...params)
-
-    return this.executeQuery(query, params)
-  }
-  
-  async getCompletion (id, date) {
-    //console.log("get completion")
+  /**
+   * Get the property of the most recent habit history (to date given)
+   * @param {string} property Name of the column/property that is being retrieved
+   * @param {string} habitId Id of the habit who's history is retrieved
+   * @param {string} date Date in form of dateToSQL "YYYY-MM-DD"
+   * @returns The value of that column/property for given date
+   */
+  async getValue(property, habitId, date) {
+    if (!this.isValidProperty(property)) {
+      throw new Error(`Invalid property: ${property}`);
+    }
 
     const query = `--sql
-      SELECT completion
+      SELECT ${property}
       FROM HabitHistory
       WHERE habitId = ?
       AND date = (
@@ -279,17 +356,103 @@ export class HabitHistoryRepository extends BaseRepository {
         ORDER BY date DESC
         LIMIT 1
       )
-    `
+    `;
+    const params = [habitId, habitId, date];
+    const data = await this.getAllQuery(query, params);
+    const res = data[0][property]; // Extracts value from object
+    //console.log("getValue response: ", res);
+    return res;
+  }
 
-    const params = [id, id, date]
+  async getProceedingLogs(date, habitId) {
+    const query = `--sql
+      SELECT *
+      FROM HabitHistory
+      WHERE date >= ?
+      AND habitId = ?
+      ORDER BY date ASC
+    `
+    const params = [
+      date,
+      habitId
+    ]
 
     try {
-      const results = await this.getAllQuery(query, params)
-      //console.log("completion history", results[0]['completion'])
-      return results[0]['completion']
+      return this.getAllQuery(query, params)
     } catch (error) {
-      console.log("Failed to fetch completion history", error)
+      console.log("Failed to retrieve habits ", error)
     }
+  }
+
+  async setCompletion (id, value, date, goal, repeat) {
+    //console.log("set completionCount", value, goal)
+
+    const completed = await this.getValue('completed', id, date)
+    try {
+      if (!completed && value >= goal) {
+        this.set("completed", 1, id, date)
+        this.set("streak", await this.getValue("streak", id, date) + 1, id, date)
+
+        const logDate = await convertDateByRepetition(repeat, date)
+        const proceedingLogs = await this.getProceedingLogs(logDate, id)
+        const initialStreak = proceedingLogs[0].streak;   
+        
+        
+        console.log("PROCEEDING LOGS: ", proceedingLogs)
+
+        let isStreak = true;
+        for (let i = 0; i < proceedingLogs.length && isStreak; i++ ) {
+          const prevDate = proceedingLogs[i].date;
+          const nextDate = proceedingLogs[i + 1].date;
+
+          const prevStreak = proceedingLogs[i].streak;
+          const nextStreak = proceedingLogs[i + 1].streak;
+
+          const prevCompletion = proceedingLogs[i].completed
+          const nextCompletion = proceedingLogs[i + 1].completed;
+
+          const difference = await determineRepetition(repeat, prevDate, nextDate)
+
+          console.log("Log diffs ", difference)
+          if (difference == 1 && prevStreak > 0 && prevCompletion) {
+            console.log("Pushing streak to ", nextDate)
+            
+            if (nextStreak == 0 ) {
+              await this.set("streak", initialStreak + i, id, nextDate)
+              isStreak = false;
+            }
+            else {
+              if (nextCompletion == 0) {
+                await this.set("streak", initialStreak + i, id, nextDate)
+                isStreak = false;
+              }
+              else {
+                await this.set("streak", initialStreak + i + 1, id, nextDate)
+              }
+              
+            }
+           
+            
+          }
+          else {
+            isStreak = false;
+          }
+          
+
+        }
+        //console.log("Proceeding Logs: ", proceedingLogs)
+      }
+    } catch (error) {console.log("Failed to push streak, ", error)}
+    await this.set("completionCount", value, id, date)
+  }
+
+  
+  
+  async getCompletion (id, date) {
+    //console.log("get completionCount")
+    const completionCount = await this.getValue("completionCount", id, date)
+
+    return completionCount
   }
 }
 
@@ -357,26 +520,33 @@ export class HabitSettingRepository extends BaseRepository {
   }
 }
 
-async function isInNextWeek(date, today) {
-  const start1 = await startOfWeek(date);
-  const start2 = await startOfWeek(today);
-
-  const oneWeekMs = 7 * 24 * 60 * 60 * 1000;
-
-  console.log("Previous Date: ", start1);
-  console.log("Current date: ", start2)
-  console.log("Difference: ", start2 - start1)
-  console.log("One week ms: ", oneWeekMs)
-
-  
-  // Checks if the difference is exactly 7 days (in milliseconds)
-  return start2 - start1 == oneWeekMs;
+const convertDateByRepetition = async (repetition, currentDate) => {
+  let logCreationDate;
+  switch (repetition) {
+    case "day":
+      logCreationDate = currentDate
+      break
+    case "week":
+      logCreationDate = await dateToSQL(await startOfWeek(currentDate))
+      break
+    case "month":
+      logCreationDate = await dateToSQL(await startOfMonth(currentDate))
+      break
+    case "year":
+      logCreationDate = await dateToSQL(await startOfYear(currentDate))
+      break
+    default:
+      logCreationDate = currentDate
+  }
+  return logCreationDate
 }
 
 const startOfWeek = async (date) => {
-  const d = new Date(date);
+
+  const d = new Date(date + "T00:00:00");
 
   const day = d.getDay() === 0 ? 7 : d.getDay() // Treats Sunday (0) as 7
+  
   d.setHours(0, 0, 0, 0); // Clears out all time values
 
   d.setDate(d.getDate() - (day - 1)); // Subtracts (day - 1) to get to Monday
@@ -395,36 +565,101 @@ const startOfYear = async (date) => {
   return start
 }
 
-async function determineRepetition(repeat, date, selectedDate) {
+const compareDays = async (loggedDate, currentDate) => {
+  const prevDate = new Date(loggedDate + "T00:00:00");
+  const currDate = new Date(currentDate + "T00:00:00");
 
+  const oneDayMs = 24 * 60 * 60 * 1000;
+
+  console.log("Previous Date: ", prevDate);
+  console.log("Current date: ", currDate)
+  console.log("Difference: ", currDate - prevDate)
+
+
+  
+  // Checks if the difference is exactly 7 days (in milliseconds)
+  if (currDate - prevDate < oneDayMs) return 0;
+  if (currDate - prevDate >= oneDayMs * 2) return 2;
+  else return 1
+}
+
+const compareWeeks = async (loggedDate, currentDate) => {
+  const prevDate = new Date(loggedDate + "T00:00:00");
+  const currDate = new Date(currentDate + "T00:00:00");
+
+  const oneWeekMs = 7 * 24 * 60 * 60 * 1000;
+
+  //console.log("Previous Date: ", prevDate);
+  //console.log("Current date: ", currDate)
+  //console.log("Difference: ", currDate - prevDate)
+  //console.log("One week ms: ", oneWeekMs)
+
+  
+  // Checks if the difference is exactly 7 days (in milliseconds)
+  if (currDate - prevDate < oneWeekMs) return 0;
+  if (currDate - prevDate >= oneWeekMs * 2) return 2;
+  else return 1
+}
+
+const compareMonths = async (loggedDate, currentDate) => {
+  const prevDate = new Date(loggedDate + "T00:00:00");
+  const currDate = new Date(currentDate + "T00:00:00")
+
+  const pMonthIndex = prevDate.getFullYear() * 12 + prevDate.getMonth();
+  const cMonthIndex = currDate.getFullYear() * 12 + currDate.getMonth();
+
+  //console.log("Current Month: ", cMonthIndex)
+  //console.log("Difference: ", cMonthIndex - pMonthIndex)
+  //console.log("Previous Month: ", pMonthIndex);
+
+  const difference = cMonthIndex - pMonthIndex
+
+  if (difference == 0) return 0; // same month
+  if (difference == 1) return 1; // consecutive month
+  else return 2; // not consecutive month
+}
+
+const compareYears = async (loggedDate, currentDate) => {
+  const prevDate = new Date(loggedDate + "T00:00:00");
+  const currDate = new Date(currentDate + "T00:00:00");
+
+  const pYear = prevDate.getFullYear();
+  const cYear = currDate.getFullYear();
+
+  //console.log("Previous Year Input: ", loggedDate)
+  //console.log("Current Year Input: ", currentDate)
+  //console.log("Previous Year: ", pYear);
+  //console.log("Current Year: ", cYear)
+  //console.log("Difference: ", cYear - pYear)
+
+  const difference = cYear - pYear
+
+  if (difference == 0) return 0; // same year
+  if (difference == 1) return 1; // consecutive year
+  else return 2; // not consecutive year
+}
+
+
+async function determineRepetition(repeat, loggedDate, currentDate) {
 
   if (repeat === "day") {
-    if (date.split('-')[2] != selectedDate.split('-')[2]) {
-      return true;
-    }
+    return await compareDays(loggedDate, currentDate);
   }
   else if (repeat === "week") {
-    if (await isInNextWeek(date, selectedDate)) {
-      console.log("returned true in weekly")
-      return true;
-    }
+    return await compareWeeks(loggedDate, currentDate);
   }
   else if (repeat === "month") {
-    if (date.split('-')[1] != selectedDate.split('-')[1]) {
-      return true;
-    }
+    return await compareMonths(loggedDate, currentDate);
   }
   else if (repeat === "year") {
-    if (date.split('-')[0] != selectedDate.split('-')[0]) {
-      return true;
-    }
+    return await compareYears(loggedDate, currentDate);
   }
-  return false
+  return 2
 }
 
 /**
  * Converts a standard JS Date() to the SQLite format YYYY-MM-DD
- * @param {*} date the JS Date()
+ * @param date the JS Date()
  * @returns JS Date() in YYYY-MM-DD format
  */
 export async function dateToSQL(date) {
@@ -434,6 +669,3 @@ export async function dateToSQL(date) {
 
   return `${year}-${month}-${day}`
 }
-
-
-
