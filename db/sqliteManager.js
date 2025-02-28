@@ -74,10 +74,12 @@ export class DevRepository extends BaseRepository {
       await db.runAsync(`DELETE FROM Habits`)
       await db.runAsync(`DELETE FROM HabitLabel`)
       await db.runAsync(`DELETE FROM HabitLocation`)
+      await db.runAsync(`DELETE FROM JournalEntries`)
       await db.runAsync(`DROP TABLE IF EXISTS Habits`)
       await db.runAsync(`DROP TABLE IF EXISTS HabitHistory`)
       await db.runAsync(`DROP TABLE IF EXISTS HabitLabel`)
       await db.runAsync(`DROP TABLE IF EXISTS HabitLocation`)
+      await db.runAsync(`DROP TABLE IF EXISTS JournalEntries`)
 
       console.log("Successfuly dropped tables")
     } catch (error) {
@@ -146,8 +148,21 @@ export class HabitsRepository extends BaseRepository {
     }
   }
 
+  async getAllHabits() {
+    const query = `--sql
+      SELECT name
+      FROM Habits
+    `
+
+    const res = this.getAllQuery(query, [])
+    console.log("GET ALL RES: ", res)
+
+    return res
+  }
+
   
   async queryHabits(date) {
+
     const query = `--sql
       SELECT Habits.*, b.completionCount, b.goal, b.date, b.streak, b.completed
       FROM Habits
@@ -517,6 +532,43 @@ export class HabitSettingRepository extends BaseRepository {
     } catch (error) {
       console.log("Failed to add new location ", error)
     }
+  }
+}
+
+export class JournalEntryRepository extends BaseRepository {
+  async getAllEntries () {
+    query = `--sql
+      SELECT *
+      FROM JournalEntries
+    `
+
+    params = [];
+
+    return await this.getAllQuery(query, params);
+  }
+
+  async createNewEntry (title, body, habitId) {
+    console.log("CREATING NEW JOURNAL", title, body, habitId)
+
+    query = `--sql
+      INSERT INTO JournalEntries (habitId, title, body) VALUES (?, ?, ?)
+    `
+
+    params = [habitId ?? null, title, body]
+
+    return await this.executeQuery(query, params);
+  }
+
+  async updateEntry (journalId, title, body, habitId) {
+    query = `--sql
+      UPDATE JournalEntries
+      SET title = ?, body = ?, habitId = ?
+      WHERE id = ?
+    `
+
+    params = [title, body, habitId, journalId]
+
+    return await this.executeQuery(query, params)
   }
 }
 

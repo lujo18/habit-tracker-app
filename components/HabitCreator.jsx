@@ -4,6 +4,8 @@ import {
   Modal,
   ScrollView,
   Alert,
+  TouchableWithoutFeedback,
+  Keyboard,
 } from "react-native";
 import React, {memo, useCallback, useEffect, useState } from "react";
 import TextButton from "./TextButton";
@@ -11,7 +13,6 @@ import BuildInput from "./BuildInput";
 import icons from "../constants/icons";
 import tailwindConfig from "../tailwind.config";
 import ColorSwatch from "./ColorSwatch";
-
 
 import BuildScreen from "./BuildScreen";
 import QuitScreen from "./QuitScreen";
@@ -242,87 +243,89 @@ const HabitCreator = ({ isVisible, onClose }) => {
 
   return (
     <Modal animationType="slide" transparent={true} visible={isVisible}>
-      <View className="w-full h-[90vh] justify-center p-7 bg-background-90 absolute bottom-0 rounded-t-3xl">
-        <View className="justify-center items-center">
-          <Text className="text-highlight text-2xl">Create Habit</Text>
-        </View>
-        <ScrollView>
-          <View className="flex-1 h-[100vh] justify-start">
-            <View className="my-6">
-              <BuildInput
-                value={habitName}
-                handleChange={changeHabitName}
-                placeholder="Your new habit"
-                inputStyles="text-lg"
-              />
-            </View>
-            <View className="gap-2">
-              <Text className="text-md text-highlight-60 mb-2 border-b border-background-80">
-                Habit Type
-              </Text>
-              <View className="flex-row gap-4">
-                <TextButton
-                  text="Build"
-                  containerStyles={`${
-                    habitSetting === "build"
-                      ? "bg-habitColors-hBlue"
-                      : "bg-background-90 border-2 border-habitColors-hBlue"
-                  } flex-1`}
-                  onPress={() => handlePress("build")}
-                />
-                <TextButton
-                  text="Quit"
-                  containerStyles={`${
-                    habitSetting === "quit"
-                      ? "bg-habitColors-hRed"
-                      : "bg-background-90 border-2 border-habitColors-hRed"
-                  } flex-1`}
-                  onPress={() => handlePress("quit")}
-                />
-                <TextButton
-                  text="Tally"
-                  containerStyles={`${
-                    habitSetting === "tally"
-                      ? "bg-background-70"
-                      : "bg-background-90 border-2 border-background-70"
-                  } flex-1`}
-                  onPress={() => handlePress("tally")}
+      <TouchableWithoutFeedback onPress={() => {Keyboard.dismiss(); setOpenMenu(0);}} accessible={false}>
+        <View className="w-full h-[90vh] justify-center p-7 bg-background-90 absolute bottom-0 rounded-t-3xl">
+          <View className="justify-center items-center">
+            <Text className="text-highlight text-2xl">Create Habit</Text>
+          </View>
+          <ScrollView>
+            <View className="flex-1 h-[100vh] justify-start">
+              <View className="my-6">
+                <BuildInput
+                  value={habitName}
+                  handleChange={changeHabitName}
+                  placeholder="Your new habit"
+                  inputStyles="text-lg"
                 />
               </View>
-                
-            </View>
-            <View>
-              <RenderHabitSettingPage />
-            </View>
-            <Text className="text-md text-highlight-60 mb-2 border-b border-background-80">
-              Color Theme
-            </Text>
-            <View className="">
+              <View className="gap-2">
+                <Text className="text-md text-highlight-60 mb-2 border-b border-background-80">
+                  Habit Type
+                </Text>
+                <View className="flex-row gap-4">
+                  <TextButton
+                    text="Build"
+                    containerStyles={`${
+                      habitSetting === "build"
+                        ? "bg-habitColors-hBlue"
+                        : "bg-background-90 border-2 border-habitColors-hBlue"
+                    } flex-1`}
+                    onPress={() => handlePress("build")}
+                  />
+                  <TextButton
+                    text="Quit"
+                    containerStyles={`${
+                      habitSetting === "quit"
+                        ? "bg-habitColors-hRed"
+                        : "bg-background-90 border-2 border-habitColors-hRed"
+                    } flex-1`}
+                    onPress={() => handlePress("quit")}
+                  />
+                  <TextButton
+                    text="Tally"
+                    containerStyles={`${
+                      habitSetting === "tally"
+                        ? "bg-background-70"
+                        : "bg-background-90 border-2 border-background-70"
+                    } flex-1`}
+                    onPress={() => handlePress("tally")}
+                  />
+                </View>
+                  
+              </View>
+              <View>
+                <RenderHabitSettingPage />
+              </View>
+              <Text className="text-md text-highlight-60 mb-2 border-b border-background-80">
+                Color Theme
+              </Text>
+              <View className="">
 
-              <ColorPicker
-                habitColors={habitColors}
-                setColor={setColor}
-                selectedColor={selectedColor}
-              />
+                <ColorPicker
+                  habitColors={habitColors}
+                  setColor={setColor}
+                  selectedColor={selectedColor}
+                />
 
+              </View>
             </View>
+          </ScrollView>
+
+          <View className="flex-row gap-4 mb-3">
+            <TextButton
+              text="Cancel"
+              onPress={onClose}
+              containerStyles="flex-1 bg-background-80"
+            />
+            <TextButton
+              text="Create"
+              onPress={createHabit}
+              containerStyles={`flex-1`}
+              specialStyles={{ backgroundColor: selectedColor }}
+            />
           </View>
-        </ScrollView>
-
-        <View className="flex-row gap-4 mb-3">
-          <TextButton
-            text="Cancel"
-            onPress={onClose}
-            containerStyles="flex-1 bg-background-80"
-          />
-          <TextButton
-            text="Create"
-            onPress={createHabit}
-            containerStyles={`flex-1`}
-            specialStyles={{ backgroundColor: selectedColor }}
-          />
         </View>
-      </View>
+      </TouchableWithoutFeedback>
     </Modal>
   );
 };

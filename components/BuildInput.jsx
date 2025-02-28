@@ -11,6 +11,7 @@ const BuildInput = ({value, handleChange, label, placeholder, inputStyles, ...pr
             value={value}
             onChangeText={handleChange} 
             placeholder={placeholder}
+            textBreakStrategy='simple'
             {...props}
         />
     </View>

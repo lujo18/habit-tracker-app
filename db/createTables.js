@@ -28,6 +28,17 @@ export const SCHEMA_SQL = `--sql
     UNIQUE (habitId, date)
   );
 
+  CREATE TABLE IF NOT EXISTS JournalEntries (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    habitId INTEGER,
+    title TEXT,
+    body TEXT,
+
+    FOREIGN KEY (habitId) REFERENCES Habits(id)
+  
+    UNIQUE (title)
+  );
+
   CREATE TABLE IF NOT EXISTS HabitLabel (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     name TEXT UNIQUE
