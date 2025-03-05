@@ -18,6 +18,8 @@ const Journal = () => {
 
 
   // JOURNAL MODAL STATES
+  const [entryId, setEntryId] = useState("")
+
   const [habits, setHabits] = useState([])
 
   const [entryTitle, setEntryTitle] = useState("")
@@ -37,6 +39,10 @@ const Journal = () => {
   }, [isEntryOpen])
 
 
+  const changeEntryId = (value) => {
+    entryId(value);
+  }
+
   const changeEntryTitle = (value) => {
     setEntryTitle(value);
   } 
@@ -50,12 +56,41 @@ const Journal = () => {
   }
 
   const onModalClose = async () => {
-    await EntryRepo.createNewEntry(entryTitle, entryBody, linkedHabit)
+
+    if (!(entryTitle && entryBody)) {
+      setIsEntryOpen(false)
+      return
+    }
+
+    if (entryId) {
+      await EntryRepo.updateEntry(entryId, entryTitle, entryBody, linkedHabit)
+    }
+    else {
+      await EntryRepo.createNewEntry(entryTitle, entryBody, linkedHabit)
+    }
+    
+    clearEntry();
     setIsEntryOpen(false)
   }
 
   const createJournalEntry = () => {
     setIsEntryOpen(true)
+  }
+
+  const editJournalEntry = async (id, title, body, habitId) => {
+    setEntryId(id)
+    setEntryTitle(title)
+    setEntryBody(body)
+    setLinkedHabit(habitId)
+
+    setIsEntryOpen(true)
+  }
+
+  const clearEntry = () => {
+    setEntryId("");
+    setEntryTitle("");
+    setEntryBody("");
+    setLinkedHabit(null);
   }
 
   return (
@@ -83,7 +118,7 @@ const Journal = () => {
           data={journalEntries}
           keyExtractor={(item) => item.id}
           renderItem={({ item }) => (
-            <JournalEntry {...item} />
+            <JournalEntry {...item} editEntry={editJournalEntry}/>
           )}
         />
       </View>

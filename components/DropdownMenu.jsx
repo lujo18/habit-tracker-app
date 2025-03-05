@@ -35,7 +35,7 @@ const DropdownMenu = ({value, onChange, options, handleOpen, id, isOpen, isCusto
             {isOpen && (
          
                
-                <ScrollView className="max-h-[180px] p-2 rounded-xl bg-background-80 absolute z-10 w-full top-full ">
+                <ScrollView nestedScrollEnabled={true} className="max-h-[180px] p-2 rounded-xl bg-background-80 absolute z-10 w-full top-full ">
                     <View className=" gap-2">
                 
                         {

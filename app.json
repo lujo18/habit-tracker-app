@@ -14,13 +14,15 @@
       "backgroundColor": "#ffffff"
     },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.lujo.habittracker"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.lujo.habittracker"
     },
     "web": {
       "favicon": "./assets/favicon.png"
@@ -28,7 +30,14 @@
     "plugins": [
       "expo-router",
       "expo-sqlite"
-      
-    ]
+    ],
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "29a6a3a7-acf7-4fd4-95d7-b55578581150"
+      }
+    }
   }
 }
