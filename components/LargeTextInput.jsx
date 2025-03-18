@@ -12,6 +12,7 @@ const LargeTextInput = ({value, handleChange, label, placeholder, inputStyles, .
           value={value}
           onChangeText={handleChange}
           placeholder={placeholder}
+          placeholderTextColor={"#BFC6D4"}
           multiline
           textAlignVertical='top'
           

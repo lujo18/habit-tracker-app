@@ -51,8 +51,8 @@ const Journal = () => {
     setEntryBody(value);
   } 
 
-  const changeLinkedHabit = () => {
-    setLinkedHabit();
+  const changeLinkedHabit = (value) => {
+    setLinkedHabit(value);
   }
 
   const onModalClose = async () => {

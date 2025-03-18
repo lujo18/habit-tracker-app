@@ -248,7 +248,7 @@ const HabitCreator = ({ isVisible, onClose }) => {
           <View className="justify-center items-center">
             <Text className="text-highlight text-2xl">Create Habit</Text>
           </View>
-          <ScrollView nestedScrollEnabled={true}>
+         
             <View className="flex-1 h-[100vh] justify-start">
               <View className="my-6">
                 <BuildInput
@@ -309,7 +309,7 @@ const HabitCreator = ({ isVisible, onClose }) => {
 
               </View>
             </View>
-          </ScrollView>
+         
 
           <View className="flex-row gap-4 mb-3">
             <TextButton

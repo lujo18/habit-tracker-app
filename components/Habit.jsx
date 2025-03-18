@@ -8,6 +8,7 @@ import tailwindConfig from '../tailwind.config'
 import { HabitHistoryRepository } from '../db/sqliteManager'
 import { DateContext } from '../app/(tabs)/home'
 import { useLoading } from './LoadingProvider'
+import { formatRepeatText } from '../utils/formatters'
 
 
 
@@ -162,23 +163,10 @@ const Habit = memo(({data}) => {
                         </Text>
                     </View>
                     <View>
-                        <View className={` p-2 rounded-2xl`}>
+                        <View className="p-2">
                             <Text className="text-highlight-60">
                                 {
-                                    (() => {
-                                        switch(repeat) {
-                                            case 'day':
-                                                return "Daily"
-                                            case 'week':
-                                                return "Weekly"
-                                            case 'month':
-                                                return "Monthly"
-                                            case 'year':
-                                                return "Yearly"
-                                            default: 
-                                                return "None"
-                                        }
-                                    })()
+                                    formatRepeatText(repeat)
                                 }
                             </Text>
                         </View>

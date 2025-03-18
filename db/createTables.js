@@ -30,10 +30,11 @@ export const SCHEMA_SQL = `--sql
 
   CREATE TABLE IF NOT EXISTS JournalEntries (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
+    date DATETIME DEFAULT CURRENT_TIMESTAMP,
     habitId INTEGER,
     title TEXT,
     body TEXT,
-
+    
     FOREIGN KEY (habitId) REFERENCES Habits(id)
   
     UNIQUE (title)
