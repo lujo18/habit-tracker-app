@@ -1,4 +1,4 @@
-import { View, Text, Image, FlatList, TouchableOpacity } from 'react-native'
+import { View, Text, FlatList, TouchableOpacity } from 'react-native'
 import React, { memo, useCallback, useContext, useEffect, useState, createContext } from 'react'
 import icons from '../../constants/icons'
 import { SafeAreaView } from 'react-native-safe-area-context'
@@ -8,12 +8,11 @@ import HabitCreator from '../../components/HabitCreator'
 import { dateToSQL, DevRepository, HabitsRepository } from '../../db/sqliteManager'
 import DateSelector from '../../components/DateSelector' 
 import { useLoading } from '../../components/LoadingProvider'
+import { Image } from 'expo-image'
+import { DateContext } from '../../contexts/DateContext'
+
 
 const tailwindColors = tailwindConfig.theme.extend.colors
-
-export const DateContext = createContext('')
-
-
 
 const Home = () => {
   const habitsRepo = new HabitsRepository();
@@ -25,7 +24,6 @@ const Home = () => {
 
   const { showLoading, hideLoading, isLoading } = useLoading();
   
-
   const [showCreateHabit, setShowCreateHabit] = useState(false)
   const [habits, setHabits] = useState([])
 
@@ -83,13 +81,14 @@ const Home = () => {
         <Image
           source={group.icon}
           className="w-8 h-8"
-          resizeMode='contain'
+          contentFit='contain'
         />
         <Text className="text-white">{group.label} Habits</Text>
       </View>
     )
   }, [])
 
+  
 
   return (
     <DateContext.Provider value={date}>
@@ -105,8 +104,9 @@ const Home = () => {
             <Image 
               source={icons.addBox}
               className="w-9 h-9"
-              resizeMode='cover'
+              contentFit='cover'
               tintColor={tailwindColors["highlight"]["90"]}
+              
             />
           </TouchableOpacity>
           <TouchableOpacity className="w-10 h-10 bg-red-50" onPress={() => {devRepo.DropTables()}}><Text>Drop Table</Text></TouchableOpacity>
@@ -167,7 +167,5 @@ const Home = () => {
     </DateContext.Provider>
   )
 }
-
-
 
 export default Home

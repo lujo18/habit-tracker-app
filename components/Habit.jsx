@@ -2,11 +2,11 @@ import { View, Text, Image, TouchableOpacity, ActivityIndicator } from 'react-na
 import React, { memo, useContext, useEffect, useRef, useState } from 'react'
 import icons from '../constants/icons'
 
-import { Canvas, Rect, SweepGradient, TwoPointConicalGradient, Skia, Shader, vec, rotate } from '@shopify/react-native-skia'
+import { Canvas, Rect, SweepGradient, vec} from '@shopify/react-native-skia'
 import Animated, { interpolate, useSharedValue, withReanimatedTimer, withRepeat, withTiming, Easing, withSpring } from 'react-native-reanimated'
 import tailwindConfig from '../tailwind.config'
 import { HabitHistoryRepository } from '../db/sqliteManager'
-import { DateContext } from '../app/(tabs)/home'
+import { DateContext } from '../contexts/DateContext'
 import { useLoading } from './LoadingProvider'
 import { formatRepeatText } from '../utils/formatters'
 
