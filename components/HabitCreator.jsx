@@ -242,7 +242,7 @@ const HabitCreator = ({ isVisible, onClose }) => {
 
 
   return (
-    <Modal animationType="slide" transparent={true} visible={isVisible}>
+    <Modal animationType="slide" transparent={true} visible={isVisible} onDismiss={onClose}>
       <TouchableWithoutFeedback onPress={() => {Keyboard.dismiss(); setOpenMenu(0);}} accessible={false}>
         <View className="w-full h-[90vh] justify-center p-7 bg-background-90 absolute bottom-0 rounded-t-3xl">
           <View className="justify-center items-center">

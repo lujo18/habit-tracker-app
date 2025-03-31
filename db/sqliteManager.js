@@ -548,13 +548,13 @@ export class JournalEntryRepository extends BaseRepository {
   }
 
   async createNewEntry (title, body, habitId) {
-    console.log("CREATING NEW JOURNAL", title, body, habitId)
+    console.log("CREATING NEW JOURNAL", title, body, habitId ?? null)
 
     query = `--sql
-      INSERT INTO JournalEntries (habitId, title, body) VALUES (?, ?, ?)
+      INSERT INTO JournalEntries (title, body, habitId) VALUES (?, ?, ?)
     `
 
-    params = [habitId ?? null, title, body]
+    params = [title, body, habitId ?? null]
 
     return await this.executeQuery(query, params);
   }

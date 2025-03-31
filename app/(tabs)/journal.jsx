@@ -26,7 +26,7 @@ const Journal = () => {
 
   const [entryBody, setEntryBody] = useState("")
 
-  const [linkedHabit, setLinkedHabit] = useState(null)
+  const [linkedHabit, setLinkedHabit] = useState(0)
 
 
   useEffect(() => {
@@ -34,6 +34,7 @@ const Journal = () => {
       setJournalEntries(await EntryRepo.getAllEntries());
       setHabits(await habitsRepo.queryHabits(await dateToSQL(new Date())));
     }
+  
 
     queryEntries()
   }, [isEntryOpen])
@@ -57,6 +58,7 @@ const Journal = () => {
 
   const onModalClose = async () => {
 
+
     if (!(entryTitle && entryBody)) {
       setIsEntryOpen(false)
       return
@@ -66,7 +68,12 @@ const Journal = () => {
       await EntryRepo.updateEntry(entryId, entryTitle, entryBody, linkedHabit)
     }
     else {
-      await EntryRepo.createNewEntry(entryTitle, entryBody, linkedHabit)
+      try {
+        await EntryRepo.createNewEntry(entryTitle, entryBody, linkedHabit)
+      }
+      catch (error) {
+        console.log("Failed to create journal entry: ", error)
+      }
     }
     
     clearEntry();
@@ -99,10 +106,10 @@ const Journal = () => {
         <View className="flex-1">
 
         </View>
-        <View className="flex-1">
-          <Text className="text-highlight-90 text-xl">Journal</Text>
+        <View className="flex-1 items-center">
+          <Text className="text-highlight text-2xl">Journal</Text>
         </View>
-        <View className="">
+        <View className="flex-1 items-end">
           <TouchableOpacity className={`bg-background-80 p-4 rounded-full ${isEntryOpen ? "opacity-0" : ""}`} onPress={() => createJournalEntry()}>
             <Image 
               source={icons.addBox}
@@ -117,9 +124,13 @@ const Journal = () => {
         <FlatList 
           data={journalEntries}
           keyExtractor={(item) => item.id}
-          renderItem={({ item }) => (
-            <JournalEntry {...item} editEntry={editJournalEntry}/>
-          )}
+          renderItem={({ item }) => {
+            const habitName = habits.find(habit => habit.id === item.habitId)?.name || null;
+            const habitColor = habits.find(habit => habit.id === item.habitId)?.color || null;
+            return (
+              <JournalEntry {...item} habitName={habitName} habitColor={habitColor} editEntry={editJournalEntry}/>
+            );
+          }}
         />
       </View>
       <CreateJournalEntry 

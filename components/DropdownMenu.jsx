@@ -1,5 +1,5 @@
 import { View, Text, TouchableOpacity, Image, ScrollView } from "react-native";
-import React, { memo, useEffect, useState } from "react";
+import React, { memo, useCallback, useEffect, useState } from "react";
 import icons from "../constants/icons";
 import SingleInputModal from "./SingleInputModal";
 
@@ -13,12 +13,12 @@ const DropdownMenu = ({
   isCustom,
   handleCreateNew,
   renderItem,
+  renderButton,
   customAddOption,
-  placeholder = 'Select an option',
-  disabledPlaceholder = 'No options available',
-  maxHeight = 200
+  placeholder = "Select an option",
+  disabledPlaceholder = "No options available",
+  maxHeight = 200,
 }) => {
-  
   const [modalOpen, setModalOpen] = useState(false);
 
   const toggleDropdown = () => {
@@ -31,9 +31,9 @@ const DropdownMenu = ({
 
   /**
    * Default render item for dropdown menu
-   * @param {*} item 
-   * @param {*} onSelect 
-   * @returns 
+   * @param {*} item
+   * @param {*} onSelect
+   * @returns
    */
   const defaultRenderItem = (item, onSelect) => (
     <TouchableOpacity
@@ -50,7 +50,6 @@ const DropdownMenu = ({
         </View>
       )}
 
-      
       <View className="gap-1">
         <Text className="text-highlight-90 text-xl">{item.name}</Text>
 
@@ -82,61 +81,73 @@ const DropdownMenu = ({
       </View>
     </TouchableOpacity>
   );
-  
 
   // Dropdown button component (toggles dropdown)
-  const DropdownButton = ({isDisabled}) => {
+  const DropdownButton = useCallback(({ isDisabled }) => {
+
     return (
       <TouchableOpacity
-        className={`flex-row p-4 items-center justify-between rounded-xl relative ${
-          isDisabled 
-            ? "bg-background-80 opacity-80"
-            : "bg-background-80"
-        }`}
+        className={`flex-row border-2 border-background-80 p-4 items-center justify-between rounded-xl relative ${
+          isDisabled ? "bg-background-80 opacity-80" : "bg-background-80"
+        } ${isOpen ? "border-habitColors-hBlue" : ""}`}
         onPress={isDisabled ? null : toggleDropdown}
       >
-        <Text className={`text-xl 
-          ${
-            isDisabled 
-              ? "text-highlight-60"
-              : "text-highlight-90"
-          } ${value ? "text-lg" : "text-xl"
-        }`}>
-          {value ? value : isDisabled ? disabledPlaceholder : placeholder}
-        </Text>
+        {renderButton ? 
+          renderButton(isDisabled, disabledPlaceholder, placeholder) : 
+          <Text
+            className={`text-xl 
+            ${isDisabled ? "text-highlight-60" : "text-highlight-90"} ${
+              value ? "text-lg" : "text-xl"
+            }`}
+          >
+            {value ? value : isDisabled ? disabledPlaceholder : placeholder}
+          </Text>
+        }
+      
         <Image
           source={icons.dropdown}
           className={`h-8 w-8 ${isOpen ? "rotate-180" : "rotate-0"} ${
-            isDisabled 
-              ? "opacity-40"
-              : "opacity-100"
+            isDisabled ? "opacity-40" : "opacity-100"
           }`}
           resizeMode="contain"
         />
       </TouchableOpacity>
     );
-  }
+  }, [options, isOpen, value])
 
-  
   // Main Dropdown content
   const DropdownContent = () => {
+
     return (
       <ScrollView
         nestedScrollEnabled={true}
         className={`max-h-[${maxHeight}px] p-2 rounded-xl bg-background-80 absolute z-10 w-full top-full`}
       >
         <View className=" gap-2">
-          {options.map((item) => (
-              renderItem ? renderItem(item, onChange) : defaultRenderItem(item, onChange)
-          ))}
-
-          {isCustom && (
-            <CustomOptions />
+          {
+          renderItem
+          ? renderItem({
+            name: placeholder,
+            
+            id: null,
+          }, onChange)
+          : defaultRenderItem({
+            name: placeholder,
+            value: null,
+            
+          }, onChange)
+          }
+          {options.map((item) =>
+            renderItem
+              ? renderItem(item, onChange)
+              : defaultRenderItem(item, onChange)
           )}
+
+          {isCustom && <CustomOptions />}
         </View>
       </ScrollView>
-    )
-  }
+    );
+  };
 
   // Add custom options for dropdown menu
   const CustomOptions = () => {
@@ -153,15 +164,13 @@ const DropdownMenu = ({
           handleSubmit={handleCreateNew}
         />
       </View>
-    )
-  }
+    );
+  };
 
   return (
     <View className="relative flex-1">
-      <DropdownButton isDisabled={options.length < 1}/>
-      {isOpen && (
-        <DropdownContent />
-      )}
+      <DropdownButton isDisabled={options.length < 1} />
+      {isOpen && <DropdownContent />}
     </View>
   );
 };

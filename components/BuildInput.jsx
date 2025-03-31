@@ -7,7 +7,7 @@ const BuildInput = ({value, handleChange, label, placeholder, inputStyles, ...pr
     <View>
         {label && (<Text className="text-highlight-70">{label}</Text>)}
         <TextInput
-            className={`border-background-80 border-2 p-4 text-highlight-90 ${inputStyles}`}
+            className={`border-b-2 border-background-80 text-xl p-5 text-highlight-90 ${inputStyles}`}
             value={value}
             onChangeText={handleChange} 
             placeholder={placeholder}
