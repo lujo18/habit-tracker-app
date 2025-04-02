@@ -1,4 +1,4 @@
-import { View, Text, FlatList, TouchableOpacity } from 'react-native'
+import { View, Text, FlatList, TouchableOpacity, Image } from 'react-native'
 import React, { memo, useCallback, useContext, useEffect, useState, createContext } from 'react'
 import icons from '../../constants/icons'
 import { SafeAreaView } from 'react-native-safe-area-context'
@@ -8,7 +8,7 @@ import HabitCreator from '../../components/HabitCreator'
 import { dateToSQL, DevRepository, HabitsRepository } from '../../db/sqliteManager'
 import DateSelector from '../../components/DateSelector' 
 import { useLoading } from '../../components/LoadingProvider'
-import { Image } from 'expo-image'
+//import { Image } from 'expo-image'
 import { DateContext } from '../../contexts/DateContext'
 
 

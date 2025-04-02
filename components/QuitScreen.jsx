@@ -12,7 +12,7 @@ const QuitScreen = memo((startTime, setStartTime) => {
             </View>
             <View className="flex-row items-center gap-4">
                 <Text className="text-xl text-highlight-60">Start time:</Text>
-                <DatePicker mode="datetime" date={date} onDateChange={setDate} />
+                <DatePicker mode="datetime" date={date} onDateChange={setDate} theme={"dark"}/>
             </View>
 
         </View>
