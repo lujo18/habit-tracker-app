@@ -45,7 +45,9 @@ const HabitsDropdown = ({
     const [currentHabit, setCurrentHabit] = useState({})
 
     useEffect(() => {
-      setCurrentHabit(options.find(habit => habit.id === value))
+      if (options) {
+        setCurrentHabit(options.find(habit => habit.id === value))
+      }
     }, [value])
     
     return (

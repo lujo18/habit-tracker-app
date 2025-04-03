@@ -23,7 +23,7 @@ const JournalEntry = ({id, date, title, body, habitId, editEntry, habitName, hab
       </View>
       <View>
         <TouchableOpacity
-        onPress={() => editEntry(id, title, body, habitId)}
+        onPress={() => editEntry(id, date, title, body, habitId)}
         className="bg-background-80 p-4"
         >
           <Image

@@ -12,6 +12,7 @@ import { useLoading } from '../../components/LoadingProvider'
 import { DateContext } from '../../contexts/DateContext'
 
 
+
 const tailwindColors = tailwindConfig.theme.extend.colors
 
 const Home = () => {
@@ -26,6 +27,7 @@ const Home = () => {
   
   const [showCreateHabit, setShowCreateHabit] = useState(false)
   const [habits, setHabits] = useState([])
+  const [quitHabits, setQuitHabits] = useState([])
 
   const [date, setDate] = useState("")
 
@@ -75,7 +77,6 @@ const Home = () => {
 
 
   const RepeatHeaders = useCallback(({ group }) => {
-    //console.log("Headers re rendered")
     return (
       <View className="flex-row items-center gap-2">
         <Image
@@ -140,6 +141,11 @@ const Home = () => {
               type: "year",
               icon: icons.habitYearly
             },
+            {
+              label: "Quit",
+              type: "forever",
+              icon: icons.habitYearly
+            }
           ]}
           keyExtractor={(item) => item.type}
           renderItem={({item: group}) => {
@@ -162,6 +168,7 @@ const Home = () => {
             
           }}
         />
+    
       
       </SafeAreaView>
     </DateContext.Provider>

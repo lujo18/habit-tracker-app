@@ -34,7 +34,7 @@ class BaseRepository {
   
   async executeQuery (query, ...params) {
     //console.log("EQ, Query: ", query)
-    //console.log("EQ, Params: ", params)
+    //console.log("EQ, Params: ", ...params)
 
     try {
       const db = await this.db
@@ -75,11 +75,15 @@ export class DevRepository extends BaseRepository {
       await db.runAsync(`DELETE FROM HabitLabel`)
       await db.runAsync(`DELETE FROM HabitLocation`)
       await db.runAsync(`DELETE FROM JournalEntries`)
+      await db.runAsync(`DELETE FROM QuitHabits`)
+      await db.runAsync(`DELETE FROM QuitHabitHistory`)
       await db.runAsync(`DROP TABLE IF EXISTS Habits`)
       await db.runAsync(`DROP TABLE IF EXISTS HabitHistory`)
       await db.runAsync(`DROP TABLE IF EXISTS HabitLabel`)
       await db.runAsync(`DROP TABLE IF EXISTS HabitLocation`)
       await db.runAsync(`DROP TABLE IF EXISTS JournalEntries`)
+      await db.runAsync(`DROP TABLE IF EXISTS QuitHabits`)
+      await db.runAsync(`DROP TABLE IF EXISTS QuitHabitHistory`)
 
       console.log("Successfuly dropped tables")
     } catch (error) {
@@ -103,10 +107,7 @@ export class HabitsRepository extends BaseRepository {
     const query = `--sql
     INSERT INTO Habits (name, setting, repeat, label, limitType, referenceGoal, color, location) VALUES (?, ?, ?, ?, ?, ?, ?, ?)
     `
-
     const params = data;
-
-    //console.log("Create Habit Params", params)
 
     /* Data array
         habitName,
@@ -128,19 +129,41 @@ export class HabitsRepository extends BaseRepository {
     }
   }
 
+  async createQuitHabit(data) {
+
+    console.log(data)
+    const query = `--sql
+    INSERT INTO QuitHabits (name, startTime, color) VALUES (?, ?, ?)
+    `
+    const params = data;
+
+
+    /* Params 
+    name TEXT,
+    startTime DATETIME NOT NULL,
+    lastResetReason TEXT,
+    currentDuration INTEGER DEFAULT 0,
+    color TEXT
+    */
+
+    try {
+      await this.executeQuery(query, params)
+    } catch (error) {
+      console.log("Failed to insert habit")
+    }
+  }
+
   async initializeHabits(date) {
     try {
-      const results = await this.queryHabits(date)
-      await this.createLogs(results, date)
+      const tallyHabits = await this.queryHabits(date)
+      await this.createLogs(tallyHabits, date)
 
-      const history = await this.getAllQuery( // FIX ME : REMOVE ME LATER
-        `SELECT * FROM HabitHistory`
-      )
-      //console.log("HABIT HISTORY: ", history) // UNCOMMENT
-  
-      const updatedResults = await this.queryHabits(date)
-  
-      //console.log("Fetched results:", updatedResults) //UNCOMMENT
+      const updatedTallyHabits = await this.queryHabits(date);
+      const updatedQuitHabits = await this.getAllQuitHabits();
+
+      const updatedResults = [...updatedTallyHabits, ...updatedQuitHabits]
+      
+      console.log("Habits\n" + JSON.stringify(updatedResults))
 
       return updatedResults
     } catch (error) {
@@ -154,7 +177,19 @@ export class HabitsRepository extends BaseRepository {
       FROM Habits
     `
 
-    const res = this.getAllQuery(query, [])
+    const res = await this.getAllQuery(query, [])
+    console.log("GET ALL RES: ", res)
+
+    return res
+  }
+
+  async getAllQuitHabits() {
+    const query = `--sql
+      SELECT *
+      FROM QuitHabits
+    `
+
+    const res = await this.getAllQuery(query, [])
     console.log("GET ALL RES: ", res)
 
     return res
@@ -228,19 +263,11 @@ export class HabitsRepository extends BaseRepository {
 
         const streak = logDifference > 1 || !habit.completed ? 0 : habit.streak ?? 0
 
-        console.log("Log diff: ", logDifference, habit.name, streak, habit.completed)
-
-        console.log("Habit: ", habit.name)
-        console.log("Log Difference: ", logDifference)
-
-        console.log("Current Streak: ", streak)
-
         const query = `--sql
           INSERT OR IGNORE INTO HabitHistory (habitId, completionCount, goal, date, streak)
           VALUES (?, ?, ?, ?, ?)
         `;
-        
-        console.log("LOG DATE, ", logDate)
+
         const params = [
             habit.id,
             0,

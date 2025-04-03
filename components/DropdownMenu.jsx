@@ -169,7 +169,7 @@ const DropdownMenu = ({
 
   return (
     <View className="relative flex-1">
-      <DropdownButton isDisabled={options.length < 1} />
+      <DropdownButton isDisabled={!options || options.length < 1} />
       {isOpen && <DropdownContent />}
     </View>
   );

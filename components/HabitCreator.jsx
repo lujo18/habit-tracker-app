@@ -112,17 +112,25 @@ const HabitCreator = ({ isVisible, onClose }) => {
     }
 
     try {
-      await habitRepo.createHabit([
-        habitName,
-        habitSetting,
-        habitRepeat,
-        habitLabel,
-        "atleast",
-        habitGoal,
-        selectedColor,
-        habitLocation
-      ])
-
+      if (habitSetting == "build") {
+        await habitRepo.createHabit([
+          habitName,
+          habitSetting,
+          habitRepeat,
+          habitLabel,
+          "atleast",
+          habitGoal,
+          selectedColor,
+          habitLocation
+        ])
+      }
+      else if (habitSetting == "quit") {
+        await habitRepo.createQuitHabit([
+          habitName,
+          new Date(startTime).toISOString().replace('T', ' ').split('.')[0], // Convert to "YYYY-MM-DD HH:MM:SS",
+          selectedColor,
+        ])
+      }
       console.log("Success", "Habit inserted successfully!");
     } catch (error) {
       console.log("Insert error", error);

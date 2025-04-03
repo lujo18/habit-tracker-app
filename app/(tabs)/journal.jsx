@@ -19,6 +19,8 @@ const Journal = () => {
 
   // JOURNAL MODAL STATES
   const [entryId, setEntryId] = useState("")
+  
+  const [entryDate, setEntryDate] = useState(new Date())
 
   const [habits, setHabits] = useState([])
 
@@ -32,7 +34,10 @@ const Journal = () => {
   useEffect(() => {
     const queryEntries = async () => {
       setJournalEntries(await EntryRepo.getAllEntries());
-      setHabits(await habitsRepo.queryHabits(await dateToSQL(new Date())));
+
+      const queryTallyHabits = await habitsRepo.queryHabits(await dateToSQL(entryDate));
+      const queryQuitHabits = await habitsRepo.getAllQuitHabits(); // Update to have a specific time shown (like day xyz or time that haven't done habit)
+      setHabits([...queryTallyHabits, ...queryQuitHabits]);
     }
   
 
@@ -84,8 +89,9 @@ const Journal = () => {
     setIsEntryOpen(true)
   }
 
-  const editJournalEntry = async (id, title, body, habitId) => {
+  const editJournalEntry = async (id, date, title, body, habitId) => {
     setEntryId(id)
+    setEntryDate(date)
     setEntryTitle(title)
     setEntryBody(body)
     setLinkedHabit(habitId)

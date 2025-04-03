@@ -14,7 +14,6 @@ export const SCHEMA_SQL = `--sql
     highestStreak INTEGER
   );
 
-
   CREATE TABLE IF NOT EXISTS HabitHistory (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     habitId INTEGER NOT NULL,
@@ -26,6 +25,28 @@ export const SCHEMA_SQL = `--sql
     FOREIGN KEY (habitId) REFERENCES Habits(id)
 
     UNIQUE (habitId, date)
+  );
+
+  CREATE TABLE IF NOT EXISTS QuitHabits (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT,
+    repeat TEXT DEFAULT "forever",
+    startTime DATETIME NOT NULL,
+    lastResetReason TEXT,
+    currentDuration INTEGER DEFAULT 0,
+    color TEXT
+  );
+
+  CREATE TABLE IF NOT EXISTS QuitHabitHistory (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    habitId INTEGER NOT NULL,
+    resetTime DATETIME NOT NULL,
+    previousDuration INTEGER,
+    reason TEXT,
+    date DATE,
+    FOREIGN KEY (habitId) REFERENCES QuitHabits(id)
+
+    UNIQUE (habitId)
   );
 
   CREATE TABLE IF NOT EXISTS JournalEntries (
