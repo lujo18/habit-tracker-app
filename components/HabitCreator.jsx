@@ -127,7 +127,7 @@ const HabitCreator = ({ isVisible, onClose }) => {
       else if (habitSetting == "quit") {
         await habitRepo.createQuitHabit([
           habitName,
-          new Date(startTime).toISOString().replace('T', ' ').split('.')[0], // Convert to "YYYY-MM-DD HH:MM:SS",
+          new Date(startTime).toISOString(), // Convert to "YYYY-MM-DD HH:MM:SS",
           selectedColor,
         ])
       }

@@ -5,7 +5,6 @@ import DatePicker from 'react-native-date-picker'
 const QuitScreen = memo(({startTime, setStartTime}) => {
     useEffect(() => {
         setStartTime(new Date());
-      
     }, [])
 
     return(

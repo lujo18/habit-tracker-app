@@ -17,6 +17,8 @@ import habitYearly from "../assets/icons/habit-yearly.png"
 import habitAtLeast from "../assets/icons/habit-at-least.png"
 import habitAtMost from "../assets/icons/habit-at-most.png"
 
+import resetArrow from "../assets/icons/reset-arrow.png"
+
 export default {
     add,
     chart,
@@ -33,5 +35,6 @@ export default {
     habitMonthly,
     habitYearly,
     dropdown,
-    streakFire
+    streakFire,
+    resetArrow
 }

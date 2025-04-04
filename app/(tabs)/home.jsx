@@ -10,6 +10,8 @@ import DateSelector from '../../components/DateSelector'
 import { useLoading } from '../../components/LoadingProvider'
 //import { Image } from 'expo-image'
 import { DateContext } from '../../contexts/DateContext'
+import QuitHabit from '../../components/QuitHabit'
+import TimerResetModal from '../../components/TimerResetModal'
 
 
 
@@ -31,6 +33,9 @@ const Home = () => {
 
   const [date, setDate] = useState("")
 
+  // Timer Reset Modal for time based habits
+  const [showResetTimerModal, setShowResetTimerModal] = useState(false)
+
   const setCurrentDate = async (value) => {
     setDate(await dateToSQL(value))
   }
@@ -42,6 +47,14 @@ const Home = () => {
 
   const onAddHabit = () => {
     setShowCreateHabit(true)
+  }
+
+  const onTimerResetClose = () => {
+    setShowResetTimerModal(false)
+  }
+
+  const ontTimerResetOpen = () => {
+    setShowResetTimerModal(true)
   }
 
   const queryHabits = async (date) => {
@@ -118,6 +131,8 @@ const Home = () => {
         <View>
           <DateSelector start={oneYearAgo} end={oneYearAhead} currentDate={date} setDate={setCurrentDate} />
         </View>
+
+
         
         <FlatList
           data={[
@@ -156,9 +171,13 @@ const Home = () => {
                   <FlatList
                     data={filteredHabits}
                     keyExtractor={(item) => item.id.toString()}
-                    renderItem={({ item }) => (
-                      <Habit key={item.id.toString()} data={item}/> 
-                    )}
+                    renderItem={({ item }) => {
+                      return item.repeat == "forever" ? 
+                        <QuitHabit key={item.id.toString()} data={item} handleReset={ontTimerResetOpen}/>
+                      :
+                        <Habit key={item.id.toString()} data={item}/>
+                      
+                    }}
                     ListHeaderComponent={() => (
                       <RepeatHeaders group={group}/>
                     )}
@@ -171,6 +190,10 @@ const Home = () => {
     
       
       </SafeAreaView>
+      <TimerResetModal 
+        isVisible={showResetTimerModal}
+        onClose={onTimerResetClose}
+      />
     </DateContext.Provider>
   )
 }

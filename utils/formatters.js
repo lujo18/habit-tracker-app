@@ -13,6 +13,8 @@ export const formatRepeatText = (repeat) => {
       return "Monthly";
     case 'year':
       return "Yearly";
+    case 'forever':
+      return "Quit";
     default: 
       return "None";
   }
