@@ -18,9 +18,10 @@ import BuildScreen from "./BuildScreen";
 import QuitScreen from "./QuitScreen";
 import TallyScreen from "./TallyScreen";
 import ColorPicker from "./ColorPicker";
-import { DevRepository, getHabitLabels, getHabitLocations,  } from "../db/sqliteManager";
+import { DevRepository, getHabitLabels, getHabitLocations, QuitHabitRepository,  } from "../db/sqliteManager";
 
 import { HabitsRepository, HabitSettingRepository } from "../db/sqliteManager";
+import { formatScrollerDate } from "../utils/formatters";
 
 const habitColors = tailwindConfig.theme.extend.colors["habitColors"];
 
@@ -66,6 +67,7 @@ const repeatOption = [
 const HabitCreator = ({ isVisible, onClose }) => {
   // Database repo connection
   const habitRepo = new HabitsRepository()
+  const quitHabitRepo = new QuitHabitRepository()
   const habitSettingRepo = new HabitSettingRepository()
   const devRepo = new DevRepository()
 
@@ -125,9 +127,9 @@ const HabitCreator = ({ isVisible, onClose }) => {
         ])
       }
       else if (habitSetting == "quit") {
-        await habitRepo.createQuitHabit([
+        await quitHabitRepo.createHabit([
           habitName,
-          new Date(startTime).toISOString(), // Convert to "YYYY-MM-DD HH:MM:SS",
+          formatScrollerDate(startTime),
           selectedColor,
         ])
       }

@@ -129,37 +129,13 @@ export class HabitsRepository extends BaseRepository {
     }
   }
 
-  async createQuitHabit(data) {
-
-    console.log(data)
-    const query = `--sql
-    INSERT INTO QuitHabits (name, startTime, color) VALUES (?, ?, ?)
-    `
-    const params = data;
-
-
-    /* Params 
-    name TEXT,
-    startTime DATETIME NOT NULL,
-    lastResetReason TEXT,
-    currentDuration INTEGER DEFAULT 0,
-    color TEXT
-    */
-
-    try {
-      await this.executeQuery(query, params)
-    } catch (error) {
-      console.log("Failed to insert habit")
-    }
-  }
-
   async initializeHabits(date) {
     try {
       const tallyHabits = await this.queryHabits(date)
       await this.createLogs(tallyHabits, date)
 
       const updatedTallyHabits = await this.queryHabits(date);
-      const updatedQuitHabits = await this.getAllQuitHabits();
+      const updatedQuitHabits = await new QuitHabitRepository().getAllHabits();
 
       const updatedResults = [...updatedTallyHabits, ...updatedQuitHabits]
       
@@ -182,19 +158,6 @@ export class HabitsRepository extends BaseRepository {
 
     return res
   }
-
-  async getAllQuitHabits() {
-    const query = `--sql
-      SELECT *
-      FROM QuitHabits
-    `
-
-    const res = await this.getAllQuery(query, [])
-    console.log("GET ALL RES: ", res)
-
-    return res
-  }
-
   
   async queryHabits(date) {
 
@@ -320,6 +283,78 @@ export class HabitsRepository extends BaseRepository {
         
       }*/
     }
+  }
+}
+
+export class QuitHabitRepository extends BaseRepository {
+  async getAllHabits() {
+    const query = `--sql
+      SELECT *
+      FROM QuitHabits
+    `
+
+    return await this.getAllQuery(query, [])
+  }
+
+  async createHabit(data) {
+    const query = `--sql
+      INSERT INTO QuitHabits (name, startTime, color) VALUES (?, ?, ?)
+    `
+    const params = data;
+
+
+    /* Params 
+    name TEXT,
+    startTime DATETIME NOT NULL,
+    lastResetReason TEXT,
+    currentDuration INTEGER DEFAULT 0,
+    color TEXT
+    */
+
+    try {
+      await this.executeQuery(query, params)
+    } catch (error) {
+      console.log("Failed to insert habit")
+    }
+  }
+
+  async queryHabit(id) {
+    const query = `--sql
+      SELECT * 
+      FROM QuitHabits
+      WHERE id = ?
+    `
+
+    const params = [id]
+
+    try {
+      return await this.getAllQuery(query, params);
+    }
+    catch (error) {
+      console.log("Failed to get QuitHabit: ", error);
+    }
+  }
+
+  async resetHabit(habitId, resetTime, reason) {
+    try {
+      const habitData = await this.queryHabit(habitId)
+
+      await new QuitHabitHistoryRepository().logCurrentData(habitData, resetTime, reason);
+
+      const query = `--sql
+        UPDATE QuitHabits
+        SET startTime = ?, lastResetReason = ?
+        WHERE id = ?
+      `
+
+      const params = [resetTime, reason, habitId]
+
+      await this.executeQuery(query, params)
+
+      console.log("Reset Time: ", resetTime)
+      console.log("Habit: ", JSON.stringify(await this.queryHabit(habitId)))
+
+    } catch (e) {console.log("Failed to reset quit habit: ", e)}
   }
 }
 
@@ -488,13 +523,31 @@ export class HabitHistoryRepository extends BaseRepository {
     await this.set("completionCount", value, id, date)
   }
 
-  
-  
   async getCompletion (id, date) {
     //console.log("get completionCount")
     const completionCount = await this.getValue("completionCount", id, date)
 
     return completionCount
+  }
+}
+
+export class QuitHabitHistoryRepository extends BaseRepository {
+  async logCurrentData(habitData, resetTime, reason) {
+
+    const query = `--sql
+      INSERT OR IGNORE INTO QuitHabitHistory (
+        habitId,
+        startTime,
+        resetTime,
+        previousDuration,
+        reason
+      )
+      VALUES (?, ?, ?, ?, ?)
+    `
+
+    const params = [habitData.id, habitData.startTime, resetTime, habitData.currentDuration, reason]
+      
+    await this.executeQuery(query, params)
   }
 }
 

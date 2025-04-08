@@ -40,10 +40,10 @@ export const SCHEMA_SQL = `--sql
   CREATE TABLE IF NOT EXISTS QuitHabitHistory (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     habitId INTEGER NOT NULL,
+    startTime DATETIME NOT NULL,
     resetTime DATETIME NOT NULL,
     previousDuration INTEGER,
     reason TEXT,
-    date DATE,
     FOREIGN KEY (habitId) REFERENCES QuitHabits(id)
 
     UNIQUE (habitId)

@@ -2,8 +2,11 @@ import { View, Text } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import PopupModalBase from './PopupModalBase'
 import DatePicker from 'react-native-date-picker'
+import { QuitHabitRepository } from '../db/sqliteManager'
+import { formatScrollerDate } from '../utils/formatters'
 
-const TimerResetModal = ({isVisible, onClose}) => {
+const TimerResetModal = ({data, onClose, showLoading, hideLoading}) => {
+  const QuitHabitRepo = new QuitHabitRepository();
 
   const [resetTime, setResetTime] = useState(new Date());
 
@@ -13,17 +16,27 @@ const TimerResetModal = ({isVisible, onClose}) => {
 
   useEffect(() => {
     setResetTime(new Date())
-  }, [isVisible])
+  }, [data])
 
-  const resetTimer = () => {
-
+  const resetTimer = async () => {
+    showLoading()
+    try {
+      await QuitHabitRepo.resetHabit(data.id, formatScrollerDate(resetTime), "")
+      onClose()
+    }
+    finally {
+      hideLoading()
+    }
   }
 
   const modalContent = () => {
     return (
-      <View className='h-[30vh]'>
-        <Text className='text-xl text-highlight-80'>Reset Timer</Text>
-        <View className='flex-1 justify-center items-center '>
+      <View className='w-full p-4'>
+        <View className='border-b-background-80 border-b-2 items-center'>
+          <Text className='text-xl text-highlight'>Are you sure you want to reset?</Text>
+          <Text className='text-base text-highlight-60'>{data.name}</Text>
+        </View>
+        <View className='justify-center items-center '>
           <DatePicker 
             mode='datetime'
             date={resetTime}
@@ -39,7 +52,7 @@ const TimerResetModal = ({isVisible, onClose}) => {
 
   return (
     <PopupModalBase 
-      isVisible={isVisible}
+      isVisible={Object.keys(data).length > 0}
       handleCancel={onClose}
       handleSubmit={resetTimer}
       submitButtonText={"Reset"}

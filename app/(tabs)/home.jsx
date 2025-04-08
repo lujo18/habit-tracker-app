@@ -34,7 +34,8 @@ const Home = () => {
   const [date, setDate] = useState("")
 
   // Timer Reset Modal for time based habits
-  const [showResetTimerModal, setShowResetTimerModal] = useState(false)
+  const [resetTimerModal, setResetTimerModal] = useState({})
+
 
   const setCurrentDate = async (value) => {
     setDate(await dateToSQL(value))
@@ -50,21 +51,24 @@ const Home = () => {
   }
 
   const onTimerResetClose = () => {
-    setShowResetTimerModal(false)
+    
+    setResetTimerModal({})
+  
   }
 
-  const ontTimerResetOpen = () => {
-    setShowResetTimerModal(true)
+  const onTimerResetOpen = (data) => {
+    setResetTimerModal(data)
   }
 
   const queryHabits = async (date) => {
     showLoading()
 
-    setHabits(await habitsRepo.initializeHabits(date))
-
-    setTimeout(() => {
+    try {
+      setHabits(await habitsRepo.initializeHabits(date))
+    }
+    finally {
       hideLoading()
-    }, 500);
+    }
   }
 
   useEffect(() => {
@@ -173,7 +177,7 @@ const Home = () => {
                     keyExtractor={(item) => item.id.toString()}
                     renderItem={({ item }) => {
                       return item.repeat == "forever" ? 
-                        <QuitHabit key={item.id.toString()} data={item} handleReset={ontTimerResetOpen}/>
+                        <QuitHabit key={item.id.toString()} data={item} handleReset={onTimerResetOpen}/>
                       :
                         <Habit key={item.id.toString()} data={item}/>
                       
@@ -191,8 +195,10 @@ const Home = () => {
       
       </SafeAreaView>
       <TimerResetModal 
-        isVisible={showResetTimerModal}
+        data={resetTimerModal}
         onClose={onTimerResetClose}
+        showLoading={showLoading}
+        hideLoading={hideLoading}
       />
     </DateContext.Provider>
   )

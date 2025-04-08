@@ -19,3 +19,8 @@ export const formatRepeatText = (repeat) => {
       return "None";
   }
 };
+
+
+export const formatScrollerDate = (time) => {
+  return new Date(new Date(time).setSeconds(new Date().getSeconds())).toISOString() // Convert to "YYYY-MM-DD HH:MM:SS",
+}

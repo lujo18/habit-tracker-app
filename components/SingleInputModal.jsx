@@ -29,9 +29,11 @@ const SingleInputModal = ({isVisible, header, handleModalOpen, placeholder, subm
 
   const modalContent = () => {
     return (
-      <View className='flex-1'>
-        <Text className="text-xl text-highlight-80">{header}</Text>
-        <View className="flex-1 justify-center">
+      <View className='w-full p-4'>
+        <View className='border-b-2 border-b-background-80 items-center'>
+          <Text className="text-xl text-highlight">{header}</Text>
+        </View>
+        <View className="justify-center py-4">
           <BuildInput
             value={inputValue}
             handleChange={changeValue}

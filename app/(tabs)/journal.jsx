@@ -36,7 +36,7 @@ const Journal = () => {
       setJournalEntries(await EntryRepo.getAllEntries());
 
       const queryTallyHabits = await habitsRepo.queryHabits(await dateToSQL(entryDate));
-      const queryQuitHabits = await habitsRepo.getAllQuitHabits(); // Update to have a specific time shown (like day xyz or time that haven't done habit)
+      const queryQuitHabits = await habitsRepo.getAllHabits(); // Update to have a specific time shown (like day xyz or time that haven't done habit)
       setHabits([...queryTallyHabits, ...queryQuitHabits]);
     }
   
