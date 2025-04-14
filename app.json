@@ -21,6 +21,9 @@
         "NSAppTransportSecurity": {
           "NSAllowsArbitraryLoads": true
         }
+      },
+      "runtimeVersion": {
+        "policy": "appVersion"
       }
     },
     "android": {
@@ -28,7 +31,8 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.lujo.habittracker"
+      "package": "com.lujo.habittracker",
+      "runtimeVersion": "1.0.0"
     },
     "web": {
       "favicon": "./assets/favicon.png"
@@ -44,6 +48,9 @@
       "eas": {
         "projectId": "29a6a3a7-acf7-4fd4-95d7-b55578581150"
       }
+    },
+    "updates": {
+      "url": "https://u.expo.dev/29a6a3a7-acf7-4fd4-95d7-b55578581150"
     }
   }
 }

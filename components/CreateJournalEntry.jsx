@@ -14,7 +14,8 @@ import BuildInput from "./BuildInput";
 import LargeTextInput from "./LargeTextInput";
 import HabitsDropdown from "./HabitsDropdown";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import { RichEditor, RichToolbar } from "react-native-pell-rich-editor";
+//import { MarkdownTextInput } from "@expensify/react-native-live-markdown";
+
 
 const CreateJournalEntry = ({
   isVisible,
@@ -134,13 +135,17 @@ const CreateJournalEntry = ({
                     />
                     <View className="flex-1"></View>
                   </View>
-                  <LargeTextInput
+
+                  {/*<LargeTextInput
                     value={entryBody}
                     handleChange={changeEntryBody}
                     placeholder={"Start writing..."}
                     isScrolling={isScrolling}
-                  />
-    
+                  />*/}
+
+              
+
+             
                   
                 </View>
               </KeyboardAwareScrollView>

@@ -1,4 +1,4 @@
-import { View, Text, TouchableOpacity, Image, ScrollView } from "react-native";
+import { View, Text, TouchableOpacity, Image, ScrollView, SafeAreaView} from "react-native";
 import React, { memo, useCallback, useEffect, useState } from "react";
 import icons from "../constants/icons";
 import SingleInputModal from "./SingleInputModal";
@@ -119,33 +119,35 @@ const DropdownMenu = ({
   const DropdownContent = () => {
 
     return (
-      <ScrollView
-        nestedScrollEnabled={true}
-        className={`max-h-[${maxHeight}px] p-2 rounded-xl bg-background-80 absolute z-10 w-full top-full`}
-      >
-        <View className=" gap-2">
-          {
-          renderItem
-          ? renderItem({
-            name: placeholder,
-            
-            id: null,
-          }, onChange)
-          : defaultRenderItem({
-            name: placeholder,
-            value: null,
-            
-          }, onChange)
-          }
-          {options.map((item) =>
+      <SafeAreaView className="absolute z-10 w-full top-full h-40">
+        <ScrollView
+          nestedScrollEnabled={true}
+          className={`max-h-[${maxHeight}px] p-2 rounded-xl bg-background-80 z-10`}
+        >
+          <View className=" gap-2">
+            {
             renderItem
-              ? renderItem(item, onChange)
-              : defaultRenderItem(item, onChange)
-          )}
+            ? renderItem({
+              name: placeholder,
+              
+              id: null,
+            }, onChange)
+            : defaultRenderItem({
+              name: placeholder,
+              value: null,
+              
+            }, onChange)
+            }
+            {options.map((item) =>
+              renderItem
+                ? renderItem(item, onChange)
+                : defaultRenderItem(item, onChange)
+            )}
 
-          {isCustom && <CustomOptions />}
-        </View>
-      </ScrollView>
+            {isCustom && <CustomOptions />}
+          </View>
+        </ScrollView>
+      </SafeAreaView>
     );
   };
 
