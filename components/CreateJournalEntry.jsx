@@ -14,6 +14,8 @@ import BuildInput from "./BuildInput";
 import LargeTextInput from "./LargeTextInput";
 import HabitsDropdown from "./HabitsDropdown";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import Markdown from "react-native-markdown-display";
+import { actions, RichEditor, RichToolbar } from "react-native-pell-rich-editor";
 //import { MarkdownTextInput } from "@expensify/react-native-live-markdown";
 
 
@@ -33,6 +35,8 @@ const CreateJournalEntry = ({
   const [keyboardOpen, setKeyboardOpen] = useState(false);
   const [keyboardHeight, setKeyboardHeight] = useState(0);
   const insets = useSafeAreaInsets();
+
+  const journalEditor = useRef();
 
   // Set up keyboard listeners to get height
   useEffect(() => {
@@ -104,7 +108,7 @@ const CreateJournalEntry = ({
             
             >
               <KeyboardAwareScrollView
-                className="px-4"
+                className="px-4 flex-1"
                 enableOnAndroid
                 scrollToOverflowEnabled={true}
                 enableAutomaticScroll={true}
@@ -116,8 +120,9 @@ const CreateJournalEntry = ({
                 keyboardShouldPersistTaps="handled"
                 onScrollBeginDrag={() => setIsScrolling(true)}
                 onScrollEndDrag={() => setIsScrolling(false)}
+                contentContainerStyle={{flexGrow: 1}}
               >
-                <View className="gap-3">
+                <View className="gap-3 flex-1">
                   <BuildInput
                     value={entryTitle}
                     handleChange={changeEntryTitle}
@@ -136,17 +141,26 @@ const CreateJournalEntry = ({
                     <View className="flex-1"></View>
                   </View>
 
-                  {/*<LargeTextInput
-                    value={entryBody}
-                    handleChange={changeEntryBody}
-                    placeholder={"Start writing..."}
-                    isScrolling={isScrolling}
-                  />*/}
-
-              
-
-             
                   
+                    {/*<LargeTextInput
+                      value={entryBody}
+                      handleChange={changeEntryBody}
+                      placeholder={"Start writing..."}
+                      isScrolling={isScrolling}
+                    />*/}
+
+                    <RichEditor 
+                      ref={journalEditor}
+                      value={entryBody}
+                      onChange={changeEntryBody}
+                      style={{flex: 1}}
+                      editorStyle={{
+                        backgroundColor: "red",
+                        color: "white"
+                      }}
+                    />
+
+                   
                 </View>
               </KeyboardAwareScrollView>
             </View>
@@ -160,7 +174,11 @@ const CreateJournalEntry = ({
               paddingBottom: toolbarBottomPadding,
             }}
           >
-            <View className="w-full flex-row justify-around">
+            <RichToolbar 
+              editor={journalEditor}
+              actions={[ actions.setBold, actions.setItalic, actions.setUnderline, actions.heading1 ]}
+            />
+            {/*<View className="w-full flex-row justify-around">
               <TouchableOpacity className="p-4">
                 <Text className="text-highlight-90 font-bold text-xl">B</Text>
               </TouchableOpacity>
@@ -173,7 +191,7 @@ const CreateJournalEntry = ({
               <TouchableOpacity className="p-4">
                 <Text className="text-highlight-90 text-xl">L</Text>
               </TouchableOpacity>
-            </View>
+            </View>*/}
           </View>
         </SafeAreaView>
       </View>
