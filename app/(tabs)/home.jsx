@@ -65,6 +65,7 @@ const Home = () => {
 
     try {
       setHabits(await habitsRepo.initializeHabits(date))
+      console.log(habits)
     }
     finally {
       hideLoading()

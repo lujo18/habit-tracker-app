@@ -4,7 +4,7 @@ import icons from '../constants/icons'
 
 const JournalEntry = ({id, date, title, body, habitId, editEntry, habitName, habitColor}) => {
   return (
-    <View className={`w-full border-2 rounded-xl py-4 px-8 justify-center mb-4 flex-row gap-4`}>
+    <View className={`w-full border-2 rounded-xl py-4 px-8 justify-center mb-4 flex-row gap-4 bg-background-80`}>
       <View className="flex-1">
         <Text className="text-highlight-90 text-lg font-semibold">{title}</Text>
         <View className='flex-row items-center gap-3'>

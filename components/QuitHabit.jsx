@@ -40,10 +40,6 @@ const QuitHabit = ({ data, handleReset }) => {
     const [data] = await QuitHabitRepo.queryHabit(id)
     currentStartTime.current = data.startTime
 
-    console.log("Interval Data: ", data)
-
-    console.log("Interval Start Time: ", currentStartTime.current)
-
     if (currentInterval.current) {
       clearInterval(currentInterval.current)
       currentInterval.current = null

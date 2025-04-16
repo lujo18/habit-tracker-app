@@ -148,15 +148,20 @@ const CreateJournalEntry = ({
                       placeholder={"Start writing..."}
                       isScrolling={isScrolling}
                     />*/}
-
-                    <RichEditor 
+  
+                    <RichEditor
+                      initialContentHTML={entryBody}
                       ref={journalEditor}
                       value={entryBody}
                       onChange={changeEntryBody}
                       style={{flex: 1}}
                       editorStyle={{
-                        backgroundColor: "red",
-                        color: "white"
+                        backgroundColor: "transparent",
+                        color: "white",
+                        fontSize: 16,
+                        lineHeight: 24,
+                        initialCSSText: 'fontFamily: "System'
+                        
                       }}
                     />
 
@@ -176,7 +181,13 @@ const CreateJournalEntry = ({
           >
             <RichToolbar 
               editor={journalEditor}
-              actions={[ actions.setBold, actions.setItalic, actions.setUnderline, actions.heading1 ]}
+              actions={[ 
+                actions.setBold,
+                actions.setItalic, 
+                actions.setUnderline,
+                actions.setBullet]}
+              style={{backgroundColor:"#373F4E"}}
+              iconTint={"#D1D6E0"}
             />
             {/*<View className="w-full flex-row justify-around">
               <TouchableOpacity className="p-4">

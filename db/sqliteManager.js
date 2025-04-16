@@ -409,6 +409,22 @@ export class HabitHistoryRepository extends BaseRepository {
     
   } 
 
+  async getAllHistory(habitId) {
+    const query = `--sql
+      SELECT *
+      FROM HabitHistory
+      WHERE habitId = ?
+    `;
+
+    const params = [habitId];
+    try {
+    return this.getAllQuery(query, params);
+    }
+    catch (err) {
+      console.log("failed to get all history", err)
+    }
+  }
+
   /**
    * Get the property of the most recent habit history (to date given)
    * @param {string} property Name of the column/property that is being retrieved
@@ -454,8 +470,11 @@ export class HabitHistoryRepository extends BaseRepository {
       habitId
     ]
 
+    console.log(date)
     try {
-      return this.getAllQuery(query, params)
+      const t = await this.getAllQuery(query, params)
+      console.log("PROCEEDING", t)
+      return t
     } catch (error) {
       console.log("Failed to retrieve habits ", error)
     }
