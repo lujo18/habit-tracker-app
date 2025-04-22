@@ -12,10 +12,43 @@ import { useLoading } from '../../components/LoadingProvider'
 import { DateContext } from '../../contexts/DateContext'
 import QuitHabit from '../../components/QuitHabit'
 import TimerResetModal from '../../components/TimerResetModal'
-
-
+import Animated, { useAnimatedStyle, useSharedValue, withSpring, withTiming, Easing, measure } from 'react-native-reanimated'
+import { Link } from 'expo-router'
 
 const tailwindColors = tailwindConfig.theme.extend.colors
+
+const habitGroups = [
+  {
+    label: "Daily",
+    type: "day",
+    icon: icons.habitDaily,
+    visible: true
+  },
+  {
+    label: "Weekly",
+    type: "week",
+    icon: icons.habitWeekly,
+    visible: true
+  },
+  {
+    label: "Monthly",
+    type: "month",
+    icon: icons.habitMonthly,
+    visible: true
+  },
+  {
+    label: "Yearly",
+    type: "year",
+    icon: icons.habitYearly,
+    visible: true
+  },
+  {
+    label: "Quit",
+    type: "forever",
+    icon: icons.habitYearly,
+    visible: true
+  }
+]
 
 const Home = () => {
   const habitsRepo = new HabitsRepository();
@@ -26,6 +59,8 @@ const Home = () => {
   const oneYearAhead = new Date(Date.now());
 
   const { showLoading, hideLoading, isLoading } = useLoading();
+
+  const [habitGroupsInfo, setHabitGroupsInfo] = useState(habitGroups)
   
   const [showCreateHabit, setShowCreateHabit] = useState(false)
   const [habits, setHabits] = useState([])
@@ -93,21 +128,97 @@ const Home = () => {
   }, [date]);
 
 
-
-  const RepeatHeaders = useCallback(({ group }) => {
-    return (
-      <View className="flex-row items-center gap-2">
-        <Image
-          source={group.icon}
-          className="w-8 h-8"
-          contentFit='contain'
-        />
-        <Text className="text-white">{group.label} Habits</Text>
-      </View>
-    )
-  }, [])
-
+  const HabitGroup = ({ group }) => {
+    
+    const isOpen = useSharedValue(true); // Flag to indicate measurement completion
+    const contentHeight = useSharedValue(0); // Shared value for animated height
   
+  
+  
+    // Animated style for the Animated.View
+    const animatedStyle = useAnimatedStyle(() => (contentHeight.value != 0 ? {
+      height: withTiming(isOpen.value ? contentHeight.value : 0, {
+        easing: Easing.out(Easing.exp),
+        duration: 600,
+      }),
+      opacity: withTiming(isOpen.value ? 1 : 0, { duration: 300 }),
+      overflow: "hidden",
+    } : {}));
+  
+    const closeHabitGroup = (groupType, visibility) => {
+
+      if (isOpen.value != visibility) {
+        isOpen.value = visibility
+      }
+    };
+  
+    const filteredHabits = habits.filter((habit) => habit.repeat === group.type);
+  
+    const RepeatHeaders = useCallback(({ group }) => {
+
+      const toggleGroup = () => {
+        setIsAnimating(true)
+        closeHabitGroup(group.type, !isOpen.value);
+        setTimeout(() => {setIsAnimating(false)}, 600)
+      }
+
+      const [isAnimating, setIsAnimating] = useState(false)
+      return (
+        <TouchableOpacity
+          onPress={toggleGroup}
+          disabled={isAnimating}
+        >
+          <View className="flex-row items-center gap-2 my-2">
+            <Image
+              source={icons.dropdown}
+              className={`w-8 h-8 ${true ? "rotate-180" : "rotate-0"}`}
+              contentFit="contain"
+            />
+            <Image source={group.icon} className="w-8 h-8" contentFit="contain" />
+            <Text className="text-white">{group.label} Habits</Text>
+          </View>
+        </TouchableOpacity>
+      );
+    }, []);
+  
+    if (filteredHabits.length > 0) {
+      return (
+        <View>
+          <RepeatHeaders group={group} />
+          <Animated.View style={animatedStyle}>
+            <View
+              onLayout={(event) => {
+                const { height } = event.nativeEvent.layout;
+                if (height != 0 && height != contentHeight.value) contentHeight.value = height
+              
+              }}
+            >
+              <FlatList
+                data={filteredHabits}
+                keyExtractor={(item) => item.id.toString()}
+                renderItem={({ item }) => {
+                  return item.repeat === "forever" ? (
+                    <QuitHabit
+                      key={item.id.toString()}
+                      data={item}
+                      handleReset={onTimerResetOpen}
+                    />
+                  ) : (
+                    <Link href="index" className='text-blue-500 mt-5'>
+                      <Habit key={item.id.toString()} data={item} />
+                    </Link>
+                    
+                  );
+                }}
+              />
+            </View>
+          </Animated.View>
+        </View>
+      );
+    } else {
+      return null;
+    }
+  };
 
   return (
     <DateContext.Provider value={date}>
@@ -140,57 +251,9 @@ const Home = () => {
 
         
         <FlatList
-          data={[
-            {
-              label: "Daily",
-              type: "day",
-              icon: icons.habitDaily
-            },
-            {
-              label: "Weekly",
-              type: "week",
-              icon: icons.habitWeekly
-            },
-            {
-              label: "Monthly",
-              type: "month",
-              icon: icons.habitMonthly
-            },
-            {
-              label: "Yearly",
-              type: "year",
-              icon: icons.habitYearly
-            },
-            {
-              label: "Quit",
-              type: "forever",
-              icon: icons.habitYearly
-            }
-          ]}
+          data={habitGroupsInfo}
           keyExtractor={(item) => item.type}
-          renderItem={({item: group}) => {
-              const filteredHabits = habits.filter(habit => {return habit.repeat === group.type; })
-            
-              if (filteredHabits.length > 0) {
-                return (
-                  <FlatList
-                    data={filteredHabits}
-                    keyExtractor={(item) => item.id.toString()}
-                    renderItem={({ item }) => {
-                      return item.repeat == "forever" ? 
-                        <QuitHabit key={item.id.toString()} data={item} handleReset={onTimerResetOpen}/>
-                      :
-                        <Habit key={item.id.toString()} data={item}/>
-                      
-                    }}
-                    ListHeaderComponent={() => (
-                      <RepeatHeaders group={group}/>
-                    )}
-                  />
-                )
-              }
-            
-          }}
+          renderItem={({item: group}) => <HabitGroup group={group}/>}
         />
     
       

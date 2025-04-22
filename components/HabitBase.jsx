@@ -47,6 +47,7 @@ const HabitBase = ({ data, habitCompletionDisplay, habitButton, enableStreak = f
   }
 
   return (
+    
     <View
       className="rounded-2xl overflow-hidden justify-center relative items-center p-1 my-4"
       onLayout={({ nativeEvent: { layout } }) => {

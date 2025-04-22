@@ -164,7 +164,6 @@ const CreateJournalEntry = ({
                         
                       }}
                     />
-
                    
                 </View>
               </KeyboardAwareScrollView>

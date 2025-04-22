@@ -50,8 +50,6 @@ const CartesianAnalytics = ({ data, xKey, yKeys }) => {
     const path = Skia.Path.Make()
     path.moveTo(x.value, bottom)
     path.lineTo(x.value, bottom - height)
-   
-    
 
     //const animPath = useAnimatedPath(path)
     

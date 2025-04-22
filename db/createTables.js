@@ -10,6 +10,7 @@ export const SCHEMA_SQL = `--sql
     referenceGoal INTEGER,
     color TEXT,
     location TEXT,
+    groupName TEXT,
     currentStreak INTEGER,
     highestStreak INTEGER
   );

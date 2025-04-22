@@ -28,7 +28,7 @@ const Journal = () => {
 
   const [entryBody, setEntryBody] = useState("")
 
-  const [linkedHabit, setLinkedHabit] = useState(0)
+  const [linkedHabit, setLinkedHabit] = useState(null)
 
 
   useEffect(() => {
