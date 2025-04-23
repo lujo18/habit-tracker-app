@@ -118,6 +118,13 @@ const TabsLayout = () => {
                     )
                 }}
             />
+            <Tabs.Screen 
+              name='habitAnalytics'
+              options={{
+                href:null,
+                headerShown:false,
+              }}
+            />
         </Tabs>
      
     </>

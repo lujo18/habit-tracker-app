@@ -131,22 +131,21 @@ const Home = () => {
   const HabitGroup = ({ group }) => {
     
     const isOpen = useSharedValue(true); // Flag to indicate measurement completion
-    const contentHeight = useSharedValue(0); // Shared value for animated height
-  
-  
+    const [contentHeight, setContentHeight] = useState(null) // Shared value for animated height
   
     // Animated style for the Animated.View
-    const animatedStyle = useAnimatedStyle(() => (contentHeight.value != 0 ? {
-      height: withTiming(isOpen.value ? contentHeight.value : 0, {
+    const animatedStyle = useAnimatedStyle(() => {
+      
+      return {
+      height: withTiming(isOpen.value ? contentHeight : 0, {
         easing: Easing.out(Easing.exp),
         duration: 600,
       }),
-      opacity: withTiming(isOpen.value ? 1 : 0, { duration: 300 }),
-      overflow: "hidden",
-    } : {}));
+      opacity: withTiming(isOpen.value ? 1 : 0, { duration: 500 }),
+      overflow: "hidden"
+    }});
   
     const closeHabitGroup = (groupType, visibility) => {
-
       if (isOpen.value != visibility) {
         isOpen.value = visibility
       }
@@ -185,13 +184,13 @@ const Home = () => {
       return (
         <View>
           <RepeatHeaders group={group} />
-          <Animated.View style={animatedStyle}>
+          <Animated.View style={[animatedStyle, {position: 'relative'}]}>
             <View
               onLayout={(event) => {
                 const { height } = event.nativeEvent.layout;
-                if (height != 0 && height != contentHeight.value) contentHeight.value = height
-              
+                if (height != 0 && !contentHeight) setContentHeight(height)
               }}
+              style={{position: 'absolute', right:0, left:0}}
             >
               <FlatList
                 data={filteredHabits}
@@ -204,9 +203,9 @@ const Home = () => {
                       handleReset={onTimerResetOpen}
                     />
                   ) : (
-                    <Link href="index" className='text-blue-500 mt-5'>
-                      <Habit key={item.id.toString()} data={item} />
-                    </Link>
+                    
+                    <Habit key={item.id.toString()} data={item} />
+                   
                     
                   );
                 }}

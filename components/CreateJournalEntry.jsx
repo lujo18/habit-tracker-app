@@ -5,7 +5,7 @@ import {
   TouchableOpacity,
   Platform,
   Keyboard,
-  SafeAreaView
+  SafeAreaView,
 } from "react-native";
 import React, { useEffect, useState, useRef } from "react";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -15,9 +15,12 @@ import LargeTextInput from "./LargeTextInput";
 import HabitsDropdown from "./HabitsDropdown";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import Markdown from "react-native-markdown-display";
-import { actions, RichEditor, RichToolbar } from "react-native-pell-rich-editor";
+import {
+  actions,
+  RichEditor,
+  RichToolbar,
+} from "react-native-pell-rich-editor";
 //import { MarkdownTextInput } from "@expensify/react-native-live-markdown";
-
 
 const CreateJournalEntry = ({
   isVisible,
@@ -41,15 +44,15 @@ const CreateJournalEntry = ({
   // Set up keyboard listeners to get height
   useEffect(() => {
     const keyboardWillShowListener = Keyboard.addListener(
-      Platform.OS === 'ios' ? 'keyboardWillShow' : 'keyboardDidShow',
+      Platform.OS === "ios" ? "keyboardWillShow" : "keyboardDidShow",
       (e) => {
         setKeyboardOpen(true);
         setKeyboardHeight(e.endCoordinates.height);
       }
     );
-    
+
     const keyboardWillHideListener = Keyboard.addListener(
-      Platform.OS === 'ios' ? 'keyboardWillHide' : 'keyboardDidHide',
+      Platform.OS === "ios" ? "keyboardWillHide" : "keyboardDidHide",
       () => {
         setKeyboardOpen(false);
         setKeyboardHeight(0);
@@ -98,17 +101,18 @@ const CreateJournalEntry = ({
                 </Text>
               </View>
               <View className="flex-1">
-                <TextButton text="done" onPress={onClose} containerStyles="p-0"/>
+                <TextButton
+                  text="done"
+                  onPress={onClose}
+                  containerStyles="p-0"
+                />
               </View>
             </View>
 
             {/* Content - with padding at bottom for toolbar */}
-            <View
-              className={`flex-1 ${keyboardOpen ? "pb-8" : "pb-16"}`}
-            
-            >
+            <View className={`flex-1 ${keyboardOpen ? "pb-8" : "pb-16"}`}>
               <KeyboardAwareScrollView
-                className="px-4 flex-1"
+                className="px-4 flex-1 bg-blue-400"
                 enableOnAndroid
                 scrollToOverflowEnabled={true}
                 enableAutomaticScroll={true}
@@ -120,7 +124,7 @@ const CreateJournalEntry = ({
                 keyboardShouldPersistTaps="handled"
                 onScrollBeginDrag={() => setIsScrolling(true)}
                 onScrollEndDrag={() => setIsScrolling(false)}
-                contentContainerStyle={{flexGrow: 1}}
+                contentContainerStyle={{ flexGrow: 1 }}
               >
                 <View className="gap-3 flex-1">
                   <BuildInput
@@ -141,55 +145,60 @@ const CreateJournalEntry = ({
                     <View className="flex-1"></View>
                   </View>
 
-                  
-                    {/*<LargeTextInput
+                  {/*<LargeTextInput
                       value={entryBody}
                       handleChange={changeEntryBody}
                       placeholder={"Start writing..."}
                       isScrolling={isScrolling}
                     />*/}
-  
-                    <RichEditor
-                      initialContentHTML={entryBody}
-                      ref={journalEditor}
-                      value={entryBody}
-                      onChange={changeEntryBody}
-                      style={{flex: 1}}
-                      editorStyle={{
-                        backgroundColor: "transparent",
-                        color: "white",
-                        fontSize: 16,
-                        lineHeight: 24,
-                        initialCSSText: 'fontFamily: "System'
-                        
-                      }}
-                    />
-                   
+
+                  <RichEditor
+                    initialContentHTML={entryBody}
+                    ref={journalEditor}
+                    value={entryBody}
+                    onChange={changeEntryBody}
+                    
+                    placeholder="Start writing..."
+                    editorStyle={{
+                      backgroundColor: "red",
+                      color: "white",
+                      fontSize: 16,
+                      lineHeight: 24,
+                      initialCSSText: 'fontFamily: "-apple-system"',
+                    }}
+                  />
                 </View>
               </KeyboardAwareScrollView>
             </View>
           </View>
 
           {/* Toolbar - positioned at bottom */}
-          <View 
+          <View
             className="absolute left-0 right-0 bg-background-80"
             style={{
-              bottom: keyboardOpen ? keyboardHeight - (Platform.OS === 'ios' ? 0 : insets.bottom) : 0,
+              bottom: keyboardOpen
+                ? keyboardHeight - (Platform.OS === "ios" ? 0 : insets.bottom)
+                : 0,
               paddingBottom: toolbarBottomPadding,
             }}
           >
-            <RichToolbar 
+            <RichToolbar
               editor={journalEditor}
-              actions={[ 
+              actions={[
                 actions.setBold,
-                actions.setItalic, 
+                actions.setItalic,
                 actions.setUnderline,
-                actions.setBullet]}
-              style={{backgroundColor:"#373F4E"}}
+                actions.insertBulletsList,
+              ]}
+              style={{
+                backgroundColor: "#373F4E",
+                height: 60,
+              }}
+              
               iconTint={"#D1D6E0"}
             />
             {/*<View className="w-full flex-row justify-around">
-              <TouchableOpacity className="p-4">
+              <TouchableOpacity className="p-4" onPress={() => journalEditor.current?.commandDOM("document.execCommand('bold', false, null)")}>
                 <Text className="text-highlight-90 font-bold text-xl">B</Text>
               </TouchableOpacity>
               <TouchableOpacity className="p-4">
