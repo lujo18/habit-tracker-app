@@ -8,6 +8,7 @@ import addBox from "../assets/icons/add-box-fill.png"
 import fillCheck from "../assets/icons/checkbox-fill-2.png"
 import dropdown from "../assets/icons/dropdown-arrow.png"
 import streakFire from "../assets/icons/streak-fire.png"
+import subtractLine from "../assets/icons/subtract-line.png"
 
 // Habit Options
 import habitDaily from "../assets/icons/habit-daily.png"
@@ -36,5 +37,6 @@ export default {
     habitYearly,
     dropdown,
     streakFire,
+    subtractLine,
     resetArrow
 }

@@ -2,7 +2,7 @@ import { View, Text, SafeAreaView } from "react-native";
 import React, { useEffect, useState } from "react";
 import { DateContext } from "../../contexts/DateContext";
 import { CartesianChart, Line, Area } from "victory-native";
-import { dateToSQL, HabitHistoryRepository } from "../../db/sqliteManager";
+import { HabitHistoryRepository } from "../../db/sqliteManager";
 import tailwindConfig from "../../tailwind.config";
 import CartesianAnalytics from "../../components/CartesianAnalytics";
 import { FontStyle, Skia } from "@shopify/react-native-skia";
@@ -17,9 +17,10 @@ const Analytics = () => {
     const getData = async () => {
       const date = new Date("2024-12-01");
       const data = await habitHistoryRepo.getProceedingLogs(
-        await dateToSQL(date),
+        date,
         3
       );
+      console.log("Line 23")
       setChartData(data);
     };
 

@@ -12,7 +12,7 @@ import { formatRepeatText } from '../utils/formatters'
 import { Link } from 'expo-router'
 
 // onPress: function ran when clicking habit's button (can vary for normal and timer based habits)
-const HabitBase = ({ data, habitCompletionDisplay, habitButton, enableStreak = false, currentStreak = 0, amount = 0, isCompleted = false, ...props }) => {
+const HabitBase = ({ data, habitCompletionDisplay, habitButton, habitSubtractButton, enableStreak = false, currentStreak = 0, amount = 0, isCompleted = false, ...props }) => {
 
   const [canvasSize, setCanvasSize] = useState({ width: 0, height: 0 })
 
@@ -60,6 +60,7 @@ const HabitBase = ({ data, habitCompletionDisplay, habitButton, enableStreak = f
           amount < goal ? "bg-background-90" : `bg-[${color}]`
         } flex-row w-full p-5 gap-3 rounded-2xl z-10`}
       >
+        {habitSubtractButton && habitSubtractButton()}
         <Link className='flex-1 flex-row' href={{ pathname: 'habitAnalytics', params: data}}>
           <View className="flex-1 gap-2">
             <View className="flex-row items-center gap-4">

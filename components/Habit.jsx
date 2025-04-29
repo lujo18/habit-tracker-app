@@ -13,7 +13,7 @@ import HabitBase from './HabitBase'
 
 
 
-const Habit = memo(({data}) => {
+const Habit = memo(({data, canSubtract}) => {
     const historyRepo = new HabitHistoryRepository();
 
     const [amount, setAmount] = useState(0);
@@ -62,35 +62,39 @@ const Habit = memo(({data}) => {
                 setIsCompleted(true)
                 setCurrentStreak(currentStreak + 1)
             }
+            if (amount != 0) {
             updateHabitCompletion()
+            }
         }   
     }, [amount])
 
-    const addMetric = () => {
-        if (curAmount.current < goal) {
-            setAmount((prev) => prev + 1)
-        }
+    const addMetric = (amount) => {
+        console.log(curAmount.current < goal && amount > 0)
+        console.log(curAmount.current > 0 && amount < 0)
+        
+        setAmount((prev) => prev + amount < 0 ? 0 : prev + amount)
+        
     }
 
-    const HabitButton = () => {
+    const HabitButton = ({incrementor}) => {
         return (
-            <TouchableOpacity onPress={addMetric} className={`w-16 h-16 overflow-hidden rounded-2xl justify-center items-center ${amount < goal ? "bg-background-80" : "bg-highlight-60"}`} disabled={amount===goal}>
+            <TouchableOpacity onPress={() => {addMetric(incrementor)}} className={`w-16 h-16 overflow-hidden rounded-2xl justify-center items-center ${amount < goal ? "bg-background-80" : "bg-highlight-60"}`}>
                 {
                     isLoading ? (
                         <ActivityIndicator size="large" />
                     ) : (
                         <Image
-                            source={amount < goal ? icons.addBox : icons.check}
+                            source={incrementor > 0 ? (amount < goal ? icons.addBox : icons.check) : icons.subtractLine}
                             resizeMode='cover'
                             className="w-[3rem] h-[3rem]"
                             tintColor={amount < goal ? tailwindColors['highlight']['80'] : tailwindColors['background']['90']}
                         />
                     )
                 }
-                
             </TouchableOpacity>  
         )
     }
+
 
 
     const HabitCompletionDisplay = () => {
@@ -105,7 +109,8 @@ const Habit = memo(({data}) => {
         <HabitBase
             data={data}
             habitCompletionDisplay={HabitCompletionDisplay}
-            habitButton={HabitButton}
+            habitButton={() => <HabitButton incrementor={1} />}
+            habitSubtractButton={canSubtract ? () => <HabitButton incrementor={-1} /> : null}
             enableStreak={true}
             currentStreak={currentStreak}
             amount={amount}

@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react'
 import icons from '../../constants/icons'
 import tailwindConfig from '../../tailwind.config'
 import CreateJournalEntry from '../../components/CreateJournalEntry'
-import { JournalEntryRepository, HabitsRepository, dateToSQL } from '../../db/sqliteManager'
+import { JournalEntryRepository, HabitsRepository } from '../../db/sqliteManager'
 import JournalEntry from '../../components/JournalEntry'
 
 const tailwindColors = tailwindConfig.theme.extend.colors
@@ -35,7 +35,7 @@ const Journal = () => {
     const queryEntries = async () => {
       setJournalEntries(await EntryRepo.getAllEntries());
 
-      const queryTallyHabits = await habitsRepo.queryHabits(await dateToSQL(entryDate));
+      const queryTallyHabits = await habitsRepo.queryHabits(entryDate);
       const queryQuitHabits = await habitsRepo.getAllHabits(); // Update to have a specific time shown (like day xyz or time that haven't done habit)
       setHabits([...queryTallyHabits, ...queryQuitHabits]);
     }

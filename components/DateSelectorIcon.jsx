@@ -1,8 +1,8 @@
 import { View, Text, TouchableOpacity } from 'react-native'
 import React, {memo, useEffect} from 'react'
-import { dateToSQL } from '../db/sqliteManager'
 
 const DateSelectorIcon = ({date, currentDate, setDate}) => {
+
   const dayAbrev = new Date(date).toLocaleString('en-US', { weekday: 'short' })
   const dayOfMonth = new Date(date).toLocaleString('en-US', { day: '2-digit' })
   const monthAbrev = new Date(date).toLocaleString('en-US', { month: 'short'})
@@ -11,7 +11,7 @@ const DateSelectorIcon = ({date, currentDate, setDate}) => {
   const presentDate = new Date();
 
   const getDate = async () => {
-    return await dateToSQL(date)
+    return date
   }
 
   return (

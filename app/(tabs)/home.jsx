@@ -5,7 +5,7 @@ import { SafeAreaView } from 'react-native-safe-area-context'
 import Habit from '../../components/Habit'
 import tailwindConfig from '../../tailwind.config'
 import HabitCreator from '../../components/HabitCreator'
-import { dateToSQL, DevRepository, HabitsRepository } from '../../db/sqliteManager'
+import { DevRepository, HabitsRepository } from '../../db/sqliteManager'
 import DateSelector from '../../components/DateSelector' 
 import { useLoading } from '../../components/LoadingProvider'
 //import { Image } from 'expo-image'
@@ -73,7 +73,7 @@ const Home = () => {
 
 
   const setCurrentDate = async (value) => {
-    setDate(await dateToSQL(value))
+    setDate(value)
   }
 
   const onModalClose = async () => {
@@ -110,8 +110,7 @@ const Home = () => {
   useEffect(() => {
     const initialize = async() => {
       const initDate = async () => {
-        const sqlDate = await dateToSQL(new Date())
-        setDate(sqlDate)  
+        setDate(new Date())  
       }
 
       if (!date) {
@@ -135,7 +134,6 @@ const Home = () => {
   
     // Animated style for the Animated.View
     const animatedStyle = useAnimatedStyle(() => {
-      
       return {
       height: withTiming(isOpen.value ? contentHeight : 0, {
         easing: Easing.out(Easing.exp),

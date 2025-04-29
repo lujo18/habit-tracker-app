@@ -1,6 +1,6 @@
 import { View } from "react-native";
-import React, { useMemo } from "react";
-import { CartesianChart, useAnimatedPath, useAreaPath, useChartPressState, useLinePath } from "victory-native";
+import React, { useEffect, useMemo } from "react";
+import { CartesianChart, useAnimatedPath, useAreaPath, useChartPressState, useLinePath} from "victory-native";
 import {
   Circle,
   DashPathEffect,
@@ -11,7 +11,8 @@ import {
   Skia,
   Font,
   FontStyle,
-  Line
+  Line,
+  Rect
 } from "@shopify/react-native-skia";
 import tailwindConfig from "../tailwind.config";
 const tailwindColors = tailwindConfig.theme.extend.colors;
@@ -23,7 +24,9 @@ const font = Skia.Font(typeFace, 12);
 const CartesianAnalytics = ({ data, xKey, yKeys }) => {
   const {state, isActive} = useChartPressState({x: 0, y: {completionCount : 0}})
 
+  try {
   // AreaChart component to render the area chart
+
   const AreaChart = ({ points, bottom, height }) => {
     const { path } = useAreaPath(points, bottom, { curveType: "linear" }); // Use curveLinear
     const { path: linePath } = useLinePath(points, bottom, {
@@ -43,20 +46,14 @@ const CartesianAnalytics = ({ data, xKey, yKeys }) => {
     );
   };
 
-  function ToolTip({x, y, bottom, height}) {
+  const ToolTip = ({x, y, bottom, height}) => {
     console.log("Tooltip values - x:", x.value, "bottom:", bottom, "height:", height);
-
     
-    const path = Skia.Path.Make()
-    path.moveTo(x.value, bottom)
-    path.lineTo(x.value, bottom - height)
-
-    //const animPath = useAnimatedPath(path)
     
     return (
       <>
-        <Path path={path} style="stroke" color={tailwindColors["background"][60]} strokeWidth={2}/>
-        <Circle cx={x} cy={y} r={4} color={"white"} />
+        <Rect x={x} y={0} height={height} width={1} color={"white"}/>
+        <Circle cx={x} cy={y} r={5} color={"white"} />
       </>
     )
   }
@@ -67,18 +64,26 @@ const CartesianAnalytics = ({ data, xKey, yKeys }) => {
         data={data}
         xKey={xKey}
         yKeys={yKeys}
+        domainPadding={{top: 40, bottom: 40, left: 20, right: 20}}
         padding={20}
         xAxis={{
           lineColor: tailwindColors["background"][80],
           lineWidth: 2,
           linePathEffect: <DashPathEffect intervals={[4, 4]} />,
         }}
+        
+        yAxis={[{domain: [0, undefined]}]}
         axisOptions={{ font }}
         chartPressState={state}
+        
       >
         {({ points, chartBounds, canvasSize }) => {
           // Ensure points and chartBounds are valid
-          if (!points || !chartBounds) return null;
+          console.log(data)
+          if (!points || !chartBounds) {
+            console.log("poings or chartBounds are null")
+            return null
+          };
           return (
             <>
               <AreaChart
@@ -95,6 +100,7 @@ const CartesianAnalytics = ({ data, xKey, yKeys }) => {
       </CartesianChart>
     </View>
   );
+  } catch (err) {console.log("Failed to load graph ", err)} 
 };
 
 export default CartesianAnalytics;

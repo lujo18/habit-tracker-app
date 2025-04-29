@@ -130,6 +130,8 @@ export class HabitsRepository extends BaseRepository {
   }
 
   async initializeHabits(date) {
+    date = await dateToSQL(date)
+
     try {
       const tallyHabits = await this.queryHabits(date)
       await this.createLogs(tallyHabits, date)
@@ -160,6 +162,7 @@ export class HabitsRepository extends BaseRepository {
   }
   
   async queryHabits(date) {
+    date = await dateToSQL(date)
 
     const query = `--sql
       SELECT Habits.*, b.completionCount, b.goal, b.date, b.streak, b.completed
@@ -187,6 +190,8 @@ export class HabitsRepository extends BaseRepository {
   }
 
   async getPreviousLog(date) {
+    date = await dateToSQL(date)
+
     const query = `--sql
       SELECT Habits.*, b.completionCount, b.goal, b.date, b.streak, b.completed
       FROM Habits
@@ -215,7 +220,8 @@ export class HabitsRepository extends BaseRepository {
 
   async createLogs(habits, currentDate) {
 
-    console.log("\n\n RAN CREATE LOGS \n\n")
+    currentDate = await dateToSQL(currentDate);
+    
     for (let habit of habits) {
       const logDate = await convertDateByRepetition(habit.repeat, currentDate);
 
@@ -382,10 +388,12 @@ export class HabitHistoryRepository extends BaseRepository {
    * set("completionCount", value, id, date)
    */
   async set(property, value, habitId, date) {
-    // Validates property to prevent SQL injection
+
     if (!this.isValidProperty(property)) {
       throw new Error(`Invalid property: ${property}`);
     }
+
+    date = await dateToSQL(date)
 
     const query = `--sql
       UPDATE HabitHistory
@@ -437,6 +445,8 @@ export class HabitHistoryRepository extends BaseRepository {
       throw new Error(`Invalid property: ${property}`);
     }
 
+    date = await dateToSQL(date)
+
     const query = `--sql
       SELECT ${property}
       FROM HabitHistory
@@ -458,6 +468,8 @@ export class HabitHistoryRepository extends BaseRepository {
   }
 
   async getProceedingLogs(date, habitId) {
+    date = await dateToSQL(date)
+    
     const query = `--sql
       SELECT *
       FROM HabitHistory
@@ -481,7 +493,7 @@ export class HabitHistoryRepository extends BaseRepository {
   }
 
   async setCompletion (id, value, date, goal, repeat) {
-    //console.log("set completionCount", value, goal)
+    date = await dateToSQL(date)
 
     const completed = await this.getValue('completed', id, date)
     try {
@@ -543,7 +555,7 @@ export class HabitHistoryRepository extends BaseRepository {
   }
 
   async getCompletion (id, date) {
-    //console.log("get completionCount")
+    date = await dateToSQL(date)
     const completionCount = await this.getValue("completionCount", id, date)
 
     return completionCount
@@ -814,6 +826,7 @@ async function determineRepetition(repeat, loggedDate, currentDate) {
  * @returns JS Date() in YYYY-MM-DD format
  */
 export async function dateToSQL(date) {
+  date = new Date(date)
   const year = date.getFullYear()
   const month = String(date.getMonth() + 1).padStart(2, '0')
   const day = String(date.getDate()).padStart(2, '0')
