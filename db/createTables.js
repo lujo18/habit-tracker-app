@@ -23,7 +23,7 @@ export const SCHEMA_SQL = `--sql
     goal INTEGER,
     date DATE,
     streak INTEGER,
-    FOREIGN KEY (habitId) REFERENCES Habits(id)
+    FOREIGN KEY (habitId) REFERENCES Habits(id) ON DELETE CASCADE
 
     UNIQUE (habitId, date)
   );
@@ -45,7 +45,7 @@ export const SCHEMA_SQL = `--sql
     resetTime DATETIME NOT NULL,
     previousDuration INTEGER,
     reason TEXT,
-    FOREIGN KEY (habitId) REFERENCES QuitHabits(id)
+    FOREIGN KEY (habitId) REFERENCES QuitHabits(id) ON DELETE CASCADE
 
     UNIQUE (habitId)
   );
@@ -57,7 +57,7 @@ export const SCHEMA_SQL = `--sql
     title TEXT,
     body TEXT,
     
-    FOREIGN KEY (habitId) REFERENCES Habits(id)
+    FOREIGN KEY (habitId) REFERENCES Habits(id) ON DELETE CASCADE
   
     UNIQUE (title)
   );

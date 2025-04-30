@@ -55,10 +55,10 @@ const Home = () => {
   const devRepo = new DevRepository() //DELETE THIS
   
   const yearToMs = 365 * 24 * 60 * 60 * 1000;
-  const oneYearAgo = new Date(Date.now() - yearToMs);
+  const oneYearAgo = new Date("2023-12-31"/*Date.now() - yearToMs*/);
   const oneYearAhead = new Date(Date.now());
 
-  const { showLoading, hideLoading, isLoading } = useLoading();
+  const {showLoading, hideLoading, isLoading } = useLoading();
 
   const [habitGroupsInfo, setHabitGroupsInfo] = useState(habitGroups)
   
@@ -70,7 +70,6 @@ const Home = () => {
 
   // Timer Reset Modal for time based habits
   const [resetTimerModal, setResetTimerModal] = useState({})
-
 
   const setCurrentDate = async (value) => {
     setDate(value)

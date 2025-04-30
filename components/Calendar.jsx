@@ -4,7 +4,7 @@ import { FlatList } from "react-native";
 import { generateDates, getMonthName } from "../utils/dateRetriver";
 import { endOfMonth } from "date-fns";
 
-const Calendar = ({selectedDay, setSelectedDay}) => {
+const Calendar = ({selectedDay, setSelectedDay, color = "#0A72D4", customCalendarIcon}) => {
   const endOfCurrentMonth = endOfMonth(new Date());
   const endOfCalendarDay = new Date().setDate(
     endOfCurrentMonth.getUTCDate() + (12 - endOfCurrentMonth.getUTCDay())
@@ -33,7 +33,6 @@ const Calendar = ({selectedDay, setSelectedDay}) => {
   // Take in the habit history and repeat through all history for matching M & Y
   // Change the effect on the calendar dates based on completionCount/goal
   useEffect(() => {
-    const indexer = selectedMonth + selectedMonth * (selectedYear - 2024);
     const filteredDates = dates.filter(
       (date) =>
         date.getUTCMonth() === selectedMonth &&
@@ -111,6 +110,40 @@ const Calendar = ({selectedDay, setSelectedDay}) => {
     );
   };
 
+  const defaultCalendarIcons = (date) => {
+    console.log
+
+    return (
+      <TouchableOpacity
+        onPress={() => {
+          setSelectedDay(date)
+        }}
+        className={`flex-1 rounded-xl items-center justify-center p-2 py-4 
+    
+        `}
+        style={
+          date.getUTCDate() == selectedDate &&
+          date.getUTCMonth() == selectedMonth &&
+          {
+            backgroundColor: color
+          }
+        }
+        disabled={date.getUTCMonth() != selectedMonth}
+      > 
+        <Text
+          className={`${
+            date.getUTCMonth() != selectedMonth
+              ? "text-background-60"
+              : "text-highlight"
+          }`}
+        >
+          {date.getUTCDate()}
+        </Text>
+      </TouchableOpacity>
+    )
+  }
+
+
   return (
     <View className="flex-1 w-full p-10">
       <View className="flex-row gap-4 items-center pb-2 border-b-2 border-background-70">
@@ -159,28 +192,8 @@ const Calendar = ({selectedDay, setSelectedDay}) => {
           )
         )*/
         }
-        renderItem={(date) => (
-          <TouchableOpacity
-            onPress={() => {
-              setSelectedDay(date.item)
-            }}
-            className={`flex-1 rounded-xl items-center justify-center p-2 py-4 ${
-              date.item.getUTCDate() == selectedDate &&
-              date.item.getUTCMonth() == selectedMonth &&
-              "bg-habitColors-hBlue"
-            }`}
-            disabled={date.item.getUTCMonth() != selectedMonth}
-          > 
-            <Text
-              className={`${
-                date.item.getUTCMonth() != selectedMonth
-                  ? "text-background-60"
-                  : "text-highlight"
-              }`}
-            >
-              {date.item.getUTCDate()}
-            </Text>
-          </TouchableOpacity>
+        renderItem={({ item }) => (
+          customCalendarIcon ? customCalendarIcon(item, selectedDate, selectedMonth) : defaultCalendarIcons(item)
         )}
         numColumns={7}
         contentContainerStyle={{ padding: 4 }}

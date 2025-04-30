@@ -68,26 +68,36 @@ class BaseRepository {
 export class DevRepository extends BaseRepository {
   async DropTables() {
     try {
-      
-      const db = await this.db
-      await db.runAsync(`DELETE FROM HabitHistory`)
-      await db.runAsync(`DELETE FROM Habits`)
-      await db.runAsync(`DELETE FROM HabitLabel`)
-      await db.runAsync(`DELETE FROM HabitLocation`)
-      await db.runAsync(`DELETE FROM JournalEntries`)
-      await db.runAsync(`DELETE FROM QuitHabits`)
-      await db.runAsync(`DELETE FROM QuitHabitHistory`)
-      await db.runAsync(`DROP TABLE IF EXISTS Habits`)
-      await db.runAsync(`DROP TABLE IF EXISTS HabitHistory`)
-      await db.runAsync(`DROP TABLE IF EXISTS HabitLabel`)
-      await db.runAsync(`DROP TABLE IF EXISTS HabitLocation`)
-      await db.runAsync(`DROP TABLE IF EXISTS JournalEntries`)
-      await db.runAsync(`DROP TABLE IF EXISTS QuitHabits`)
-      await db.runAsync(`DROP TABLE IF EXISTS QuitHabitHistory`)
+      const db = await this.db;
 
-      console.log("Successfuly dropped tables")
+      // Disable foreign key constraints temporarily
+      await db.runAsync(`PRAGMA foreign_keys = OFF;`);
+
+      // Delete rows in child tables first
+      await db.runAsync(`DELETE FROM HabitHistory`);
+      await db.runAsync(`DELETE FROM QuitHabitHistory`);
+      await db.runAsync(`DELETE FROM Habits`);
+      await db.runAsync(`DELETE FROM QuitHabits`);
+      await db.runAsync(`DELETE FROM HabitLabel`);
+      await db.runAsync(`DELETE FROM HabitLocation`);
+      await db.runAsync(`DELETE FROM JournalEntries`);
+      await db.runAsync(`DELETE FROM sqlite_sequence;`); // Reset AUTOINCREMENT counters
+
+      // Drop tables in the correct order
+      await db.runAsync(`DROP TABLE IF EXISTS HabitHistory`);
+      await db.runAsync(`DROP TABLE IF EXISTS QuitHabitHistory`);
+      await db.runAsync(`DROP TABLE IF EXISTS Habits`);
+      await db.runAsync(`DROP TABLE IF EXISTS QuitHabits`);
+      await db.runAsync(`DROP TABLE IF EXISTS HabitLabel`);
+      await db.runAsync(`DROP TABLE IF EXISTS HabitLocation`);
+      await db.runAsync(`DROP TABLE IF EXISTS JournalEntries`);
+
+      // Re-enable foreign key constraints
+      await db.runAsync(`PRAGMA foreign_keys = ON;`);
+
+      console.log("Successfully dropped tables");
     } catch (error) {
-      console.log("Failed to drop tables", error)
+      console.log("Failed to drop tables", error);
     }
   }
 
@@ -556,6 +566,7 @@ export class HabitHistoryRepository extends BaseRepository {
 
   async getCompletion (id, date) {
     date = await dateToSQL(date)
+    console.log("Habit SQL date ", date)
     const completionCount = await this.getValue("completionCount", id, date)
 
     return completionCount
@@ -827,9 +838,9 @@ async function determineRepetition(repeat, loggedDate, currentDate) {
  */
 export async function dateToSQL(date) {
   date = new Date(date)
-  const year = date.getFullYear()
-  const month = String(date.getMonth() + 1).padStart(2, '0')
-  const day = String(date.getDate()).padStart(2, '0')
+  const year = date.getUTCFullYear()
+  const month = String(date.getUTCMonth() + 1).padStart(2, '0')
+  const day = String(date.getUTCDate()).padStart(2, '0')
 
   return `${year}-${month}-${day}`
 }

@@ -10,6 +10,7 @@ import { DateContext } from '../contexts/DateContext'
 import { useLoading } from './LoadingProvider'
 import { formatRepeatText } from '../utils/formatters'
 import { Link } from 'expo-router'
+import { setDate } from 'date-fns'
 
 // onPress: function ran when clicking habit's button (can vary for normal and timer based habits)
 const HabitBase = ({ data, habitCompletionDisplay, habitButton, habitSubtractButton, enableStreak = false, currentStreak = 0, amount = 0, isCompleted = false, ...props }) => {
@@ -17,6 +18,8 @@ const HabitBase = ({ data, habitCompletionDisplay, habitButton, habitSubtractBut
   const [canvasSize, setCanvasSize] = useState({ width: 0, height: 0 })
 
   const {name, repeat, color, goal} = data
+
+  const selectedDate = useContext(DateContext)
 
   const borderColor = color
   const backgroundColor = tailwindConfig.theme.extend.colors["background"]["90"]
@@ -53,15 +56,21 @@ const HabitBase = ({ data, habitCompletionDisplay, habitButton, habitSubtractBut
       className="rounded-2xl overflow-hidden justify-center relative items-center p-1 my-4"
       onLayout={({ nativeEvent: { layout } }) => {
         setCanvasSize(layout);
-      }}
-    >
-      <View
+            }}
+          >
+            <View
         className={`${
           amount < goal ? "bg-background-90" : `bg-[${color}]`
         } flex-row w-full p-5 gap-3 rounded-2xl z-10`}
-      >
+            >
         {habitSubtractButton && habitSubtractButton()}
-        <Link className='flex-1 flex-row' href={{ pathname: 'habitAnalytics', params: data}}>
+        <Link
+          className="flex-1 flex-row"
+          href={{
+            pathname: 'habitAnalytics',
+            params: { data: JSON.stringify(data), selectedDate: new Date(new Date(selectedDate).setDate(selectedDate.getDate() - 1)).toISOString() },
+          }}
+        >
           <View className="flex-1 gap-2">
             <View className="flex-row items-center gap-4">
               <Text className="text-highlight text-2xl">{name}</Text>

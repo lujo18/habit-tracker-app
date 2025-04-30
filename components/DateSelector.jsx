@@ -1,6 +1,7 @@
 import { View, Text, FlatList } from 'react-native'
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import DateSelectorIcon from './DateSelectorIcon'
+import { generateDates } from '../utils/dateRetriver'
 
 const DateSelector = ({ start, end, currentDate, setDate }) => {
 
@@ -14,18 +15,8 @@ const DateSelector = ({ start, end, currentDate, setDate }) => {
     }
   }, [dates]);
 
-  const generateDates = (startDate, endDate) => {
-    const dates = [];
-    let currentDate = new Date(startDate);
-    while (currentDate <= endDate) {
-      dates.push(new Date(currentDate))
-      currentDate.setDate(currentDate.getDate() + 1)
-    }
-    return dates;
-  }
-
   const dates = useMemo(() => {
-    return generateDates( start, end )
+    return generateDates(start, end)
   }, [start, end])
 
   const renderItem = useCallback(({item}) => {

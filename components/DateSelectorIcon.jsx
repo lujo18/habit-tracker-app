@@ -16,13 +16,13 @@ const DateSelectorIcon = ({date, currentDate, setDate}) => {
 
   return (
     <TouchableOpacity 
-      className={`w-16 h-16 items-center justify-center bg-background-90 rounded-xl ${new Date(`${currentDate}T00:00:00`).toDateString() === new Date(date).toDateString() && "bg-habitColors-hBlue"}`}
+      className={`w-16 h-16 items-center justify-center bg-background-90 rounded-xl ${new Date(currentDate).toDateString() === new Date(date).toDateString() && "bg-habitColors-hBlue"}`}
       onPress={() => {setDate(date)}}  
     >
       {
-        presentDate.getMonth() != date.getMonth() ? (
-          presentDate.getFullYear() != date.getFullYear() ? (
-            <Text className="text-white">{date.getFullYear()}</Text>
+        presentDate.getUTCMonth() != date.getUTCMonth() ? (
+          presentDate.getUTCFullYear() != date.getUTCFullYear() ? (
+            <Text className="text-white">{date.getUTCFullYear()}</Text>
           ) : (
             <Text className="text-white">{monthAbrev}</Text>
           )

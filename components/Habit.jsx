@@ -32,6 +32,7 @@ const Habit = memo(({data, canSubtract}) => {
     const tailwindColors = tailwindConfig.theme.extend.colors
 
     useEffect(() => {
+        console.log("Habits date ", selectedDate)
         const fetchCompletion = async () => {
             try {
                 setAmount(await historyRepo.getCompletion(id, selectedDate))
@@ -48,10 +49,11 @@ const Habit = memo(({data, canSubtract}) => {
             setIsCompleted(completed)
         }
         
-    }, [isLoading])
+    }, [isLoading, selectedDate])
 
     async function updateHabitCompletion() {
         curAmount.current = amount
+        //console.log("UPDATE: ", id, amount, selectedDate, goal, repeat)
         await historyRepo.setCompletion(id, amount, selectedDate, goal, repeat)
         progressValue.set(amount)
     }
@@ -69,8 +71,6 @@ const Habit = memo(({data, canSubtract}) => {
     }, [amount])
 
     const addMetric = (amount) => {
-        console.log(curAmount.current < goal && amount > 0)
-        console.log(curAmount.current > 0 && amount < 0)
         
         setAmount((prev) => prev + amount < 0 ? 0 : prev + amount)
         
