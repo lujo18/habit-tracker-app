@@ -47,9 +47,7 @@ const CartesianAnalytics = ({ data, xKey, yKeys }) => {
   };
 
   const ToolTip = ({x, y, bottom, height}) => {
-    console.log("Tooltip values - x:", x.value, "bottom:", bottom, "height:", height);
-    
-    
+
     return (
       <>
         <Rect x={x} y={0} height={height} width={1} color={"white"}/>

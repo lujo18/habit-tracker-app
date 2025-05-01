@@ -105,8 +105,6 @@ export class DevRepository extends BaseRepository {
     const query = `SELECT * FROM HabitHistory`
 
     const result = await this.getAllQuery(query)
-
-    console.log("SIMPLE QUERY RESULT", result)
     
     return result;
   }
@@ -151,7 +149,7 @@ export class HabitsRepository extends BaseRepository {
 
       const updatedResults = [...updatedTallyHabits, ...updatedQuitHabits]
       
-      console.log("Habits\n" + JSON.stringify(updatedResults))
+      //console.log("Habits\n" + JSON.stringify(updatedResults))
 
       return updatedResults
     } catch (error) {

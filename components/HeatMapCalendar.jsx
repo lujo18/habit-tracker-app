@@ -2,11 +2,14 @@ import { View, Text, TouchableOpacity } from 'react-native';
 import React, { useEffect } from 'react';
 import Calendar from './Calendar';
 
-const HeatMapCalendar = ({ habitHistory, selectedDay, setSelectedDay, color = "#0A72D4" }) => {
+const HeatMapCalendar = ({ habitHistory, selectedDay, setSelectedDay, color = "#0A72D4", selectedAmount }) => {
   
-  console.log(JSON.stringify(habitHistory))
+  useEffect(() => {
+    console.log(selectedAmount)
+  }, [selectedAmount])
 
   const calendarIcons = (date, selectedDate, selectedMonth) => {
+
     const data = habitHistory.filter(
       (entry) => new Date(entry.date).toDateString() === date.toDateString()
     );
@@ -31,7 +34,7 @@ const HeatMapCalendar = ({ habitHistory, selectedDay, setSelectedDay, color = "#
       <View className='absolute top-0 left-0 right-0 bottom-0 rounded-xl'
         style={ date.getUTCMonth() == selectedMonth && {
           backgroundColor: data.length > 0 ? color : "transparent",
-          opacity: data.length > 0 ? data[0].completionCount / data[0].goal : 1
+          opacity: data.length > 0 ? (selectedDate == date.getUTCDate() ? selectedAmount : data[0].completionCount) / data[0].goal : 1
         }}
       >
 

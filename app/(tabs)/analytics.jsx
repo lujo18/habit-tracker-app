@@ -20,7 +20,6 @@ const Analytics = () => {
         date,
         3
       );
-      console.log("Line 23")
       setChartData(data);
     };
 

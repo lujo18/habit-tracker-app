@@ -13,7 +13,7 @@ import HabitBase from './HabitBase'
 
 
 
-const Habit = memo(({data, canSubtract}) => {
+const Habit = memo(({data, canSubtract, updateSelectedAmount}) => {
     const historyRepo = new HabitHistoryRepository();
 
     const [amount, setAmount] = useState(0);
@@ -45,13 +45,15 @@ const Habit = memo(({data, canSubtract}) => {
 
         if (!isLoading) {
             fetchCompletion()
+            updateSelectedAmount && updateSelectedAmount(curAmount.current)
             setCurrentStreak(streak)
             setIsCompleted(completed)
         }
         
     }, [isLoading, selectedDate])
 
-    async function updateHabitCompletion() {
+    async function updateHabitCompletion(amount) {
+        updateSelectedAmount && updateSelectedAmount(amount)
         curAmount.current = amount
         //console.log("UPDATE: ", id, amount, selectedDate, goal, repeat)
         await historyRepo.setCompletion(id, amount, selectedDate, goal, repeat)
@@ -64,16 +66,13 @@ const Habit = memo(({data, canSubtract}) => {
                 setIsCompleted(true)
                 setCurrentStreak(currentStreak + 1)
             }
-            if (amount != 0) {
-            updateHabitCompletion()
-            }
         }   
     }, [amount])
 
-    const addMetric = (amount) => {
-        
-        setAmount((prev) => prev + amount < 0 ? 0 : prev + amount)
-        
+    const addMetric = (value) => {
+        const newAmount = amount + value <= 0 ? 0 : amount + value
+        setAmount(newAmount)
+        updateHabitCompletion(newAmount)
     }
 
     const HabitButton = ({incrementor}) => {

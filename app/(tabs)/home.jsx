@@ -56,7 +56,8 @@ const Home = () => {
   
   const yearToMs = 365 * 24 * 60 * 60 * 1000;
   const oneYearAgo = new Date("2023-12-31"/*Date.now() - yearToMs*/);
-  const oneYearAhead = new Date(Date.now());
+  const oneYearAhead = new Date() - 24 * 60 * 60 * 1000;
+  
 
   const {showLoading, hideLoading, isLoading } = useLoading();
 
@@ -99,7 +100,7 @@ const Home = () => {
 
     try {
       setHabits(await habitsRepo.initializeHabits(date))
-      console.log(habits)
+    
     }
     finally {
       hideLoading()
@@ -109,7 +110,7 @@ const Home = () => {
   useEffect(() => {
     const initialize = async() => {
       const initDate = async () => {
-        setDate(new Date())  
+        setDate(new Date(new Date() - 24 * 60 * 60 * 1000))  
       }
 
       if (!date) {

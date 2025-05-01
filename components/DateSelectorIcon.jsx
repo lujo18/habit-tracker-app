@@ -3,20 +3,22 @@ import React, {memo, useEffect} from 'react'
 
 const DateSelectorIcon = ({date, currentDate, setDate}) => {
 
-  const dayAbrev = new Date(date).toLocaleString('en-US', { weekday: 'short' })
-  const dayOfMonth = new Date(date).toLocaleString('en-US', { day: '2-digit' })
-  const monthAbrev = new Date(date).toLocaleString('en-US', { month: 'short'})
-  const yearAbrev = new Date(date).toLocaleString('en-US', {year: "numeric"})
+  //date = new Date(new Date(date).setDate(date.getUTCDate()))
 
-  const presentDate = new Date();
+  const dayAbrev = new Date(date).toLocaleString('en-US', {timeZone: 'UTC', weekday: 'short' })
+  const dayOfMonth = new Date(date).getUTCDate()
+  const monthAbrev = new Date(date).toLocaleString('en-US', {timeZone: 'UTC', month: 'short' })
+  const yearAbrev = new Date(date).toLocaleString('en-US', {timeZone: 'UTC', year: "numeric"})
+
+  const presentDate = new Date(new Date().setDate(new Date().getUTCDate()))
 
   const getDate = async () => {
     return date
   }
 
   return (
-    <TouchableOpacity 
-      className={`w-16 h-16 items-center justify-center bg-background-90 rounded-xl ${new Date(currentDate).toDateString() === new Date(date).toDateString() && "bg-habitColors-hBlue"}`}
+    <TouchableOpacity  // was h-16
+      className={`w-40 h-40 items-center justify-center bg-background-90 rounded-xl ${new Date(currentDate).toDateString() === new Date(date).toDateString() && "bg-habitColors-hBlue"}`}
       onPress={() => {setDate(date)}}  
     >
       {
@@ -28,6 +30,7 @@ const DateSelectorIcon = ({date, currentDate, setDate}) => {
           )
         ) : (
           <Text className="text-white">{dayAbrev}</Text>
+         
         )
       }
 

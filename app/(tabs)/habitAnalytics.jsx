@@ -23,19 +23,22 @@ const habitAnalytics = () => {
   const [chartData, setChartData] = useState([]);
   const tailwindColors = tailwindConfig.theme.extend.colors;
 
+  const [selectedAmount, setSelectedAmount] = useState(0)
+
+
+  const getData = async () => {
+    const date = new Date("2024-12-01");
+
+    const historyData = await habitHistoryRepo.getProceedingLogs(
+      date,
+      parseInt(data.id)
+    );
+
+    setChartData(historyData);
+  };
+
   useEffect(() => {
     try {
-      const getData = async () => {
-        const date = new Date("2024-12-01");
-
-        const historyData = await habitHistoryRepo.getProceedingLogs(
-          date,
-          parseInt(data.id)
-        );
-
-        setChartData(historyData);
-      };
-
       getData();
     } catch (r) {
       console.log("Analytics error,", r);
@@ -43,10 +46,13 @@ const habitAnalytics = () => {
   }, [data.id]);
 
   const setDate = async (value) => {
-    console.log("New date ", value)
+    getData()
     setSelectedDate(new Date(value));
   };
 
+  const updateSelectedAmount = (amount) => {
+    setSelectedAmount(amount)
+  }
   
   return (
     <DateContext.Provider value={selectedDate}>
@@ -68,10 +74,10 @@ const habitAnalytics = () => {
               yKeys={["completionCount"]}
             />*/}
 
-            <HeatMapCalendar habitHistory={chartData} selectedDay={selectedDate} setSelectedDay={setDate} color={data.color}/>
+            <HeatMapCalendar habitHistory={chartData} selectedDay={selectedDate} setSelectedDay={setDate} color={data.color} selectedAmount={selectedAmount}/>
 
             <View className="w-full p-4">
-              <Habit data={data} canSubtract={true} />
+              <Habit data={data} canSubtract={true} updateSelectedAmount={updateSelectedAmount}/>
             </View>
 
             <Text className="text-white">{JSON.stringify(data)}{JSON.stringify(date)}</Text>

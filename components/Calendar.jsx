@@ -111,7 +111,6 @@ const Calendar = ({selectedDay, setSelectedDay, color = "#0A72D4", customCalenda
   };
 
   const defaultCalendarIcons = (date) => {
-    console.log
 
     return (
       <TouchableOpacity

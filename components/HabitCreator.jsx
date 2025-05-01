@@ -106,7 +106,6 @@ const HabitCreator = ({ isVisible, onClose }) => {
   }, []);
 
   const createHabit = async () => {
-    console.log("create habit");
 
     if (!habitName) {
       Alert.alert("Error", "Name is required!");
