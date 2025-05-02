@@ -67,7 +67,7 @@ const Home = () => {
   const [habits, setHabits] = useState([])
   const [quitHabits, setQuitHabits] = useState([])
 
-  const [date, setDate] = useState("")
+  const [date, setDate] = useState(null)
 
   // Timer Reset Modal for time based habits
   const [resetTimerModal, setResetTimerModal] = useState({})
@@ -86,9 +86,7 @@ const Home = () => {
   }
 
   const onTimerResetClose = () => {
-    
     setResetTimerModal({})
-  
   }
 
   const onTimerResetOpen = (data) => {
@@ -99,8 +97,9 @@ const Home = () => {
     showLoading()
 
     try {
-      setHabits(await habitsRepo.initializeHabits(date))
-    
+      //setHabits(await habitsRepo.initializeHabits(date))
+      setHabits(await habitsRepo.getAll())
+      console.log(habits)
     }
     finally {
       hideLoading()
@@ -109,22 +108,27 @@ const Home = () => {
 
   useEffect(() => {
     const initialize = async() => {
-      const initDate = async () => {
-        setDate(new Date(new Date() - 24 * 60 * 60 * 1000))  
+      const initDate = async() => {
+        const currentDate = new Date();
+        currentDate.setHours(0, 0, 0, 0);
+        setDate(currentDate);
       }
 
-      if (!date) {
+      await initDate()
+      await queryHabits(date)
+
+      /*if (!date) {
         console.log("INIT DATE")
         await initDate()
       }
       else {
         console.log("INITIALIZE")
         await queryHabits(date);
-      }
+      }*/
     }
 
     initialize()
-  }, [date]);
+  }, []);
 
 
   const HabitGroup = ({ group }) => {

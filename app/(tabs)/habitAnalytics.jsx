@@ -28,11 +28,8 @@ const habitAnalytics = () => {
 
   const getData = async () => {
     const date = new Date("2024-12-01");
-
-    const historyData = await habitHistoryRepo.getProceedingLogs(
-      date,
-      parseInt(data.id)
-    );
+    console.log("data.id: ", parseInt(data.id))
+    const historyData = await habitHistoryRepo.getAllHistory(parseInt(data.id))
 
     setChartData(historyData);
   };

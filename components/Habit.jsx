@@ -17,12 +17,15 @@ const Habit = memo(({data, canSubtract, updateSelectedAmount}) => {
     const historyRepo = new HabitHistoryRepository();
 
     const [amount, setAmount] = useState(0);
+    const [goal, setGoal] = useState(0);
     const curAmount = useRef(null); 
 
     const [isCompleted, setIsCompleted] = useState(0)
     const [currentStreak, setCurrentStreak] = useState(0)
 
-    const {id, name, completion, setting, repeat, type, label, color, goal, location, date, streak, completed} = data
+    const [dynamicData, setDynamicData] = useState(null)
+
+    const {id, name, completion, setting, repeat, type, label, color, referenceGoal, location, date, streak, completed} = data
 
     const selectedDate = useContext(DateContext)
     const { isLoading } = useLoading();
@@ -32,22 +35,34 @@ const Habit = memo(({data, canSubtract, updateSelectedAmount}) => {
     const tailwindColors = tailwindConfig.theme.extend.colors
 
     useEffect(() => {
-        console.log("Habits date ", selectedDate)
-        const fetchCompletion = async () => {
-            try {
-                setAmount(await historyRepo.getCompletion(id, selectedDate))
-                curAmount.current = amount;
-            } 
-            catch (error) {
-                console.log("Failed to fetch completion:", error);
+        const fetchHabitData = async () => {
+            const data = await historyRepo.getEntry(id, selectedDate)
+            setDynamicData(data)
+            console.log("Dynamic Data: ", data)
+            
+            if (data == null) {
+                console.log("No history, waiting for action")
+                setAmount(0);
+                setGoal(referenceGoal);
+                currentStreak(0)
+                setIsCompleted(false)
             }
+            else {
+                setAmount(data.completionCount)
+                setGoal(data.goal)
+                currentStreak(data.streak)
+                setIsCompleted(completed)
+            }
+            //setAmount(await historyRepo.getCompletion(id, selectedDate)) // try to get completion
+            curAmount.current = amount;
+            
         }
 
         if (!isLoading) {
-            fetchCompletion()
+            fetchHabitData()
             updateSelectedAmount && updateSelectedAmount(curAmount.current)
-            setCurrentStreak(streak)
-            setIsCompleted(completed)
+            //setCurrentStreak(streak)
+            //setIsCompleted(completed)
         }
         
     }, [isLoading, selectedDate])
@@ -61,12 +76,25 @@ const Habit = memo(({data, canSubtract, updateSelectedAmount}) => {
     }
 
     useEffect(() => {
-        if (!isLoading) {
-            if (!isCompleted && amount >= goal) {
-                setIsCompleted(true)
-                setCurrentStreak(currentStreak + 1)
+        const inner = async () => {
+            
+            if (dynamicData == null && amount > 0) {
+                console.log("Action heard, creating entry")
+                setDynamicData(await historyRepo.getEntryWithCheck(id, selectedDate))
             }
-        }   
+           
+            if (dynamicData && !isLoading) {
+                if (!isCompleted && amount >= goal) {
+                    setIsCompleted(true)
+                    setCurrentStreak(currentStreak + 1)
+                }
+                else if (isCompleted && amount < goal) {
+                    setIsCompleted(false)
+                    setCurrentStreak(currentStreak - 1)
+                }
+            }  
+        }
+        inner() 
     }, [amount])
 
     const addMetric = (value) => {
@@ -106,13 +134,14 @@ const Habit = memo(({data, canSubtract, updateSelectedAmount}) => {
 
     return (
         <HabitBase
-            data={data}
+            data={{...dynamicData, ...data }}
             habitCompletionDisplay={HabitCompletionDisplay}
             habitButton={() => <HabitButton incrementor={1} />}
             habitSubtractButton={canSubtract ? () => <HabitButton incrementor={-1} /> : null}
             enableStreak={true}
             currentStreak={currentStreak}
             amount={amount}
+            goal={goal}
             isCompleted={isCompleted}
         />
     )

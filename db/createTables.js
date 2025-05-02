@@ -23,10 +23,13 @@ export const SCHEMA_SQL = `--sql
     goal INTEGER,
     date DATE,
     streak INTEGER,
-    FOREIGN KEY (habitId) REFERENCES Habits(id) ON DELETE CASCADE
-
+    periodKey TEXT NOT NULL,
+    FOREIGN KEY (habitId) REFERENCES Habits(id) ON DELETE CASCADE,
     UNIQUE (habitId, date)
   );
+
+  CREATE UNIQUE INDEX IF NOT EXISTS IdxHabitHistoryPeriod
+  ON HabitHistory (habitId, periodKey);
 
   CREATE TABLE IF NOT EXISTS QuitHabits (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -46,8 +49,6 @@ export const SCHEMA_SQL = `--sql
     previousDuration INTEGER,
     reason TEXT,
     FOREIGN KEY (habitId) REFERENCES QuitHabits(id) ON DELETE CASCADE
-
-    UNIQUE (habitId)
   );
 
   CREATE TABLE IF NOT EXISTS JournalEntries (
@@ -56,10 +57,7 @@ export const SCHEMA_SQL = `--sql
     habitId INTEGER,
     title TEXT,
     body TEXT,
-    
     FOREIGN KEY (habitId) REFERENCES Habits(id) ON DELETE CASCADE
-  
-    UNIQUE (title)
   );
 
   CREATE TABLE IF NOT EXISTS HabitLabel (
@@ -71,7 +69,6 @@ export const SCHEMA_SQL = `--sql
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     name TEXT UNIQUE
   );
-  
   
   INSERT OR IGNORE INTO HabitLabel (name)
   VALUES
@@ -85,4 +82,4 @@ export const SCHEMA_SQL = `--sql
   ("bedroom"),
   ("kitchen");
 
-`
+`;

@@ -58,7 +58,7 @@ class BaseRepository {
       return result
     } catch (error) {
       console.log("Failed to getAllQuery", error)
-      
+      //return null
     }
     
   }
@@ -157,12 +157,34 @@ export class HabitsRepository extends BaseRepository {
     }
   }
 
+  async get(id) {
+    const query = `--sql
+      SELECT *
+      FROM Habits
+      WHERE id = ?
+      LIMIT 1
+    `;
+
+    const params = [id]
+
+    const result = await this.getAllQuery(query, id);
+    return result[0] ?? null;
+  }
+
+  async getAll() {
+    const query = `--sql
+      SELECT *
+      FROM Habits
+    `
+
+    return await this.getAllQuery(query, [])
+  }
+
   async getAllHabits() {
     const query = `--sql
       SELECT name
       FROM Habits
     `
-
     const res = await this.getAllQuery(query, [])
     console.log("GET ALL RES: ", res)
 
@@ -475,6 +497,78 @@ export class HabitHistoryRepository extends BaseRepository {
     return res;
   }
 
+  async getEntry(id, date) {
+    date = await dateToSQL(date)
+    console.log("Get entry | date : ", date, id)
+    console.log(await this.getAllHistory(id))
+
+    const query = `--sql
+      SELECT *
+      FROM HabitHistory
+      WHERE date = ?
+      AND habitId = ?
+      LIMIT 1
+    `
+    const params = [
+      date,
+      id
+    ]
+
+    try {
+      const result = await this.getAllQuery(query, params);
+      console.log("Get entry results: ", result[0])
+      return result[0] ?? null;
+    }
+    catch (e) {
+      console.log("Failed to get entry", e);
+    }
+     
+  }
+
+  async getEntryWithCheck(id, date) {
+    
+    try {
+      date = await dateToSQL(date)
+
+      const result = await this.getEntry(id, date)
+
+      if (result == null) {
+      await this.createEntry(id, date)
+      const entry = await this.getAllHistory(id)
+      console.log(entry)
+      return entry 
+      } else {
+      return result
+      }
+    } catch (error) {
+      console.log("Failed to get or create entry", error)
+    }
+  }
+
+  async createEntry(id, date) { 
+    const habit = await new HabitsRepository().get(id);
+
+    const query = `--sql
+      INSERT OR IGNORE INTO HabitHistory (habitId, completionCount, goal, date, streak)
+      VALUES (?, ?, ?, ?, ?)
+    `;
+
+    const params = [
+      habit.id,
+      0,
+      habit.referenceGoal,
+      date,
+      0
+    ]
+    
+    try {
+      await this.executeQuery(query, params)
+      console.log("Successfully created new entry");
+    } catch (error) {
+      console.log("Failed to create entry", error)
+    }
+  }
+
   async getProceedingLogs(date, habitId) {
     date = await dateToSQL(date)
     
@@ -564,7 +658,7 @@ export class HabitHistoryRepository extends BaseRepository {
 
   async getCompletion (id, date) {
     date = await dateToSQL(date)
-    console.log("Habit SQL date ", date)
+    
     const completionCount = await this.getValue("completionCount", id, date)
 
     return completionCount
