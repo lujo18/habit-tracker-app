@@ -1,4 +1,4 @@
-import { View } from "react-native";
+import { View, Text } from "react-native";
 import React, { useEffect, useMemo } from "react";
 import { CartesianChart, useAnimatedPath, useAreaPath, useChartPressState, useLinePath} from "victory-native";
 import {
@@ -12,7 +12,9 @@ import {
   Font,
   FontStyle,
   Line,
-  Rect
+  Rect,
+
+  Canvas
 } from "@shopify/react-native-skia";
 import tailwindConfig from "../tailwind.config";
 const tailwindColors = tailwindConfig.theme.extend.colors;
@@ -51,51 +53,57 @@ const CartesianAnalytics = ({ data, xKey, yKeys }) => {
     return (
       <>
         <Rect x={x} y={0} height={height} width={1} color={"white"}/>
-        <Circle cx={x} cy={y} r={5} color={"white"} />
+        <Circle cx={x} cy={y} r={7} color={"black"} strokeWidth={1}/>
+        <Circle cx={x} cy={y} r={5} color={"white"} strokeWidth={1}/>
+        
+        
       </>
     )
   }
 
   return (
-    <View className="w-full h-[300px]">
-      <CartesianChart
-        data={data}
-        xKey={xKey}
-        yKeys={yKeys}
-        domainPadding={{top: 40, bottom: 40, left: 20, right: 20}}
-        padding={20}
-        xAxis={{
-          lineColor: tailwindColors["background"][80],
-          lineWidth: 2,
-          linePathEffect: <DashPathEffect intervals={[4, 4]} />,
-        }}
-        
-        yAxis={[{domain: [0, undefined]}]}
-        axisOptions={{ font }}
-        chartPressState={state}
-        
-      >
-        {({ points, chartBounds, canvasSize }) => {
-          // Ensure points and chartBounds are valid
-          console.log(data)
-          if (!points || !chartBounds) {
-            console.log("poings or chartBounds are null")
-            return null
-          };
-          return (
-            <>
-              <AreaChart
-                points={points.completionCount}
-                bottom={chartBounds.bottom}
-                height={canvasSize.height}
-              />
-              {isActive &&
-                <ToolTip x={state.x.position} y={state.y.completionCount.position} bottom={chartBounds.bottom} height={canvasSize.height}/>
-              }
-            </>
-          );
-        }}
-      </CartesianChart>
+    <View className="w-full">
+      <Text>Habit Progress</Text>
+      <View className="w-full h-[300px]">
+        <CartesianChart
+          data={data}
+          xKey={xKey}
+          yKeys={yKeys}
+          domainPadding={{top: 40, bottom: 40, left: 20, right: 20}}
+          padding={20}
+          xAxis={{
+            lineColor: tailwindColors["background"][80],
+            lineWidth: 2,
+            linePathEffect: <DashPathEffect intervals={[4, 4]} />,
+          }}
+      
+          yAxis={[{domain: [0, undefined]}]}
+          axisOptions={{ font }}
+          chartPressState={state}
+      
+        >
+          {({ points, chartBounds, canvasSize }) => {
+            // Ensure points and chartBounds are valid
+            console.log(data)
+            if (!points || !chartBounds) {
+              console.log("poings or chartBounds are null")
+              return null
+            };
+            return (
+              <>
+                <AreaChart
+                  points={points.completionCount}
+                  bottom={chartBounds.bottom}
+                  height={canvasSize.height}
+                />
+                {isActive &&
+                  <ToolTip x={state.x.position} y={state.y.completionCount.position} bottom={chartBounds.bottom} height={canvasSize.height}/>
+                }
+              </>
+            );
+          }}
+        </CartesianChart>
+      </View>
     </View>
   );
   } catch (err) {console.log("Failed to load graph ", err)} 

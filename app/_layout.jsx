@@ -3,6 +3,7 @@ import { SplashScreen, Stack } from "expo-router";
 import "../global.css";
 
 import { LoadingProvider } from "../components/LoadingProvider";
+import { DateProvider } from "../contexts/DateContext";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -13,10 +14,12 @@ const RootLayout = () => {
 
   return ( 
     <LoadingProvider>
-      <Stack>
-        <Stack.Screen name="index" options={{ headerShown: false }} />
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-      </Stack>
+      <DateProvider>
+        <Stack>
+          <Stack.Screen name="index" options={{ headerShown: false }} />
+          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+        </Stack>
+      </DateProvider>
     </LoadingProvider> 
   );
 };

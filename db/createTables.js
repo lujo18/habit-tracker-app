@@ -23,13 +23,13 @@ export const SCHEMA_SQL = `--sql
     goal INTEGER,
     date DATE,
     streak INTEGER,
-    periodKey TEXT NOT NULL,
+    periodKey DATE NOT NULL,
     FOREIGN KEY (habitId) REFERENCES Habits(id) ON DELETE CASCADE,
     UNIQUE (habitId, date)
   );
 
-  CREATE UNIQUE INDEX IF NOT EXISTS IdxHabitHistoryPeriod
-  ON HabitHistory (habitId, periodKey);
+  /*CREATE UNIQUE INDEX IF NOT EXISTS IdxHabitHistoryPeriod
+  ON HabitHistory (habitId, periodKey);*/
 
   CREATE TABLE IF NOT EXISTS QuitHabits (
     id INTEGER PRIMARY KEY AUTOINCREMENT,

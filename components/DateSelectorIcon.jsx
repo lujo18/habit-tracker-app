@@ -12,30 +12,26 @@ const DateSelectorIcon = ({date, currentDate, setDate}) => {
 
   const presentDate = new Date(new Date().setDate(new Date().getUTCDate()))
 
-  const getDate = async () => {
-    return date
-  }
-
   return (
     <TouchableOpacity  // was h-16
-      className={`w-40 h-40 items-center justify-center bg-background-90 rounded-xl ${new Date(currentDate).toDateString() === new Date(date).toDateString() && "bg-habitColors-hBlue"}`}
+      className={`w-16 h-16 items-center justify-center bg-background-90 rounded-xl ${new Date(currentDate).toDateString() === new Date(date).toDateString() && "border-habitColors-hBlue border-2"}`}
       onPress={() => {setDate(date)}}  
     >
       {
         presentDate.getUTCMonth() != date.getUTCMonth() ? (
           presentDate.getUTCFullYear() != date.getUTCFullYear() ? (
-            <Text className="text-white">{date.getUTCFullYear()}</Text>
+            <Text className="text-highlight-70 text-lg font-lora-semibold-italic">{date.getUTCFullYear()}</Text>
           ) : (
-            <Text className="text-white">{monthAbrev}</Text>
+            <Text className="text-highlight-70 text-lg font-lora-semibold-italic">{monthAbrev}</Text>
           )
         ) : (
-          <Text className="text-white">{dayAbrev}</Text>
+          <Text className="text-highlight-70 text-lg font-lora-semibold-italic">{dayAbrev}</Text>
          
         )
       }
 
       
-      <Text className="text-white text-2xl">{dayOfMonth}</Text>
+      <Text className="text-white text-3xl font-generalsans-semibold">{dayOfMonth}</Text>
     </TouchableOpacity>
   )
 }

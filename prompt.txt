@@ -1,0 +1,26 @@
+{
+  "type": "object",
+  "properties": {
+    "habitName": {
+      "type": "string",
+      "description": "the name of the activity being done, type as a verb, use capitalization",
+      "nullable": false
+    },
+    "goalAmount": {
+      "type": "integer",
+      "format": "int64",
+      "description": "the amount of repetition the task should be done, come up with a reasonable beginning amount for the activity if no amount is specified, you must provide an amount value at all times",
+      "nullable": false
+    },
+    "activityLabel": {
+      "type": "string",
+      "description": "the metric for quanity that measures how much or how long each value of goalAmount means",
+      "nullable": false
+    }
+  },
+  "propertyOrdering": [
+    "habitName",
+    "goalAmount",
+    "activityLabel"
+  ]
+}

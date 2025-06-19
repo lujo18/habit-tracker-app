@@ -10,14 +10,14 @@ const tailwindColors = tailwindConfig.theme.extend.colors
 
 const TabIcon = ({icon, color, name, focused}) => {
   return (
-    <View className="items-center justify-center gap-2 w-20">
+    <View className="items-center justify-center gap-2">
       <Image
         source={icon}
         resizeMode='contain'
         tintColor={color}
         className={focused ? 'w-11 h-11' : 'w-9 h-9'}
       />
-      <Text className={focused ? "text-highlight-60" : "text-background-90"}>{name}</Text>
+      {/*<Text className={focused ? "text-highlight-60" : "text-background-90"}>{name}</Text>*/}
     </View>
   )
 }
@@ -25,8 +25,7 @@ const TabIcon = ({icon, color, name, focused}) => {
 const TabsLayout = () => {
 
   return (
-    <> 
-      
+    <>
         <Tabs
           screenOptions={{
             tabBarShowLabel: false,
@@ -35,9 +34,15 @@ const TabsLayout = () => {
             tabBarStyle: {
               backgroundColor: tailwindColors['background']['DEFAULT'],
               borderTopWidth: 1,
-              borderTopColor: tailwindColors['background']['90'],
-              height: 92,
-              paddingTop: 12
+              borderColor: tailwindColors['background']['90'],
+              height: 70,
+              borderWidth: 1,
+              borderRadius: 50,
+              marginBottom: 25,
+              marginHorizontal: 20,
+              paddingTop: 15,
+              
+              position: "absolute"
             }
           }}
         >
@@ -126,7 +131,7 @@ const TabsLayout = () => {
               }}
             />
         </Tabs>
-     
+      
     </>
   )
 }

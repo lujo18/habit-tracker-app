@@ -438,6 +438,35 @@ export class HabitHistoryRepository extends BaseRepository {
     `;
 
     const params = [value ?? 0, habitId, habitId, date];
+
+    try {
+      await this.executeQuery(query, params);
+    }
+    catch (error) {
+      console.log(`Failed to set ${property} to ${value}: `, error)
+    }
+    
+  } 
+
+
+  async setPeriod(property, value, habitId, periodKey) {
+
+    if (!this.isValidProperty(property)) {
+      throw new Error(`Invalid property: ${property}`);
+    }
+
+    periodKey = await dateToSQL(periodKey)
+
+    const query = `--sql
+      UPDATE HabitHistory
+      SET ${property} = ?
+      WHERE habitId = ? 
+      AND periodKey = ?
+    `;
+
+    const params = [value ?? 0, habitId, periodKey];
+
+    console.warn("Set period", query, params)
     try {
       await this.executeQuery(query, params);
     }
@@ -497,16 +526,54 @@ export class HabitHistoryRepository extends BaseRepository {
     return res;
   }
 
-  async getEntry(id, date) {
-    date = await dateToSQL(date)
-    console.log("Get entry | date : ", date, id)
-    console.log(await this.getAllHistory(id))
+  /**
+   * Get the property of the most recent habit history for a given periodKey.
+   * @param {string} property Name of the column/property that is being retrieved
+   * @param {string} habitId Id of the habit whose history is retrieved
+   * @param {string} date Period key in form of dateToSQL "YYYY-MM-DD"
+   * @returns The value of that column/property for the given periodKey
+   */
+  async getValueForPeriod(property, habitId, date) {
+    if (!this.isValidProperty(property)) {
+      throw new Error(`Invalid property: ${property}`);
+    }
+
+    const habit = await new HabitsRepository().get(habitId);
+    const periodKeyDate = await getPeriodKey(habit.repeat, date);
 
     const query = `--sql
-      SELECT *
+      SELECT ${property}
       FROM HabitHistory
-      WHERE date = ?
-      AND habitId = ?
+      WHERE habitId = ?
+      AND periodKey = ?
+      ORDER BY date DESC
+      LIMIT 1
+    `;
+    const params = [habitId, periodKeyDate];
+    const data = await this.getAllQuery(query, params);
+    const res = data && data[0] ? data[0][property] : undefined;
+    return res;
+  }
+
+  async getEntry(id, date) {
+    date = await dateToSQL(date)
+
+    const query = `--sql
+      SELECT h.*, (
+        SELECT SUM(completionCount)
+        FROM HabitHistory h2
+        WHERE h2.periodKey = h.periodKey
+        AND h2.habitId = h.habitId
+      ) AS periodCompletion,
+      (
+        SELECT streak
+        FROM HabitHistory h2
+        WHERE h2.periodKey = h.periodKey
+        AND h2.habitId = h.habitId
+      ) AS periodStreak
+      FROM HabitHistory h
+      WHERE h.date = ?
+      AND h.habitId = ?
       LIMIT 1
     `
     const params = [
@@ -516,7 +583,7 @@ export class HabitHistoryRepository extends BaseRepository {
 
     try {
       const result = await this.getAllQuery(query, params);
-      console.log("Get entry results: ", result[0])
+      //console.log("Get entry results: ", result[0])
       return result[0] ?? null;
     }
     catch (e) {
@@ -525,20 +592,46 @@ export class HabitHistoryRepository extends BaseRepository {
      
   }
 
+  async getPeriodData(id, date) {
+    date = await dateToSQL(date)
+    const habit = await new HabitsRepository().get(id);
+    const periodKeyDate = await getPeriodKey(habit.repeat, date);
+
+    const query = `--sql
+      SELECT *, SUM(completionCount) AS periodCompletion
+      FROM HabitHistory h2
+      WHERE periodKey = ?
+      AND habitId = ?
+      LIMIT 1
+    `
+    const params = [
+      periodKeyDate,
+      id
+    ]
+
+    try {
+      const result = await this.getAllQuery(query, params);
+      //console.log("Get entry results: ", result[0])
+      return result[0]?.id ? result[0] : null;
+    }
+    catch (e) {
+      console.log("Failed to get entry", e);
+    }
+  }
+
   async getEntryWithCheck(id, date) {
-    
     try {
       date = await dateToSQL(date)
 
       const result = await this.getEntry(id, date)
 
       if (result == null) {
-      await this.createEntry(id, date)
-      const entry = await this.getAllHistory(id)
-      console.log(entry)
-      return entry 
+        await this.createEntry(id, date)
+        const entry = await this.getEntry(id, date)
+        console.log("Got entry:", entry);
+        return entry 
       } else {
-      return result
+        return result
       }
     } catch (error) {
       console.log("Failed to get or create entry", error)
@@ -548,21 +641,26 @@ export class HabitHistoryRepository extends BaseRepository {
   async createEntry(id, date) { 
     const habit = await new HabitsRepository().get(id);
 
+    const periodKeyDate = await getPeriodKey(habit.repeat, date);
+
     const query = `--sql
-      INSERT OR IGNORE INTO HabitHistory (habitId, completionCount, goal, date, streak)
-      VALUES (?, ?, ?, ?, ?)
+      INSERT OR IGNORE INTO HabitHistory (habitId, completionCount, goal, date, streak, periodKey)
+      VALUES (?, ?, ?, ?, ?, ?)
     `;
 
     const params = [
       habit.id,
-      0,
+      1,
       habit.referenceGoal,
       date,
-      0
+      0,
+      periodKeyDate
     ]
+
     
     try {
       await this.executeQuery(query, params)
+      console.log(await this.getEntry(id, date))
       console.log("Successfully created new entry");
     } catch (error) {
       console.log("Failed to create entry", error)
@@ -571,13 +669,19 @@ export class HabitHistoryRepository extends BaseRepository {
 
   async getProceedingLogs(date, habitId) {
     date = await dateToSQL(date)
+
+    console.log("Get proceeding dates for:", date)
     
     const query = `--sql
       SELECT *
-      FROM HabitHistory
-      WHERE date >= ?
-      AND habitId = ?
-      ORDER BY date ASC
+      FROM (
+        SELECT *,
+                ROW_NUMBER() OVER (PARTITION BY periodKey ORDER BY date ASC) AS rn
+        FROM HabitHistory
+        WHERE periodKey >= ?
+        AND habitId = ?
+      ) t
+      WHERE rn = 1;
     `
     const params = [
       date,
@@ -587,23 +691,183 @@ export class HabitHistoryRepository extends BaseRepository {
     console.log(date)
     try {
       const t = await this.getAllQuery(query, params)
-      console.log("PROCEEDING", t)
+      //console.log("PROCEEDING", t)
       return t
     } catch (error) {
       console.log("Failed to retrieve habits ", error)
     }
   }
 
-  async setCompletion (id, value, date, goal, repeat) {
+  /**
+   * Gets the habit history entries for days after the given date, stopping at the first missed day (where streak breaks).
+   * @param {number} id - The habit ID.
+   * @param {string} date - The starting date (YYYY-MM-DD).
+   * @returns {Promise<Array>} Array of HabitHistory entries up to the first missed day.
+   */
+  async getStreakUntilMissed(id, date) {
+    date = await dateToSQL(date);
+   
+    const habit = await new HabitsRepository().get(id);
+    const repeat = habit?.repeat;
+    const logs = await this.getProceedingLogs(date, id);
+    const streakLogs = [];
+
+    //streakLogs.push(logs[0])
+    for (let i = 1; i < logs.length; i++) {
+      // Check if the next log's periodKey is the next period after the current one
+      const currentKey = logs[i - 1].periodKey;
+      const nextKey = logs[i].periodKey;
+      let isConsecutive = false;
+
+      console.log("Comparing dates: ", currentKey, nextKey, (new Date(nextKey) - new Date(currentKey)), 24 * 60 * 60 * 1000)
+
+      if (logs[i - 1] && logs[i]) {
+        switch (repeat) {
+          case "day":
+        isConsecutive = (new Date(nextKey) - new Date(currentKey)) === 24 * 60 * 60 * 1000;
+        break;
+          case "week":
+        isConsecutive = (new Date(nextKey) - new Date(currentKey)) === 7 * 24 * 60 * 60 * 1000;
+        break;
+          case "month":
+        const curDate = new Date(currentKey);
+        const nextDate = new Date(nextKey);
+        isConsecutive =
+          nextDate.getUTCFullYear() === curDate.getUTCFullYear() &&
+          nextDate.getUTCMonth() === curDate.getUTCMonth() + 1 ||
+          (curDate.getUTCMonth() === 11 && nextDate.getUTCMonth() === 0 && nextDate.getUTCFullYear() === curDate.getUTCFullYear() + 1);
+        break;
+          case "year":
+        isConsecutive = (new Date(nextKey).getUTCFullYear() - new Date(currentKey).getUTCFullYear()) === 1;
+        break;
+          default:
+        isConsecutive = false;
+        }
+      }
+      if (!isConsecutive) break;
+      streakLogs.push(logs[i]);
+      
+    }
+
+    return streakLogs;
+  }
+
+  /**
+   * Gets the streak value of the period directly before the current one.
+   * If there is no entry for the immediately preceding period, returns 0.
+   * @param {number} id - The habit ID.
+   * @param {string|Date} date - The current date (YYYY-MM-DD or Date).
+   * @returns {Promise<number>} The streak value of the previous period or 0.
+   */
+  async getStrictPreviousPeriodStreak(id, date) {
+    const habit = await new HabitsRepository().get(id);
+    if (!habit) return 0;
+    const repeat = habit.repeat;
+    let currentPeriodKey = await getPeriodKey(repeat, date);
+
+    // Calculate the previous period key based on repeat type
+    let prevPeriodDate = new Date(currentPeriodKey);
+    switch (repeat) {
+      case "day":
+        prevPeriodDate.setDate(prevPeriodDate.getDate() - 1);
+        break;
+      case "week":
+        prevPeriodDate.setDate(prevPeriodDate.getDate() - 7);
+        break;
+      case "month":
+        prevPeriodDate.setMonth(prevPeriodDate.getMonth() - 1);
+        break;
+      case "year":
+        prevPeriodDate.setFullYear(prevPeriodDate.getFullYear() - 1);
+        break;
+      default:
+        return 0;
+    }
+    const prevPeriodKey = await dateToSQL(prevPeriodDate);
+
+    const query = `--sql
+      SELECT streak, completed
+      FROM HabitHistory
+      WHERE habitId = ?
+      AND periodKey = ?
+      ORDER BY date DESC
+      LIMIT 1
+    `;
+    const params = [id, prevPeriodKey];
+    const data = await this.getAllQuery(query, params);
+    console.log("data", data)
+    return data && (data.length > 0 && data[0].completed == 1) ? data[0].streak : 0;
+  }
+
+  async getPreviousPeriodStreak(id, date) {
+
+    const habit = await new HabitsRepository().get(id);
+
+    const periodKey = await getPeriodKey(habit.repeat, date)
+
+    const query = `--sql
+      SELECT streak
+      FROM HabitHistory
+      WHERE habitId = ?
+      AND periodKey < ?
+      ORDER BY periodKey DESC
+      LIMIT 1
+    `
+
+    const params = [id, periodKey]
+
+    const data = await this.getAllQuery(query, params)
+    return data.length > 0 ? data[0].streak : 0;
+  }
+
+  async setCompletion (id, value, date, goal, periodKey, currentStreak) {
     date = await dateToSQL(date)
+      try {
+      
+      if (!periodKey) {
+        const habit = await new HabitsRepository().get(id);
+        periodKey = await getPeriodKey(habit?.repeat, date)
+      }
 
-    const completed = await this.getValue('completed', id, date)
-    try {
-      if (!completed && value >= goal) {
-        this.set("completed", 1, id, date)
-        this.set("streak", await this.getValue("streak", id, date) + 1, id, date)
+      await this.set("completionCount", value, id, date)
+      
+      const periodData = await this.getPeriodData(id, date)
+      const periodAmount = periodData.periodCompletion
 
-        const logDate = await convertDateByRepetition(repeat, date)
+      //const previousPeriodStreak = await this.getPreviousPeriodStreak(id, date)
+
+      //console.log("Period data:", previousPeriodStreak)
+    
+      const completed = await this.getValueForPeriod("completed", id, date)
+      //let currentStreak = await this.getValueForPeriod("streak", id, date)
+
+      //if (currentStreak == 0 && currentStreak != previousPeriodStreak) {currentStreak = previousPeriodStreak}
+      
+      //console.log("Current Streak:", currentStreak)
+      
+      //console.log("Data", periodAmount, goal)
+      if (!completed && periodAmount >= goal) {
+        const newStreak = currentStreak + 1
+
+        await this.setPeriod("completed", 1, id, periodKey)
+        await this.setPeriod("streak", newStreak, id, periodKey)
+
+        const datesAfter = await this.getStreakUntilMissed(id, periodKey)
+        //console.error("DATES AFTER", datesAfter)
+
+        let i = 1;
+        for (const log of datesAfter) {
+          //console.log("Updating Streak: ", log, newStreak + i)
+          //if (datesAfter[i - 1]?.streak == log.streak) .{
+          await this.setPeriod("streak", log.completed == 1 ? newStreak + i : newStreak + i - 1, id, log.periodKey) 
+          //}
+          if (log.completed == 0) {
+            break
+          }
+          i++
+        }
+
+        /*const logDate = await convertDateByRepetition(repeat, date)
         const proceedingLogs = await this.getProceedingLogs(logDate, id)
         const initialStreak = proceedingLogs[0].streak;   
         
@@ -649,11 +913,18 @@ export class HabitHistoryRepository extends BaseRepository {
           }
           
 
-        }
+        }*/
         //console.log("Proceeding Logs: ", proceedingLogs)
       }
-    } catch (error) {console.log("Failed to push streak, ", error)}
-    await this.set("completionCount", value, id, date)
+      else if (completed && periodAmount < goal) {
+        const newStreak = currentStreak - 1
+
+        await this.setPeriod("completed", 0, id, periodKey)
+        await this.setPeriod("streak", newStreak, id, periodKey)
+      }
+      
+    } catch (error) {console.error("Failed to push streak, ", error)}
+    
   }
 
   async getCompletion (id, date) {
@@ -786,6 +1057,7 @@ export class JournalEntryRepository extends BaseRepository {
   }
 }
 
+// Gets the keyDate for history (so the first day of it's time period)
 const convertDateByRepetition = async (repetition, currentDate) => {
   let logCreationDate;
   switch (repetition) {
@@ -841,8 +1113,6 @@ const compareDays = async (loggedDate, currentDate) => {
   console.log("Current date: ", currDate)
   console.log("Difference: ", currDate - prevDate)
 
-
-  
   // Checks if the difference is exactly 7 days (in milliseconds)
   if (currDate - prevDate < oneDayMs) return 0;
   if (currDate - prevDate >= oneDayMs * 2) return 2;
@@ -935,4 +1205,28 @@ export async function dateToSQL(date) {
   const day = String(date.getUTCDate()).padStart(2, '0')
 
   return `${year}-${month}-${day}`
+}
+
+async function getPeriodKey(repeat, date = Date.now()) {
+  let periodKeyDate = new Date(date);
+  switch (repeat) {
+    case "day":
+      periodKeyDate = await dateToSQL(periodKeyDate);
+      return periodKeyDate;
+    case "week":
+      periodKeyDate.setDate(periodKeyDate.getDate() - periodKeyDate.getDay())
+      periodKeyDate = await dateToSQL(periodKeyDate);
+      return periodKeyDate;
+    case "month":
+      periodKeyDate.setDate(1);
+      periodKeyDate = await dateToSQL(periodKeyDate);
+      return periodKeyDate;
+    case "year":
+      periodKeyDate.setMonth(0, 1);
+      periodKeyDate = await dateToSQL(periodKeyDate);
+      return periodKeyDate;
+    default:
+      console.error("Invalid repeat type")
+      return null;
+  }
 }

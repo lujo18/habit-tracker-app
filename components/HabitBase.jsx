@@ -6,20 +6,19 @@ import { Canvas, Rect, SweepGradient, vec} from '@shopify/react-native-skia'
 import Animated, { interpolate, useSharedValue, withReanimatedTimer, withRepeat, withTiming, Easing, withSpring } from 'react-native-reanimated'
 import tailwindConfig from '../tailwind.config'
 import { HabitHistoryRepository } from '../db/sqliteManager'
-import { DateContext } from '../contexts/DateContext'
+import { DateContext, useDateContext } from '../contexts/DateContext'
 import { useLoading } from './LoadingProvider'
 import { formatRepeatText } from '../utils/formatters'
 import { Link } from 'expo-router'
 import { setDate } from 'date-fns'
 
 // onPress: function ran when clicking habit's button (can vary for normal and timer based habits)
-const HabitBase = ({ data, habitCompletionDisplay, habitButton, habitSubtractButton, enableStreak = false, currentStreak = 0, amount = 0, isCompleted = false, ...props }) => {
-
+const HabitBase = ({ data, habitCompletionDisplay, habitButton, habitSubtractButton, enableStreak = false, currentStreak = 0, amount = 0, goal, isCompleted = false, ...props }) => {
+  const {selectedDate} = useDateContext()
+  
   const [canvasSize, setCanvasSize] = useState({ width: 0, height: 0 })
 
-  const {name, repeat, color, goal} = data
-
-  const selectedDate = useContext(DateContext)
+  const {name, repeat, color} = data
 
   const borderColor = color
   const backgroundColor = tailwindConfig.theme.extend.colors["background"]["90"]
@@ -29,7 +28,7 @@ const HabitBase = ({ data, habitCompletionDisplay, habitButton, habitSubtractBut
     return (
       <View className="flex-row items-center justify-start">
         <Text
-          className={`text-xl ${
+          className={`text-2xl font-lora-semibold-italic ${
             isCompleted ? "text-highlight" : "text-background-70"
           } `}
         >
@@ -56,41 +55,46 @@ const HabitBase = ({ data, habitCompletionDisplay, habitButton, habitSubtractBut
       className="rounded-2xl overflow-hidden justify-center relative items-center p-1 my-4"
       onLayout={({ nativeEvent: { layout } }) => {
         setCanvasSize(layout);
+      }}
+>
+        <View
+          className={`${
+            amount < goal ? "bg-background-90" : `bg-[${color}]`
+          } flex-row w-full p-5 gap-3 rounded-2xl z-10`}
+        >
+          {habitSubtractButton && habitSubtractButton()}
+
+          <Link
+            className="flex-1"
+            href={{
+              pathname: 'habitAnalytics',
+              params: { data: JSON.stringify(data), selectedDate },
             }}
           >
-            <View
-        className={`${
-          amount < goal ? "bg-background-90" : `bg-[${color}]`
-        } flex-row w-full p-5 gap-3 rounded-2xl z-10`}
-            >
-        {habitSubtractButton && habitSubtractButton()}
-        <Link
-          className="flex-1 flex-row"
-          href={{
-            pathname: 'habitAnalytics',
-            params: { data: JSON.stringify(data), selectedDate: new Date(new Date(selectedDate).setDate(selectedDate.getDate() - 1)).toISOString() },
-          }}
-        >
-          <View className="flex-1 gap-2">
-            <View className="flex-row items-center gap-4">
-              <Text className="text-highlight text-2xl">{name}</Text>
-          
-              {enableStreak && <HabitStreak />}
+            <View className='flex-1 flex flex-row justify-between'>
+            
+              <View className="flex-1 gap-2">
+                <View className="flex-row items-center gap-4">
+                  <Text className="text-highlight text-2xl font-generalsans-semibold">{name}</Text>
+            
+                  {enableStreak && <HabitStreak />}
+                </View>
+                {/** contains current completion under habit name (x/y label | x time) */}
+                { habitCompletionDisplay() }
+              </View>
+              
+              <View>
+                <View className="p-2">
+                  <Text className="text-highlight-60 text-lg font-generalsans-medium">
+                    {formatRepeatText(repeat)}
+                  </Text>
+                </View>
+              </View>
             </View>
-            {/** contains current completion under habit name (x/y label | x time) */}
-            { habitCompletionDisplay() }
-          </View>
-          <View>
-            <View className="p-2">
-              <Text className="text-highlight-60">
-                {formatRepeatText(repeat)}
-              </Text>
-            </View>
-          </View>
-        </Link>
+          </Link>
 
-        { habitButton() }
-      </View>
+          { habitButton() }
+        </View>
 
       <Canvas
         style={{

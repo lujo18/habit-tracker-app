@@ -2,10 +2,13 @@ import { View, Text, FlatList } from 'react-native'
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import DateSelectorIcon from './DateSelectorIcon'
 import { generateDates } from '../utils/dateRetriver'
+import { useDateContext } from '../contexts/DateContext'
 
-const DateSelector = ({ start, end, currentDate, setDate }) => {
+const DateSelector = ({ start, end }) => {
 
   const flatListRef = useRef(null);
+  
+  const {selectedDate, setSelectedDate} = useDateContext();
 
   useEffect(() => {
     if (flatListRef.current) {
@@ -22,10 +25,10 @@ const DateSelector = ({ start, end, currentDate, setDate }) => {
   const renderItem = useCallback(({item}) => {
     return (
       <View className="mr-2">
-        <DateSelectorIcon date={item} currentDate={currentDate} setDate={setDate} />
+        <DateSelectorIcon date={item} currentDate={selectedDate} setDate={setSelectedDate} />
       </View>
     )
-  }, [currentDate])
+  }, [selectedDate])
 
   return (
     <View className="pt-2 pb-2">

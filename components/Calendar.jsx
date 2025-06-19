@@ -4,7 +4,7 @@ import { FlatList } from "react-native";
 import { generateDates, getMonthName } from "../utils/dateRetriver";
 import { endOfMonth } from "date-fns";
 
-const Calendar = ({selectedDay, setSelectedDay, color = "#0A72D4", customCalendarIcon}) => {
+const Calendar = ({selectedDay, setSelectedDay, color = "#0A72D4", customCalendarIcon, allowFutureDates}) => {
   const endOfCurrentMonth = endOfMonth(new Date());
   const endOfCalendarDay = new Date().setDate(
     endOfCurrentMonth.getUTCDate() + (12 - endOfCurrentMonth.getUTCDay())
@@ -70,6 +70,7 @@ const Calendar = ({selectedDay, setSelectedDay, color = "#0A72D4", customCalenda
 
   const changeMonth = (direction) => {
     let newMonth = selectedMonth + direction;
+    
     /*if (
       (selectedYear == (dates[dates.length - 1].getFullYear()) &&
         newMonth > dates[dates.length - 1].getMonth()) &&
@@ -90,6 +91,10 @@ const Calendar = ({selectedDay, setSelectedDay, color = "#0A72D4", customCalenda
     }
 
     setSelectedMonth(newMonth);
+
+    const newDate = new Date(selectedDay)
+    newDate.setUTCDate(1)
+    setSelectedDay(newDate)
     //}
   };
 
@@ -127,7 +132,7 @@ const Calendar = ({selectedDay, setSelectedDay, color = "#0A72D4", customCalenda
             backgroundColor: color
           }
         }
-        disabled={date.getUTCMonth() != selectedMonth}
+        disabled={(!allowFutureDates ? (date.getUTCDate() > new Date().getDate() && date.getUTCMonth() == new Date().getUTCMonth()) : false) || date.getUTCMonth() != selectedMonth}
       > 
         <Text
           className={`${
@@ -192,7 +197,7 @@ const Calendar = ({selectedDay, setSelectedDay, color = "#0A72D4", customCalenda
         )*/
         }
         renderItem={({ item }) => (
-          customCalendarIcon ? customCalendarIcon(item, selectedDate, selectedMonth) : defaultCalendarIcons(item)
+          customCalendarIcon ? customCalendarIcon(item, selectedDate, selectedMonth, allowFutureDates) : defaultCalendarIcons(item)
         )}
         numColumns={7}
         contentContainerStyle={{ padding: 4 }}

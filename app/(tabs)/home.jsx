@@ -5,15 +5,16 @@ import { SafeAreaView } from 'react-native-safe-area-context'
 import Habit from '../../components/Habit'
 import tailwindConfig from '../../tailwind.config'
 import HabitCreator from '../../components/HabitCreator'
-import { DevRepository, HabitsRepository } from '../../db/sqliteManager'
+import { DevRepository, HabitHistoryRepository, HabitsRepository } from '../../db/sqliteManager'
 import DateSelector from '../../components/DateSelector' 
 import { useLoading } from '../../components/LoadingProvider'
 //import { Image } from 'expo-image'
-import { DateContext } from '../../contexts/DateContext'
+import { DateContext, useDateContext } from '../../contexts/DateContext'
 import QuitHabit from '../../components/QuitHabit'
 import TimerResetModal from '../../components/TimerResetModal'
 import Animated, { useAnimatedStyle, useSharedValue, withSpring, withTiming, Easing, measure } from 'react-native-reanimated'
 import { Link } from 'expo-router'
+import { ScrollView } from 'react-native'
 
 const tailwindColors = tailwindConfig.theme.extend.colors
 
@@ -52,14 +53,27 @@ const habitGroups = [
 
 const Home = () => {
   const habitsRepo = new HabitsRepository();
+  const historyRepo = new HabitHistoryRepository(); // DELETE THIS
   const devRepo = new DevRepository() //DELETE THIS
+
+  const [history, setHistory] = useState()
+  
+  useEffect(() => {
+    const fetchHistory = async () => {
+      const result = await historyRepo.getAllHistory(1);
+      setHistory(result);
+    };
+    fetchHistory();
+  }, [selectedDate]);
   
   const yearToMs = 365 * 24 * 60 * 60 * 1000;
-  const oneYearAgo = new Date("2023-12-31"/*Date.now() - yearToMs*/);
-  const oneYearAhead = new Date() - 24 * 60 * 60 * 1000;
+  const oneYearAgo = new Date("2024-12-01"/*Date.now() - yearToMs*/);
+  const oneYearAhead = new Date();
+  oneYearAhead.setHours(0, 0, 0, 0);
   
 
   const {showLoading, hideLoading, isLoading } = useLoading();
+  const {selectedDate, seteSelectedDate} = useDateContext();
 
   const [habitGroupsInfo, setHabitGroupsInfo] = useState(habitGroups)
   
@@ -67,18 +81,18 @@ const Home = () => {
   const [habits, setHabits] = useState([])
   const [quitHabits, setQuitHabits] = useState([])
 
-  const [date, setDate] = useState(null)
+  //const [date, setDate] = useState(null)
 
   // Timer Reset Modal for time based habits
   const [resetTimerModal, setResetTimerModal] = useState({})
 
-  const setCurrentDate = async (value) => {
+  /*const setCurrentDate = async (value) => {
     setDate(value)
-  }
+  }*/
 
   const onModalClose = async () => {
     setShowCreateHabit(false)
-    queryHabits(date)
+    queryHabits(selectedDate)
   }
 
   const onAddHabit = () => {
@@ -108,14 +122,15 @@ const Home = () => {
 
   useEffect(() => {
     const initialize = async() => {
-      const initDate = async() => {
+      /*const initDate = async() => {
         const currentDate = new Date();
+        currentDate.setDate(currentDate.getDate() - 1)
         currentDate.setHours(0, 0, 0, 0);
         setDate(currentDate);
       }
 
-      await initDate()
-      await queryHabits(date)
+      await initDate()*/
+      await queryHabits(selectedDate)
 
       /*if (!date) {
         console.log("INIT DATE")
@@ -176,7 +191,7 @@ const Home = () => {
               contentFit="contain"
             />
             <Image source={group.icon} className="w-8 h-8" contentFit="contain" />
-            <Text className="text-white">{group.label} Habits</Text>
+            <Text className="text-highlight-70 text-lg font-lora-semibold-italic">{group.label} Habits</Text>
           </View>
         </TouchableOpacity>
       );
@@ -222,8 +237,10 @@ const Home = () => {
   };
 
   return (
-    <DateContext.Provider value={date}>
-      <SafeAreaView className="bg-background h-full w-full px-4 flex-1">
+    <>
+    {/*<DateContext.Provider value={date}>*/}
+    
+      <SafeAreaView className="bg-background h-full w-full flex-1">
         <View className="flex-row align-center  p-4">
           <View>
             <Text>Other Option</Text>
@@ -246,7 +263,8 @@ const Home = () => {
         </View>
 
         <View>
-          <DateSelector start={oneYearAgo} end={oneYearAhead} currentDate={date} setDate={setCurrentDate} />
+          
+          <DateSelector start={oneYearAgo} end={oneYearAhead} />
         </View>
 
 
@@ -255,17 +273,20 @@ const Home = () => {
           data={habitGroupsInfo}
           keyExtractor={(item) => item.type}
           renderItem={({item: group}) => <HabitGroup group={group}/>}
+          className='px-4'
         />
-    
-      
+
+        <TimerResetModal 
+            data={resetTimerModal}
+            onClose={onTimerResetClose}
+            showLoading={showLoading}
+            hideLoading={hideLoading}
+        />
       </SafeAreaView>
-      <TimerResetModal 
-        data={resetTimerModal}
-        onClose={onTimerResetClose}
-        showLoading={showLoading}
-        hideLoading={hideLoading}
-      />
-    </DateContext.Provider>
+      
+    
+    {/*</DateContext.Provider>*/}
+    </>
   )
 }
 

@@ -39,7 +39,227 @@
     },
     "plugins": [
       "expo-router",
-      "expo-sqlite"
+      "expo-sqlite",
+      [
+        "expo-font",
+        {
+          "fonts": [
+            {
+              "fontFamily": "General Sans",
+              "fontDefinitions": [
+                {
+                  "path": "./assets/fonts/GeneralSans/GeneralSans-Regular.otf",
+                  "weight": 400,
+                  "name": "GeneralSans-Regular"
+                },
+                {
+                  "path": "./assets/fonts/GeneralSans/GeneralSans-Italic.otf",
+                  "weight": 400,
+                  "style": "italic",
+                  "name": "GeneralSans-Italic"
+                },
+                {
+                  "path": "./assets/fonts/GeneralSans/GeneralSans-Medium.otf",
+                  "weight": 500,
+                  "name": "GeneralSans-Medium"
+                },
+                {
+                  "path": "./assets/fonts/GeneralSans/GeneralSans-MediumItalic.otf",
+                  "weight": 500,
+                  "style": "italic",
+                  "name": "GeneralSans-MediumItalic"
+                },
+                {
+                  "path": "./assets/fonts/GeneralSans/GeneralSans-Semibold.otf",
+                  "weight": 600,
+                  "name": "GeneralSans-SemiBold"
+                },
+                {
+                  "path": "./assets/fonts/GeneralSans/GeneralSans-SemiboldItalic.otf",
+                  "weight": 600,
+                  "style": "italic",
+                  "name": "GeneralSans-SemiBoldItalic"
+                },
+                {
+                  "path": "./assets/fonts/GeneralSans/GeneralSans-Bold.otf",
+                  "weight": 700,
+                  "name": "GeneralSans-Bold"
+                },
+                {
+                  "path": "./assets/fonts/GeneralSans/GeneralSans-BoldItalic.otf",
+                  "weight": 700,
+                  "style": "italic",
+                  "name": "GeneralSans-BoldItalic"
+                },
+                {
+                  "path": "./assets/fonts/GeneralSans/GeneralSans-Light.otf",
+                  "weight": 300,
+                  "name": "GeneralSans-Light"
+                },
+                {
+                  "path": "./assets/fonts/GeneralSans/GeneralSans-LightItalic.otf",
+                  "weight": 300,
+                  "style": "italic",
+                  "name": "GeneralSans-LightItalic"
+                },
+                {
+                  "path": "./assets/fonts/GeneralSans/GeneralSans-Extralight.otf",
+                  "weight": 200,
+                  "name": "GeneralSans-ExtraLight"
+                },
+                {
+                  "path": "./assets/fonts/GeneralSans/GeneralSans-ExtralightItalic.otf",
+                  "weight": 200,
+                  "style": "italic",
+                  "name": "GeneralSans-ExtraLightItalic"
+                }
+              ]
+            },
+            {
+              "fontFamily": "Source Sans",
+                "fontDefinitions": [
+                {
+                  "path": "./assets/fonts/SourceSans/SourceSans3-Black.ttf",
+                  "weight": 900,
+                  "name": "SourceSans3-Black"
+                },
+                {
+                  "path": "./assets/fonts/SourceSans/SourceSans3-BlackItalic.ttf",
+                  "weight": 900,
+                  "style": "italic",
+                  "name": "SourceSans3-BlackItalic"
+                },
+                {
+                  "path": "./assets/fonts/SourceSans/SourceSans3-ExtraBold.ttf",
+                  "weight": 800,
+                  "name": "SourceSans3-ExtraBold"
+                },
+                {
+                  "path": "./assets/fonts/SourceSans/SourceSans3-ExtraBoldItalic.ttf",
+                  "weight": 800,
+                  "style": "italic",
+                  "name": "SourceSans3-ExtraBoldItalic"
+                },
+                {
+                  "path": "./assets/fonts/SourceSans/SourceSans3-Bold.ttf",
+                  "weight": 700,
+                  "name": "SourceSans3-Bold"
+                },
+                {
+                  "path": "./assets/fonts/SourceSans/SourceSans3-BoldItalic.ttf",
+                  "weight": 700,
+                  "style": "italic",
+                  "name": "SourceSans3-BoldItalic"
+                },
+                {
+                  "path": "./assets/fonts/SourceSans/SourceSans3-SemiBold.ttf",
+                  "weight": 600,
+                  "name": "SourceSans3-SemiBold"
+                },
+                {
+                  "path": "./assets/fonts/SourceSans/SourceSans3-SemiBoldItalic.ttf",
+                  "weight": 600,
+                  "style": "italic",
+                  "name": "SourceSans3-SemiBoldItalic"
+                },
+                {
+                  "path": "./assets/fonts/SourceSans/SourceSans3-Medium.ttf",
+                  "weight": 500,
+                  "name": "SourceSans3-Medium"
+                },
+                {
+                  "path": "./assets/fonts/SourceSans/SourceSans3-MediumItalic.ttf",
+                  "weight": 500,
+                  "style": "italic",
+                  "name": "SourceSans3-MediumItalic"
+                },
+                {
+                  "path": "./assets/fonts/SourceSans/SourceSans3-Regular.ttf",
+                  "weight": 400,
+                  "name": "SourceSans3-Regular"
+                },
+                {
+                  "path": "./assets/fonts/SourceSans/SourceSans3-Italic.ttf",
+                  "weight": 400,
+                  "style": "italic",
+                  "name": "SourceSans3-Italic"
+                },
+                {
+                  "path": "./assets/fonts/SourceSans/SourceSans3-Light.ttf",
+                  "weight": 300,
+                  "name": "SourceSans3-Light"
+                },
+                {
+                  "path": "./assets/fonts/SourceSans/SourceSans3-LightItalic.ttf",
+                  "weight": 300,
+                  "style": "italic",
+                  "name": "SourceSans3-LightItalic"
+                },
+                {
+                  "path": "./assets/fonts/SourceSans/SourceSans3-ExtraLight.ttf",
+                  "weight": 200,
+                  "name": "SourceSans3-ExtraLight"
+                },
+                {
+                  "path": "./assets/fonts/SourceSans/SourceSans3-ExtraLightItalic.ttf",
+                  "weight": 200,
+                  "style": "italic",
+                  "name": "SourceSans3-ExtraLightItalic"
+                }
+                ]
+                },
+                {
+                "fontFamily": "Lora",
+                "fontDefinitions": [
+                {
+                  "path": "./assets/fonts/Lora/Lora-Bold.ttf",
+                  "weight": 700,
+                  "name": "Lora-Bold"
+                },
+                {
+                  "path": "./assets/fonts/Lora/Lora-BoldItalic.ttf",
+                  "weight": 700,
+                  "style": "italic",
+                  "name": "Lora-BoldItalic"
+                },
+                {
+                  "path": "./assets/fonts/Lora/Lora-SemiBold.ttf",
+                  "weight": 600,
+                  "name": "Lora-SemiBold"
+                },
+                {
+                  "path": "./assets/fonts/Lora/Lora-SemiBoldItalic.ttf",
+                  "weight": 600,
+                  "style": "italic",
+                  "name": "Lora-SemiBoldItalic"
+                },
+                {
+                  "path": "./assets/fonts/Lora/Lora-Medium.ttf",
+                  "weight": 500,
+                  "name": "Lora-Medium"
+                },
+                {
+                  "path": "./assets/fonts/Lora/Lora-MediumItalic.ttf",
+                  "weight": 500,
+                  "style": "italic",
+                  "name": "Lora-MediumItalic"
+                },
+                {
+                  "path": "./assets/fonts/Lora/Lora-Regular.ttf",
+                  "weight": 400,
+                  "name": "Lora-Regular"
+                },
+                {
+                  "path": "./assets/fonts/Lora/Lora-Italic.ttf",
+                  "weight": 400,
+                  "style": "italic",
+                  "name": "Lora-Italic"
+                }
+              ]
+            }
+          ]
+        }
+      ]
     ],
     "extra": {
       "router": {

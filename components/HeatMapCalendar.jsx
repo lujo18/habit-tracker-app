@@ -8,7 +8,9 @@ const HeatMapCalendar = ({ habitHistory, selectedDay, setSelectedDay, color = "#
     console.log(selectedAmount)
   }, [selectedAmount])
 
-  const calendarIcons = (date, selectedDate, selectedMonth) => {
+  
+
+  const calendarIcons = (date, selectedDate, selectedMonth, allowFutureDates) => {
 
     const data = habitHistory.filter(
       (entry) => new Date(entry.date).toDateString() === date.toDateString()
@@ -27,9 +29,7 @@ const HeatMapCalendar = ({ habitHistory, selectedDay, setSelectedDay, color = "#
           : "border-2 border-transparent"
         }
       `}
-    
-
-      disabled={date.getUTCMonth() != selectedMonth}
+      disabled={(!allowFutureDates ? (date.getUTCDate() > new Date().getDate() && date.getUTCMonth() == new Date().getUTCMonth()) : false) || date.getUTCMonth() != selectedMonth}
       >
       <View className='absolute top-0 left-0 right-0 bottom-0 rounded-xl'
         style={ date.getUTCMonth() == selectedMonth && {
@@ -41,6 +41,7 @@ const HeatMapCalendar = ({ habitHistory, selectedDay, setSelectedDay, color = "#
       </View>
       <Text
         className={`${
+        (!allowFutureDates ? (date.getUTCDate() > new Date().getDate() && date.getUTCMonth() == new Date().getUTCMonth()) : false) ||
         date.getUTCMonth() != selectedMonth
           ? "text-background-60"
           : "text-highlight"
@@ -58,6 +59,7 @@ const HeatMapCalendar = ({ habitHistory, selectedDay, setSelectedDay, color = "#
       setSelectedDay={setSelectedDay}
       color={color}
       customCalendarIcon={calendarIcons}
+      allowFutureDates={true}
     />
   );
 };
