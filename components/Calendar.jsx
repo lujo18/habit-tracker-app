@@ -1,5 +1,5 @@
 import { View, Text, TouchableOpacity } from "react-native";
-import React, { useEffect, useState } from "react";
+import React, { memo, useEffect, useMemo, useState, useCallback } from "react";
 import { FlatList } from "react-native";
 import { generateDates, getMonthName } from "../utils/dateRetriver";
 import { endOfMonth } from "date-fns";
@@ -13,18 +13,20 @@ const Calendar = ({selectedDay, setSelectedDay, color = "#0A72D4", customCalenda
     endOfCurrentMonth.getMonth() + 1
   );
 
-  const dates = generateDates("2023-12-31", endOfCalendar);
-  const [selectedDates, setSelectedDates] = useState([]);
+  const dates = useMemo(() => 
+    generateDates("2023-12-31", endOfCalendar), 
+    [endOfCalendar]
+  );
   const selectedMonth = selectedDay.getUTCMonth();
   const selectedYear = selectedDay.getUTCFullYear();
   const selectedDate = selectedDay.getUTCDate();
 
-  const setSelectedMonth = async (month) => {
-    await setSelectedDay(selectedDay.setUTCMonth(month))
+  const setSelectedMonth = (month) => {
+    setSelectedDay(selectedDay.setUTCMonth(month))
   }
 
-  const setSelectedYear = async (year) => {
-    await setSelectedDay(selectedDay.setFullYear(year))
+  const setSelectedYear = (year) => {
+    setSelectedDay(selectedDay.setFullYear(year))
   }
   // Check: Generate dates from a year back up until the end of current month
   // Have a state that hold a month and a year in it
@@ -32,7 +34,7 @@ const Calendar = ({selectedDay, setSelectedDay, color = "#0A72D4", customCalenda
   // Take that map and generate a flatlist with icons for each date
   // Take in the habit history and repeat through all history for matching M & Y
   // Change the effect on the calendar dates based on completionCount/goal
-  useEffect(() => {
+  const selectedDates = useMemo(() => {
     const filteredDates = dates.filter(
       (date) =>
         date.getUTCMonth() === selectedMonth &&
@@ -65,23 +67,11 @@ const Calendar = ({selectedDay, setSelectedDay, color = "#0A72D4", customCalenda
       })
       .slice(0, lastDayOfMonth < 2 ? 6 - lastDayOfMonth : 13 - lastDayOfMonth);
 
-    setSelectedDates([...proceedingDays, ...filteredDates, ...followingDays]);
+    return [...proceedingDays, ...filteredDates, ...followingDays];
   }, [selectedMonth]);
 
   const changeMonth = (direction) => {
     let newMonth = selectedMonth + direction;
-    
-    /*if (
-      (selectedYear == (dates[dates.length - 1].getFullYear()) &&
-        newMonth > dates[dates.length - 1].getMonth()) &&
-      (selectedYear == (dates[0].getFullYear()) &&
-        newMonth < dates[0].getMonth()) 
-    ) 
-    {
-      return
-    }
-    else
-    {*/
     if (newMonth < 0) {
       setSelectedYear(selectedYear + direction);
       newMonth = 11;
@@ -115,53 +105,54 @@ const Calendar = ({selectedDay, setSelectedDay, color = "#0A72D4", customCalenda
     );
   };
 
-  const defaultCalendarIcons = (date) => {
-
+  const defaultCalendarIcons = useCallback((date) => {
+    const isCurrentMonth = date.getUTCMonth() === selectedMonth;
+    const isSelected = date.getUTCDate() === selectedDate && isCurrentMonth;
+    const isFutureDisabled = !allowFutureDates && 
+                             date.getUTCDate() > new Date().getDate() && 
+                             date.getUTCMonth() === new Date().getUTCMonth();
+    
     return (
       <TouchableOpacity
-        onPress={() => {
-          setSelectedDay(date)
-        }}
-        className={`flex-1 rounded-xl items-center justify-center p-2 py-4 
-    
-        `}
-        style={
-          date.getUTCDate() == selectedDate &&
-          date.getUTCMonth() == selectedMonth &&
-          {
-            backgroundColor: color
-          }
-        }
-        disabled={(!allowFutureDates ? (date.getUTCDate() > new Date().getDate() && date.getUTCMonth() == new Date().getUTCMonth()) : false) || date.getUTCMonth() != selectedMonth}
+        onPress={() => setSelectedDay(date)}
+        className={`flex-1 rounded-xl items-center justify-center p-2 py-4`}
+        style={isSelected ? { backgroundColor: color } : undefined}
+        disabled={isFutureDisabled || !isCurrentMonth}
       > 
         <Text
-          className={`${
-            date.getUTCMonth() != selectedMonth
-              ? "text-background-60"
-              : "text-highlight"
-          }`}
+          className={`${!isCurrentMonth ? "text-background-60" : "text-highlight"}`}
         >
           {date.getUTCDate()}
         </Text>
       </TouchableOpacity>
-    )
-  }
+    );
+  }, [selectedDate, selectedMonth, allowFutureDates, color]);
 
+  // Move complex disabled logic to useMemo
+  const prevButtonDisabled = useMemo(() => {
+    if (selectedMonth - 1 < 0) {
+      return 11 === dates[0].getUTCMonth() && selectedYear - 1 === dates[0].getUTCFullYear();
+    }
+    return selectedMonth - 1 === dates[0].getUTCMonth() && selectedYear === dates[0].getUTCFullYear();
+  }, [selectedMonth, selectedYear, dates]);
+
+  const nextButtonDisabled = useMemo(() => {
+    if (selectedMonth + 1 > 11) {
+      return 0 === dates[dates.length - 1].getUTCMonth() && 
+             selectedYear + 1 === dates[dates.length - 1].getUTCFullYear();
+    }
+    return selectedMonth + 1 === dates[dates.length - 1].getUTCMonth() && 
+           selectedYear === dates[dates.length - 1].getUTCFullYear();
+  }, [selectedMonth, selectedYear, dates]);
 
   return (
-    <View className="flex-1 w-full p-10">
+    <View className="flex-1 w-full py-4">
       <View className="flex-row gap-4 items-center pb-2 border-b-2 border-background-70">
         <View className="flex-1">
           <CalendarButton
             name="Previous"
             direction={-1}
-            disabled={
-              selectedMonth - 1 < 0
-                ? 11 == dates[0].getUTCMonth() &&
-                  selectedYear - 1 == dates[0].getUTCFullYear()
-                : selectedMonth - 1 == dates[0].getUTCMonth() &&
-                  selectedYear - 1 == dates[0].getUTCFullYear()
-            }
+            disabled={prevButtonDisabled}
           />
         </View>
         <View className="flex-2 items-center gap-2">
@@ -174,15 +165,7 @@ const Calendar = ({selectedDay, setSelectedDay, color = "#0A72D4", customCalenda
           <CalendarButton
             name="Next"
             direction={1}
-            disabled={
-              selectedMonth + 1 > 11
-                ? 0 == dates[dates.length - 1].getUTCMonth() &&
-                  selectedYear == dates[dates.length - 1].getUTCFullYear()
-                : selectedMonth + 1 == dates[dates.length - 1].getUTCMonth() &&
-                  selectedYear == dates[dates.length - 1].getUTCFullYear()
-
-              //&& dates[dates.length - 1].getUTCDay() == 6
-            }
+            disabled={nextButtonDisabled}
           />
         </View>
       </View>
@@ -196,10 +179,12 @@ const Calendar = ({selectedDay, setSelectedDay, color = "#0A72D4", customCalenda
           )
         )*/
         }
+        keyExtractor={(item) => item.toISOString()}
         renderItem={({ item }) => (
           customCalendarIcon ? customCalendarIcon(item, selectedDate, selectedMonth, allowFutureDates) : defaultCalendarIcons(item)
         )}
         numColumns={7}
+        initialNumToRender={35}
         contentContainerStyle={{ padding: 4 }}
         scrollEnabled={false}
       />
@@ -207,4 +192,4 @@ const Calendar = ({selectedDay, setSelectedDay, color = "#0A72D4", customCalenda
   );
 };
 
-export default Calendar;
+export default memo(Calendar);

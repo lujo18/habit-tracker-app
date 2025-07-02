@@ -24,3 +24,81 @@
     "activityLabel"
   ]
 }
+
+### Your Personalized Habit Builder for [User's Stated Desire/Problem]
+
+Hello! I understand you're looking to [rephrase user's desire/problem in an encouraging way, e.g., "boost your productivity," "learn a new skill," "improve your well-being"]. Building new habits is the most effective way to create lasting change.
+
+Based on your input, here's a powerful, achievable habit designed to help you achieve your desire:
+
+---
+
+#### 🎯 **1. Your Core Desire/Goal:**
+
+> *   **[Gemini inserts the user's core desire/goal here, e.g., "To feel less overwhelmed and consistently productive."]*
+
+#### 🌱 **2. The Proposed Keystone Habit:**
+
+> *   **Habit Name:** [A simple, memorable name for the habit, e.g., "The 5-Minute Focus Start"]
+> *   **Specific Action:** [Gemini describes the precise, actionable habit. Be very clear and concise.]
+>     *   *Example for productivity:* "Spend 5 minutes planning your top 3 priorities for the day."
+>     *   *Example for language learning:* "Review 5 new vocabulary words or phrases."
+>     *   *Example for healthier eating:* "Drink one full glass of water before every meal."
+
+#### ✨ **3. Why This Habit Works for You:**
+
+> *   [Gemini explains the direct link between this small habit and the user's larger desire. Emphasize consistency over intensity.]
+>     *   *Example for productivity:* "This habit forces you to clarify your most important tasks, reducing decision fatigue and ensuring you focus on what truly moves the needle, even on busy days."
+
+---
+
+#### 🛠️ **4. Implementation Plan (Make it Easy!):**
+
+> *   **A. Habit Trigger (The "Anchor"):**
+>     *   [What existing, consistent daily action will immediately precede this new habit?]
+>         *   *Example:* "Right after you finish your first cup of coffee in the morning."
+>         *   *Example:* "As soon as you sit down at your desk."
+> *   **B. Ideal Location:**
+>     *   [Where will you perform this habit? Be specific.]
+>         *   *Example:* "At your desk, before opening emails."
+> *   **C. Schedule & Frequency:**
+>     *   [When exactly will you do it? How often?]
+>         *   *Example:* "Every weekday morning, between 7:30 AM - 8:00 AM."
+> *   **D. The "Atom Habit" (Start Ridiculously Small):**
+>     *   [What is the *absolute minimum* you can do that still counts? This is crucial for days when motivation is low.]
+>         *   *Example for planning:* "Just write down *one* thing you want to accomplish today."
+>         *   *Example for language learning:* "Just open the app and look at one word."
+>         *   *Example for water:* "Just take one sip."
+
+#### ✅ **5. Making It Stick (Reinforce Success):**
+
+> *   **A. Tracking Your Progress:**
+>     *   [Suggest a simple tracking method.]
+>         *   *Example:* "Put a checkmark on a calendar, use a simple habit tracking app, or a tally in a notebook."
+> *   **B. Immediate Reward (Optional but Powerful):**
+>     *   [What small, immediate, positive thing can you do after completing the habit?]
+>         *   *Example:* "Allow yourself to check one social media post."
+>         *   *Example:* "Take a deep, satisfying breath."
+> *   **C. Identity Shift (Who You Are Becoming):**
+>     *   [Connect the habit to the user's desired identity.]
+>         *   *Example:* "By consistently doing this, you're not just 'being productive,' you're becoming *a person who is organized and focused*."
+
+#### 🚧 **6. Plan for Setbacks (Resilience Strategy):**
+
+> *   **The "Never Miss Twice" Rule:**
+>     *   [What will the user do if they miss a day?]
+>         *   *Example:* "If you miss a day, don't beat yourself up. Just make sure you do it *tomorrow*. The goal isn't perfection, it's consistency over the long run."
+> *   **Adjust as Needed:**
+>     *   "If the habit feels too hard after a week, make the 'atom habit' even smaller. If it feels too easy, you can gradually increase it."
+
+---
+
+#### 🚀 **Let's Begin!**
+
+Consistency is key. Focus on showing up every day, even if it's just for the "atom habit." Over time, these small actions will compound into significant results.
+
+You've got this!
+
+---
+
+**Important Note:** This habit plan is a general recommendation based on your input. It is not a substitute for professional advice from a coach, therapist, or medical professional. Always listen to your body and adjust as needed.

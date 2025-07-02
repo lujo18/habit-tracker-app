@@ -240,7 +240,7 @@ const Home = () => {
     <>
     {/*<DateContext.Provider value={date}>*/}
     
-      <SafeAreaView className="bg-background h-full w-full flex-1">
+      <SafeAreaView className="bg-background h-full w-full flex-1" edges={["top"]} >
         <View className="flex-row align-center  p-4">
           <View>
             <Text>Other Option</Text>

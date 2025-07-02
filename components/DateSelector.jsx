@@ -40,6 +40,7 @@ const DateSelector = ({ start, end }) => {
         horizontal
         initialNumToRender={15}
         windowSize={5}
+        showsHorizontalScrollIndicator={false}
       />
     </View>
   )

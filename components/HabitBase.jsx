@@ -52,7 +52,7 @@ const HabitBase = ({ data, habitCompletionDisplay, habitButton, habitSubtractBut
   return (
     
     <View
-      className="rounded-2xl overflow-hidden justify-center relative items-center p-1 my-4"
+      className="rounded-2xl overflow-hidden justify-center relative items-center my-4"
       onLayout={({ nativeEvent: { layout } }) => {
         setCanvasSize(layout);
       }}
@@ -60,7 +60,7 @@ const HabitBase = ({ data, habitCompletionDisplay, habitButton, habitSubtractBut
         <View
           className={`${
             amount < goal ? "bg-background-90" : `bg-[${color}]`
-          } flex-row w-full p-5 gap-3 rounded-2xl z-10`}
+          } flex-row w-full p-4 gap-3 rounded-2xl z-10`}
         >
           {habitSubtractButton && habitSubtractButton()}
 
