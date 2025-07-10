@@ -1,9 +1,18 @@
 import { useFonts } from 'expo-font';
 import { Link } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
-import { useCallback } from 'react';
+import { useCallback, useState } from 'react';
 import { Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import * as SplashScreen from 'expo-splash-screen'
+
+
+SplashScreen.preventAutoHideAsync()
+
+SplashScreen.setOptions({
+  duration: 1000,
+  fade: true,
+})
 
 export default function App() {
   const [fontsLoaded, fontError] = useFonts({
@@ -45,18 +54,25 @@ export default function App() {
     'SourceSans3-BlackItalic': require('../assets/fonts/SourceSans/SourceSans3-BlackItalic.ttf'),
   })
 
+ 
+
+  const [appReady, setAppReady] = useState(false)
+
   const onLayoutRootView = useCallback(async () => {
     if (fontsLoaded || fontError) {
-      await SplashScreen.hideAsync();
+      // Wait for 2 seconds before hiding the splash screen
+      setTimeout(() => {
+        SplashScreen.hideAsync();
+      }, 2000);
     }
-  }, [fontsLoaded, fontError])
+  }, [fontsLoaded, fontError]);
 
   if (!fontsLoaded && !fontError) {
     return null;
   }
 
   return (
-    <SafeAreaView className="justify-center items-center w-full h-full bg-background">
+    <SafeAreaView className="justify-center items-center w-full h-full bg-background" onLayout={onLayoutRootView}>
       <Text className="text-2xl text-white">Habit Tracker</Text>
       <Link href="/home" className='text-blue-500 mt-5'>Testing</Link>
     </SafeAreaView>

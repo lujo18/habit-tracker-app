@@ -38,7 +38,7 @@ const DropdownMenu = ({
   const defaultRenderItem = (item, onSelect) => (
     <TouchableOpacity
       key={item.id || item.name}
-      className="p-3 bg-background-70 items-center rounded-xl flex-row gap-2 top-0"
+      className="p-3 bg-background-80 items-center rounded-xl flex-row gap-2 top-0"
       onPress={(e) => {
         e.stopPropagation();
         onSelect(item.name);
@@ -89,7 +89,7 @@ const DropdownMenu = ({
       <TouchableOpacity
         className={`flex-row border-2 border-background-80 p-4 items-center justify-between rounded-xl relative ${
           isDisabled ? "bg-background-80 opacity-80" : "bg-background-80"
-        } ${isOpen ? "border-habitColors-hBlue" : ""}`}
+        } ${isOpen ? "border-background-70 bg-transparent" : ""}`}
         onPress={isDisabled ? null : toggleDropdown}
       >
         {renderButton ? 
@@ -119,10 +119,10 @@ const DropdownMenu = ({
   const DropdownContent = () => {
 
     return (
-      <SafeAreaView className="absolute z-10 w-full top-full h-40">
+      <SafeAreaView className="absolute z-10 w-full top-full h-[300%] shadow-lg shadow-black/60">
         <ScrollView
           nestedScrollEnabled={true}
-          className={`max-h-[${maxHeight}px] p-2 rounded-xl bg-background-80 z-10`}
+          className={`max-h-[${maxHeight}px] h-full p-2 rounded-xl bg-background-90 z-10`}
         >
           <View className=" gap-2">
             {

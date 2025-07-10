@@ -12,7 +12,7 @@ export const generateDates = (startDate, endDate) => {
 }
 
 export const formatChartData = async (data, timeframe, repeat) => {
-  let currentGoal = data[0].goal;
+  let currentGoal = data[0]?.goal || 0;
 
   const endDate = new Date()
   const startDate = new Date(new Date().setDate(endDate.getDate() - timeframe + 1))
@@ -33,7 +33,7 @@ export const formatChartData = async (data, timeframe, repeat) => {
     })
 
     if (filterDate[0]) {
-      currentGoal = filterDate[0].goal
+      currentGoal = filterDate[0]?.goal
       return filterDate[0]
     }
     else {
@@ -99,20 +99,21 @@ const getPeriodKey = async (repeat, date = Date.now()) => {
 
 export const getPeriodData = (filledData) => {
   
-  const periodData = filledData.reduce((acc, curr) => {
+  const periodData = filledData.reduce((acc, curr, index) => {
     if (!curr.periodKey) return acc; // skip if no periodKey
+
     if (!acc[curr.periodKey]) {
       acc[curr.periodKey] = {
         date: curr.periodKey,
         completionCount: 0,
-        goal: curr.goal || 0,
+        goal: curr?.goal || 0,
         streak: curr.streak
       };
     }
     acc[curr.periodKey].completionCount += curr.completionCount || 0;
     // If goal is missing, update it if found
-    if (!acc[curr.periodKey].goal && curr.goal) {
-      acc[curr.periodKey].goal = curr.goal;
+    if (!acc[curr.periodKey].goal && curr?.goal) {
+      acc[curr.periodKey].goal = curr?.goal;
     }
     return acc;
   }, {});

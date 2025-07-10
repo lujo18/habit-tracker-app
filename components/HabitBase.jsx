@@ -67,7 +67,7 @@ const HabitBase = ({ data, habitCompletionDisplay, habitButton, habitSubtractBut
           <Link
             className="flex-1"
             href={{
-              pathname: 'habitAnalytics',
+              pathname: '/habitAnalytics',
               params: { data: JSON.stringify(data), selectedDate },
             }}
           >

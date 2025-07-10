@@ -56,8 +56,9 @@ const TimerResetModal = ({data, onClose, showLoading, hideLoading}) => {
       handleCancel={onClose}
       handleSubmit={resetTimer}
       submitButtonText={"Reset"}
-      modalContent={modalContent}
-    />
+    >
+      {modalContent()}
+    </PopupModalBase>
   )
 }
 

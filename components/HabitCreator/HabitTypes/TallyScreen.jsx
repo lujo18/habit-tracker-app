@@ -1,6 +1,6 @@
 import { View, Text } from "react-native";
 import React, { memo } from "react";
-import DropdownMenu from "./DropdownMenu";
+import DropdownMenu from "../../DropdownMenu";
 
 const TallyScreen = memo(
   ({

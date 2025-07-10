@@ -1,9 +1,9 @@
 import { View, Text, TouchableOpacity, ScrollView } from "react-native";
-import React, { useState, useEffect, useContext, createContext } from "react";
+import React, { useState, useEffect, useContext, createContext, memo, useMemo } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Link, useLocalSearchParams, useRouter } from "expo-router";
 import CartesianAnalytics from "../../components/CartesianAnalytics";
-import { HabitHistoryRepository } from "../../db/sqliteManager";
+import { HabitHistoryRepository, HabitsRepository } from "../../db/sqliteManager";
 import tailwindConfig from "../../tailwind.config";
 import Calendar from "../../components/Calendar";
 import Habit from "../../components/Habit";
@@ -13,17 +13,18 @@ import ScrollingPager from "../../components/Paging/ScrollingPager";
 import OverviewPage from "../../components/habitAnalytics/OverviewPage";
 import { HabitDataContext, StandardHabitDataContext } from "../../contexts/HabitContexts";
 import Charts from "../../components/habitAnalytics/Charts";
+import { useHabitUpdate } from "../../contexts/HabitUpdateContext";
 
 const habitAnalytics = () => {
-
+  const habitRepo = useMemo(() => new HabitsRepository(), [])
   // const params = useLocalSearchParams()
   // const data = JSON.parse(params.data)
   
   //const date = new Date(params.selectedDate);
   //date.setDate(date.getDate() - 1);
   const params = useLocalSearchParams() // Gets basic data about habit
-  const standardHabitData = JSON.parse(params.data)
-  
+  const [standardHabitData, setStandardHabitData] = useState(JSON.parse(params.data))
+
   const router = useRouter();
 
   const habitHistoryRepo = new HabitHistoryRepository();
@@ -32,20 +33,26 @@ const habitAnalytics = () => {
 
   const [habitData, setHabitData] = useState([]); // HabitData for context
 
-  // const [selectedAmount, setSelectedAmount] = useState(0)
-
-  // useEffect(() => {
-  //   setAnalyticDate(selectedDate)
-  // }, [selectedDate])
+  const {lastUpdateTimestamp} = useHabitUpdate()
 
   const updateHabitData = async () => {
-    const historyData = await habitHistoryRepo.getAllHistory(parseInt(standardHabitData.id))
-    setHabitData(historyData);
+    try {
+      const historyData = await habitHistoryRepo.getAllHistory(parseInt(standardHabitData.id));
+      setHabitData(historyData);
+      const habitData = await habitRepo.get(standardHabitData.id);
+      console.log("Habit data", habitData);
+      setStandardHabitData(habitData);
+    } catch (error) {
+      console.error("Error updating habit data:", error);
+    }
   };
 
   useEffect(() => {
-    updateHabitData();
-  }, [standardHabitData.id]);
+    console.log("Standard data", standardHabitData)
+    if (standardHabitData && standardHabitData.id) {
+      updateHabitData();
+    }
+  }, [standardHabitData.id, lastUpdateTimestamp]);
 
   // const setDate = async (value) => {
   //   getData()
@@ -63,12 +70,23 @@ const habitAnalytics = () => {
     <HabitDataContext.Provider value={{habitData, updateHabitData}}>
       <StandardHabitDataContext.Provider value={standardHabitData}>
         <SafeAreaView className="w-full h-full bg-background-90" edges={["top"]}>
-          <View className="p-4 flex-row">
-            <TouchableOpacity className="flex-1" onPress={() => router.back()}>
+          <View className="p-4 flex flex-row ">
+            <TouchableOpacity onPress={() => router.back()}>
               <Text className="text-white">BACK</Text>
             </TouchableOpacity>
-            <Text className="flex-2 text-2xl text-white">{standardHabitData.name}</Text>
-            <View className="flex-1"></View>
+            <View className="flex-1 flex items-center">
+              <Text className="text-2xl text-white">{standardHabitData.name}</Text>
+            </View>
+            <View>
+              <Link
+                 href={{
+                  pathname: 'habitEditor',
+                  params: { data: JSON.stringify(standardHabitData), adaptiveSuggestion: null}
+                }}
+              >
+                <Text className="text-white">EDIT</Text>
+              </Link>
+            </View>
           </View>
           <View className="flex-1">
             <ScrollingPager>
@@ -84,6 +102,5 @@ const habitAnalytics = () => {
     </HabitDataContext.Provider>
   );
 };
-
 
 export default habitAnalytics;

@@ -82,12 +82,12 @@ const Habit = memo(({ data, canSubtract, updateSelectedAmount = null, providedSe
         id,
         selectedDate
       );
-      console.log("No history, waiting for action");
+      //console.log("No history, waiting for action");
       //console.log("Period Data: ", JSON.stringify(periodData))
 
       setAmount(0);
       if (periodData) {
-        console.log("Period data exists");
+        //console.log("Period data exists");
 
         setPeriodAmount(periodData.periodCompletion);
         setGoal(periodData.goal);
@@ -98,14 +98,14 @@ const Habit = memo(({ data, canSubtract, updateSelectedAmount = null, providedSe
             : periodData.streak
         ); // was periodData.streak == 0 ? periodData.streak : previousStreak but that caused weekly dates that didn't have log save to show 0 for streak instead of correct
       } else {
-        console.log("Period data doesn't exist");
+        //console.log("Period data doesn't exist");
         setPeriodAmount(0);
         setGoal(referenceGoal);
         setIsCompleted(false);
         setCurrentStreak(previousStreak);
       }
     } else {
-      console.log("Existing data:", data);
+      //console.log("Existing data:", data);
 
       setAmount(data.completionCount);
       setPeriodAmount(data.periodCompletion);
@@ -181,7 +181,7 @@ const Habit = memo(({ data, canSubtract, updateSelectedAmount = null, providedSe
       //if (currentStreak == data.streak) {
       try {
         if (!isCompleted && periodAmount >= goal) {
-          console.log("Add streak, should run:", currentStreak + 1);
+          //console.log("Add streak, should run:", currentStreak + 1);
           setIsCompleted(true);
           setCurrentStreak(currentStreak + 1);
           //await historyRepo.setPeriod("streak", currentStreak + 1, id, data.periodKey)
@@ -220,14 +220,14 @@ const Habit = memo(({ data, canSubtract, updateSelectedAmount = null, providedSe
         await setStreaks();
       }
 
-      console.log(
-        "Completed:",
-        isCompleted,
-        "PeriodAmount:",
-        periodAmount,
-        "Goal:",
-        goal
-      );
+      // console.log(
+      //   "Completed:",
+      //   isCompleted,
+      //   "PeriodAmount:",
+      //   periodAmount,
+      //   "Goal:",
+      //   goal
+      // );
 
       //if (currentStreak == dynamicData.streak) {
 

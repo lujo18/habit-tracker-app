@@ -66,6 +66,7 @@ const TabsLayout = () => {
                 options={{
                     title: "Journal",
                     headerShown: false,
+                    href: null,
                     tabBarIcon: ({color, focused}) => (
                       <TabIcon
                         icon={icons.book}
@@ -82,6 +83,7 @@ const TabsLayout = () => {
                 options={{
                     title: "Analytics",
                     headerShown: false,
+                    href: null, // remove when needed
                     tabBarIcon: ({color, focused}) => (
                       <TabIcon
                         icon={icons.chart}
@@ -123,13 +125,7 @@ const TabsLayout = () => {
                     )
                 }}
             />
-            <Tabs.Screen 
-              name='habitAnalytics'
-              options={{
-                href:null,
-                headerShown:false,
-              }}
-            />
+            
         </Tabs>
       
     </>

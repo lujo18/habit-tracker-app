@@ -1,26 +1,28 @@
-import { SplashScreen, Stack } from "expo-router";
+import { Stack } from "expo-router";
 
 import "../global.css";
 
 import { LoadingProvider } from "../components/LoadingProvider";
 import { DateProvider } from "../contexts/DateContext";
+import { HabitUpdateProvider } from "../contexts/HabitUpdateContext";
 
-SplashScreen.preventAutoHideAsync();
-
-SplashScreen.hide();
 
 const RootLayout = () => {
   console.log("\n\nNEW RUN " + "\n\n");
 
   return ( 
-    <LoadingProvider>
-      <DateProvider>
-        <Stack>
-          <Stack.Screen name="index" options={{ headerShown: false }} />
-          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        </Stack>
-      </DateProvider>
-    </LoadingProvider> 
+    <HabitUpdateProvider>
+      <LoadingProvider>
+        <DateProvider>
+          <Stack screenOptions={{headerShown: false}}>
+            <Stack.Screen name="index" />
+            <Stack.Screen name="(tabs)" />
+            <Stack.Screen name="habitAnalytics" />
+            <Stack.Screen name="habitEditor" />
+          </Stack>
+        </DateProvider>
+      </LoadingProvider> 
+    </HabitUpdateProvider>
   );
 };
 

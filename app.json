@@ -1,21 +1,26 @@
 {
   "expo": {
-    "name": "Habit Tracker",
-    "slug": "habit-tracker",
-    "scheme": "habit-tracker",
+    "name": "Avir",
+    "slug": "avir",
+    "scheme": "avir",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
-    "userInterfaceStyle": "light",
+    "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "splash": {
-      "image": "./assets/splash-icon.png",
+      "image": "./assets/icons/app/splash-icon-dark.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.lujo.habittracker",
+      "icon": {
+        "light": "./assets/icons/app/ios-light.png",
+        "dark": "./assets/icons/app/ios-dark.png",
+        "tinted": "./assets/icons/app/ios-tinted.png"
+      },
+      "bundleIdentifier": "com.lujo.avir",
       "infoPlist": {
         "ITSAppUsesNonExemptEncryption": false,
         "NSAppTransportSecurity": {
@@ -28,10 +33,10 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
+        "foregroundImage": "./assets/icons/app/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.lujo.habittracker",
+      "package": "com.lujo.avir",
       "runtimeVersion": "1.0.0"
     },
     "web": {
@@ -40,6 +45,18 @@
     "plugins": [
       "expo-router",
       "expo-sqlite",
+      [
+        "expo-splash-screen",
+        {
+          "backgroundColor": "#ffffff",
+          "image": "./assets/icons/app/splash-icon-dark.png",
+          "dark": {
+            "image": "./assets/icons/app/splash-icon-light.png",
+            "backgroundColor": "#000000"
+          },
+          "imageWidth": 200
+        }
+      ],
       [
         "expo-font",
         {

@@ -1,5 +1,5 @@
 import { View, Text, TouchableOpacity, FlatList, Dimensions, ScrollView } from 'react-native'
-import React, { useState, useRef } from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 import PagerView from 'react-native-pager-view'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import TextButton from '../TextButton'
@@ -8,9 +8,12 @@ import AnimatedNavbar from './AnimatedNavbar'
 
 const {width: screenWidth} = Dimensions.get('window')
 
-const ScrollingPager = ({children}) => {
+const ScrollingPager = ({children, isControlled = false, currentPage}) => {
   const flatListRef = useRef(null)
-  const [currentIndex, setCurrentIndex] = useState(0)
+  const [internalIndex, setInternalIndex] = useState(currentPage)
+
+  const currentIndex = isControlled ? currentPage : internalIndex
+  const setCurrentIndex = isControlled ? () => {} : setInternalIndex
 
 
   const childrenArray = React.Children.toArray(children)
@@ -26,14 +29,29 @@ const ScrollingPager = ({children}) => {
     return null
   }).filter(Boolean) || []
 
+  useEffect(() => {
+    if (isControlled && typeof currentPage == "number") {
+      goToSlide(currentPage)
+    }
+  }, [currentPage])
 
-  const renderItem = ({ item }) => (
-    <View className= 'w-[100vw] flex-1 px-8 py-4 pb-60'>
-      {item.component}
-    </View>
-  )
+
+  const renderItem = ({ item }) => {
+    // Add your desired props here
+    const extraProps = {  showsVerticalScrollIndicator:false }
+
+    // Clone the element with additional props
+    const childWithProps = React.cloneElement(item.component, extraProps)
+
+    return (
+      <View className='w-[100vw] flex-1 px-8 py-4 pb-60'>
+        {childWithProps}
+      </View>
+    )
+  }
 
   const onScroll = (event) => {
+
     const slideSize = event.nativeEvent.layoutMeasurement.width
     const index = event.nativeEvent.contentOffset.x / slideSize
     const roundedIndex = Math.round(index)
@@ -55,9 +73,11 @@ const ScrollingPager = ({children}) => {
 
   return (
     <ScrollView className="flex-1 w-full bg-background">
-      
-   
-      <AnimatedNavbar pages={data.map((page) => page.pageTitle)} activePage={currentIndex} setActivePage={goToSlide}/>
+      <AnimatedNavbar
+        pages={data.map((page) => page.pageTitle)}
+        activePage={currentIndex || 0}
+        setActivePage={isControlled ? () => {} : goToSlide}
+      />
       <FlatList
         ref={flatListRef}
         data={data}
@@ -70,8 +90,9 @@ const ScrollingPager = ({children}) => {
         scrollEventThrottle={16}
         decelerationRate={"fast"}
         snapToInterval={screenWidth}
-        snapToAlignment='start'
-        contentContainerStyle={{width: "100vw"}}
+        snapToAlignment="start"
+        contentContainerStyle={{ width: "100vw" }}
+        scrollEnabled={!isControlled}
       />
     </ScrollView>
   )

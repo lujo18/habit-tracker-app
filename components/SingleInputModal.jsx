@@ -5,6 +5,8 @@ import TextButton from './TextButton'
 import PopupModalBase from './PopupModalBase'
 
 
+
+
 const SingleInputModal = ({isVisible, header, handleModalOpen, placeholder, submitButtonText, handleSubmit}) => {
   const [inputValue, setInputValue] = useState("")
 
@@ -50,8 +52,9 @@ const SingleInputModal = ({isVisible, header, handleModalOpen, placeholder, subm
       handleCancel={handleModalOpen}
       handleSubmit={submitValue}
       submitButtonText={submitButtonText}
-      modalContent={modalContent}
-    />
+    >
+      {modalContent()}
+    </PopupModalBase>
   )
 }
 

@@ -180,6 +180,28 @@ export class HabitsRepository extends BaseRepository {
     return await this.getAllQuery(query, [])
   }
 
+  async setValues(id, properties, values) {
+    properties = properties.map((val) => `${val} = ?`)
+
+    console.log("PRPS", ...properties, id)
+
+    const query = `--sql
+      UPDATE Habits
+      SET ${properties.join(', ')}
+      WHERE id = ?
+    `
+
+    const params = [...values, id]
+
+    try {
+      await this.executeQuery(query, params);
+    }
+    catch (error) {
+      console.log(`Failed to set ${properties} to ${values}: `, error)
+    }
+  }
+
+
   async getAllHabits() {
     const query = `--sql
       SELECT name
@@ -795,7 +817,7 @@ export class HabitHistoryRepository extends BaseRepository {
     `;
     const params = [id, prevPeriodKey];
     const data = await this.getAllQuery(query, params);
-    console.log("data", data)
+    //console.log("data", data)
     return data && (data.length > 0 && data[0].completed == 1) ? data[0].streak : 0;
   }
 

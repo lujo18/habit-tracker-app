@@ -1,8 +1,9 @@
 import { View, Text } from "react-native";
 import React, { memo, useCallback, useState } from "react";
-import DropdownMenu from "./DropdownMenu";
-import BuildInput from "./BuildInput";
-import { HabitSettingRepository } from "../db/sqliteManager";
+import DropdownMenu from "../../DropdownMenu";
+import BuildInput from "../../BuildInput";
+import { HabitSettingRepository } from "../../../db/sqliteManager";
+import Subheader from "../../Text/Subheader";
 
 const GoalInput = memo(({ onGoalChange, habitGoal }) => {
 
@@ -22,12 +23,12 @@ const GoalInput = memo(({ onGoalChange, habitGoal }) => {
       handleChange={handleChange}
       placeholder="#"
       keyboardType="numeric"
-      inputStyles={"w-[100px] rounded-2xl text-3xl text-center"}
+      inputStyles={"w-[100px] rounded-2xl text-2xl text-center"}
     />
   );
 });
 
-const BuildScreen = memo(
+const DynamicScreen = memo(
   ({
     habitLimit,
     habitLabel,
@@ -58,7 +59,7 @@ const BuildScreen = memo(
           </Text>
         </View>
         <View className="flex-row items-center gap-4">
-          <Text className="text-xl text-highlight-60">I will do</Text>
+          <Subheader className="text-xl text-highlight-60">I will do</Subheader>
         </View>
         <View className="flex-row items-center gap-4">
           <GoalInput onGoalChange={onGoalChange} habitGoal={habitGoal}/>
@@ -74,7 +75,7 @@ const BuildScreen = memo(
           />
         </View>
         <View className="flex-row items-center gap-4">
-          <Text className="text-xl text-highlight-60">every</Text>
+          <Subheader className="text-xl text-highlight-60">every</Subheader>
           <DropdownMenu
             value={habitRepeat}
             onChange={setRepeat}
@@ -86,7 +87,7 @@ const BuildScreen = memo(
           />
         </View>
         <View className="flex-row items-center gap-4">
-          <Text className="text-xl text-highlight-60">at</Text>
+          <Subheader className="text-xl text-highlight-60">at</Subheader>
           <DropdownMenu
             value={habitLocation}
             onChange={setLocation}
@@ -103,4 +104,4 @@ const BuildScreen = memo(
   }
 );
 
-export default BuildScreen;
+export default DynamicScreen;

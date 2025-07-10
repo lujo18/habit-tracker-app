@@ -71,7 +71,7 @@ const AnimatedNavbar = ({pages, activePage, setActivePage}) => {
         style={[
           {
             width: buttonSize.width,
-            height: buttonSize.height,
+            height: buttonSize.height + 8,
           },
           animatedStyle,
         ]}
