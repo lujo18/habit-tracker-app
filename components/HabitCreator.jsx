@@ -6,6 +6,8 @@ import {
   Alert,
   TouchableWithoutFeedback,
   Keyboard,
+  KeyboardAvoidingView,
+  Platform,
 } from "react-native";
 import React, { memo, useCallback, useEffect, useMemo, useState } from "react";
 import TextButton from "./TextButton";
@@ -102,10 +104,9 @@ const HabitCreator = ({ isVisible, onClose }) => {
   const [openMenu, setOpenMenu] = useState(0);
 
   // 3. Habit Style Screen
-  const [selectedColor, setSelectedColor] = useState(
-    habitColors[Object.keys(habitColors)[0]]
-  );
-
+  const [selectedColor, setSelectedColor] = useState("");
+  /*habitColors[Object.keys(habitColors)[0]]*/
+  
   // 4. Habit Oath
   const [oathSigned, setOathSigned] = useState(false);
 
@@ -156,6 +157,8 @@ const HabitCreator = ({ isVisible, onClose }) => {
       habitRepeat,
       habitGoal,
       habitLocation,
+      selectedColor,
+      oathSigned,
       openMenu,
       labelOption,
       locationOption,
@@ -171,7 +174,7 @@ const HabitCreator = ({ isVisible, onClose }) => {
     setHabitRepeat("");
     setHabitLocation("");
     setStartTime(new Date());
-    setSelectedColor(habitColors[Object.keys(habitColors)[0]]);
+    setSelectedColor("");
   }, [isVisible]);
 
   const retrieveOptions = async () => {
@@ -258,6 +261,10 @@ const HabitCreator = ({ isVisible, onClose }) => {
     setOpenMenu(0);
   };
 
+  const setOath = (value) => {
+    setOathSigned(value)
+  }
+
   const setLocation = (value) => {
     setHabitLocation(value);
     setOpenMenu(0);
@@ -297,140 +304,145 @@ const HabitCreator = ({ isVisible, onClose }) => {
       visible={isVisible}
       onDismiss={onClose}
     >
-      <TouchableWithoutFeedback
-        onPress={() => {
-          Keyboard.dismiss();
-          setOpenMenu(0);
-        }}
-        accessible={false}
-      >
-        <SafeAreaView
-          className="w-full h-[90vh] justify-center bg-background-90 absolute bottom-0 rounded-t-3xl"
-          edges={["bottom"]}
+      <SafeAreaView
+          className="w-full h-full relative flex items-center justify-end bg-background"
+          
         >
-          <View className="justify-center items-center">
-            <Header className="text-2xl">Create Habit</Header>
-          </View>
-
-          <ScrollingPager isControlled={true} currentPage={currentPage}>
-            <HabitType
-              pageTitle={"Choose Type"}
-              habitType={habitSetting}
-              setHabitType={setHabitSetting}
-            />
-            <HabitSettings
-              pageTitle={"Set Your Goal"}
-              habitType={habitSetting}
-              habitName={habitName}
-              habitLimit={habitLimit}
-              habitLabel={habitLabel}
-              habitRepeat={habitRepeat}
-              habitGoal={habitGoal}
-              habitLocation={habitLocation}
-              onGoalChange={changeHabitGoal}
-              openMenu={openMenu}
-              handleOpen={handleOpen}
-              setName={changeHabitName}
-              setType={setType}
-              setLabel={setLabel}
-              setRepeat={setRepeat}
-              setLocation={setLocation}
-              goalOption={goalOption}
-              repeatOption={repeatOption}
-              labelOption={labelOption}
-              locationOption={locationOption}
-              addHabitLabel={addHabitLabel}
-              addHabitLocation={addHabitLocation}
-              // Quit data
-              startTime={startTime}
-              setStartTime={setQuitStart}
-                
-            />
-            <HabitStyle pageTitle={"Make It Yours"} />
-            <HabitDedication pageTitle={"Lock It In"} />
-          </ScrollingPager>
-
-          {/*
-            <View className="flex-1 h-[100vh] justify-start">
-              <View className="my-6">
-                <BuildInput
-                  value={habitName}
-                  handleChange={changeHabitName}
-                  placeholder="Your new habit"
-                  inputStyles="text-lg"
+      <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} className="w-full h-[90vh] justify-center rounded-t-3xl">
+        <TouchableWithoutFeedback
+          onPress={() => {
+            Keyboard.dismiss();
+            setOpenMenu(0);
+          }}
+          accessible={false}
+          className="flex-1 h-full w-full"
+        >
+        
+            <View className="h-full">
+              <View className="justify-center items-center">
+                <Header className="text-2xl">Create Habit</Header>
+              </View>
+              <ScrollingPager isControlled={true} currentPage={currentPage}>
+                <HabitType
+                  pageTitle={"Choose Type"}
+                  habitType={habitSetting}
+                  setHabitType={setHabitSetting}
                 />
-              </View>
-              <View className="gap-2">
-                <Text className="text-md text-highlight-60 mb-2 border-b border-background-80">
-                  Habit Type
-                </Text>
-                <View className="flex-row gap-4">
-                  <TextButton
-                    text="Build"
-                    containerStyles={`${
-                      habitSetting === "build"
-                        ? "bg-habitColors-hBlue"
-                        : "bg-background-90 border-2 border-habitColors-hBlue"
-                    } flex-1`}
-                    onPress={() => handlePress("build")}
-                  />
-                  <TextButton
-                    text="Quit"
-                    containerStyles={`${
-                      habitSetting === "quit"
-                        ? "bg-habitColors-hRed"
-                        : "bg-background-90 border-2 border-habitColors-hRed"
-                    } flex-1`}
-                    onPress={() => handlePress("quit")}
-                  />
-                  <TextButton
-                    text="Tally"
-                    containerStyles={`${
-                      habitSetting === "tally"
-                        ? "bg-background-70"
-                        : "bg-background-90 border-2 border-background-70"
-                    } flex-1`}
-                    onPress={() => handlePress("tally")}
-                  />
-                </View>
-                  
-              </View>
-              <View>
-                <RenderHabitSettingPage />
-              </View>
-              <Text className="text-md text-highlight-60 mb-2 border-b border-background-80">
-                Color Theme
-              </Text>
-              <View className="">
-
-                <ColorPicker
-                  habitColors={habitColors}
-                  setColor={setColor}
+                <HabitSettings
+                  pageTitle={"Set Your Goal"}
+                  habitType={habitSetting}
+                  habitName={habitName}
+                  habitLimit={habitLimit}
+                  habitLabel={habitLabel}
+                  habitRepeat={habitRepeat}
+                  habitGoal={habitGoal}
+                  habitLocation={habitLocation}
+                  onGoalChange={changeHabitGoal}
+                  openMenu={openMenu}
+                  handleOpen={handleOpen}
+                  setName={changeHabitName}
+                  setType={setType}
+                  setLabel={setLabel}
+                  setRepeat={setRepeat}
+                  setLocation={setLocation}
+                  goalOption={goalOption}
+                  repeatOption={repeatOption}
+                  labelOption={labelOption}
+                  locationOption={locationOption}
+                  addHabitLabel={addHabitLabel}
+                  addHabitLocation={addHabitLocation}
+                  // Quit data
+                  startTime={startTime}
+                  setStartTime={setQuitStart}
+        
+                />
+                <HabitStyle pageTitle={"Make It Yours"}
                   selectedColor={selectedColor}
+                  setColor={setColor}
                 />
-
+                <HabitDedication pageTitle={"Lock It In"} setOathSigned={setOath}/>
+              </ScrollingPager>
+              {/*
+                <View className="flex-1 h-[100vh] justify-start">
+                  <View className="my-6">
+                    <BuildInput
+                      value={habitName}
+                      handleChange={changeHabitName}
+                      placeholder="Your new habit"
+                      inputStyles="text-lg"
+                    />
+                  </View>
+                  <View className="gap-2">
+                    <Text className="text-md text-highlight-60 mb-2 border-b border-background-80">
+                      Habit Type
+                    </Text>
+                    <View className="flex-row gap-4">
+                      <TextButton
+                        text="Build"
+                        containerStyles={`${
+                          habitSetting === "build"
+                            ? "bg-habitColors-hBlue"
+                            : "bg-background-90 border-2 border-habitColors-hBlue"
+                        } flex-1`}
+                        onPress={() => handlePress("build")}
+                      />
+                      <TextButton
+                        text="Quit"
+                        containerStyles={`${
+                          habitSetting === "quit"
+                            ? "bg-habitColors-hRed"
+                            : "bg-background-90 border-2 border-habitColors-hRed"
+                        } flex-1`}
+                        onPress={() => handlePress("quit")}
+                      />
+                      <TextButton
+                        text="Tally"
+                        containerStyles={`${
+                          habitSetting === "tally"
+                            ? "bg-background-70"
+                            : "bg-background-90 border-2 border-background-70"
+                        } flex-1`}
+                        onPress={() => handlePress("tally")}
+                      />
+                    </View>
+        
+                  </View>
+                  <View>
+                    <RenderHabitSettingPage />
+                  </View>
+                  <Text className="text-md text-highlight-60 mb-2 border-b border-background-80">
+                    Color Theme
+                  </Text>
+                  <View className="">
+                    <ColorPicker
+                      habitColors={habitColors}
+                      setColor={setColor}
+                      selectedColor={selectedColor}
+                    />
+                  </View>
+                </View>
+              */}
+              <View className="flex-row gap-4 p-4">
+                <TextButton
+                  text={pageButtonContraints[currentPage].backName}
+                  type={"outline"}
+                  onPress={pageButtonContraints[currentPage].backAction}
+                  containerStyles="flex-1 bg-background-80"
+                />
+                <TextButton
+                  text={pageButtonContraints[currentPage].forwardName}
+                  type={"solid"}
+                  onPress={pageButtonContraints[currentPage].forwardAction}
+                  containerStyles={`flex-1`}
+                  //specialStyles={{ backgroundColor: selectedColor }}
+                  disabled={pageButtonContraints[currentPage].constraints}
+                />
               </View>
             </View>
-          */}
-
-          <View className="flex-row gap-4 mb-3 p-4">
-            <TextButton
-              text={pageButtonContraints[currentPage].backName}
-              type={"outline"}
-              onPress={pageButtonContraints[currentPage].backAction}
-              containerStyles="flex-1 bg-background-80"
-            />
-            <TextButton
-              text={pageButtonContraints[currentPage].forwardName}
-              type={"solid"}
-              onPress={pageButtonContraints[currentPage].forwardAction}
-              containerStyles={`flex-1`}
-              //specialStyles={{ backgroundColor: selectedColor }}
-              disabled={pageButtonContraints[currentPage].constraints}
-            />
-          </View>
-        </SafeAreaView>
-      </TouchableWithoutFeedback>
+        
+        </TouchableWithoutFeedback>
+      </KeyboardAvoidingView>
+      </SafeAreaView>
     </Modal>
   );
 };

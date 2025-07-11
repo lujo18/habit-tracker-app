@@ -4,10 +4,10 @@ import Header from '../Text/Header'
 import Subheader from '../Text/Subheader'
 
 const colorClasses = {
-  red: "border-red-300 bg-red-900/70",
-  purple: "border-purple-300 bg-purple-900/70",
-  blue: "border-blue-300 bg-blue-900/70",
-  orange: "border-orange-300 bg-orange-900/70"
+  red: "border-habitColors-red-up bg-transparent",
+  purple: "border-habitColors-purple-up bg-transparent",
+  blue: "border-habitColors-blue-up bg-transparent",
+  orange: "border-habitColors-yellow-up bg-transparent"
 }
 
 const items = [
@@ -45,7 +45,7 @@ const HabitType = ({habitType, setHabitType}) => {
       {items.map((item, idx) => (
         <TouchableOpacity
           key={item.title}
-          className={`w-full border-2 rounded-xl p-4 mb-4 basis-[48%] ${habitType === item.type || habitType === "" ? colorClasses[item.color] : "border-background-80 bg-background-90" || ""}`}
+          className={`w-full border-2 rounded-xl p-4 mb-4 basis-[48%] ${habitType === item.type || habitType === "" ? colorClasses[item.color] : "border-background-90 bg-background" || ""}`}
           style={{
             aspectRatio: 1,
           }}

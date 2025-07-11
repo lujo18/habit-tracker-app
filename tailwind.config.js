@@ -25,12 +25,33 @@ module.exports = {
           60: "#BFC6D4"
         },
         habitColors: {
-          hRed: "#882C40",
-          hPurple: "#C412FF",
-          hGreen: "#39BF09",
-          hYellow: "#EFB002",
-          hBlue: "#0A72D4",
-        }
+          red: {
+            up: "#B84C2C",      // lighter, more yellow (orange-ish)
+            DEFAULT: "#882C40",
+            down: "#4C2C88"     // darker, more blue (purple-ish)
+          },
+          yellow: {
+            up: "#FFF502",      // lighter, more yellow (lemon)
+            DEFAULT: "#EFB002",
+            down: "#B08202"     // darker, more blue (olive)
+          },
+          green: {
+            up: "#BFE609",      // lighter, more yellow (lime)
+            DEFAULT: "#39BF09",
+            down: "#0989BF"     // darker, more blue (teal)
+          },
+          blue: {
+            up: "#4CD4A6",      // lighter, more yellow (turquoise)
+            DEFAULT: "#0A72D4",
+            down: "#0A2CD4"     // darker, more blue (deeper blue)
+          },
+          purple: {
+            up: "#E05AFF",      // lighter, more yellow (pinkish)
+            DEFAULT: "#C412FF",
+            down: "#124CFF"     // darker, more blue (indigo)
+          }
+        },
+        
       },
       
     },

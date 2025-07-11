@@ -1,4 +1,4 @@
-import { View, Text, TouchableOpacity, FlatList, Dimensions, ScrollView } from 'react-native'
+import { View, Text, TouchableOpacity, FlatList, Dimensions, ScrollView, KeyboardAvoidingView, Platform } from 'react-native'
 import React, { useState, useRef, useEffect } from 'react'
 import PagerView from 'react-native-pager-view'
 import { SafeAreaView } from 'react-native-safe-area-context'
@@ -44,7 +44,7 @@ const ScrollingPager = ({children, isControlled = false, currentPage}) => {
     const childWithProps = React.cloneElement(item.component, extraProps)
 
     return (
-      <View className='w-[100vw] flex-1 px-8 py-4 pb-60'>
+      <View className='w-[100vw] px-8 py-4'>
         {childWithProps}
       </View>
     )
@@ -71,8 +71,19 @@ const ScrollingPager = ({children, isControlled = false, currentPage}) => {
     setCurrentIndex(index)
   }
 
+  const handleScrollToIndexFailed = (info) => {
+    const wait = new Promise(resolve => setTimeout(resolve, 500))
+
+    wait.then(() => {
+      if (flatListRef.current && info.index < data.length) {
+        flatListRef.current.scrollToIndex({ index: info.index, animated: false })
+      }
+    })
+  }
+
   return (
-    <ScrollView className="flex-1 w-full bg-background">
+    <View className='flex-1 w-full'>
+    <ScrollView className="w-full bg-background" contentContainerStyle={{flexGrow: 1, justifyContent:"center"}}>
       <AnimatedNavbar
         pages={data.map((page) => page.pageTitle)}
         activePage={currentIndex || 0}
@@ -91,10 +102,12 @@ const ScrollingPager = ({children, isControlled = false, currentPage}) => {
         decelerationRate={"fast"}
         snapToInterval={screenWidth}
         snapToAlignment="start"
-        contentContainerStyle={{ width: "100vw" }}
+        contentContainerStyle={{ width: "100vw"}}
         scrollEnabled={!isControlled}
+        onScrollToIndexFailed={handleScrollToIndexFailed}
       />
     </ScrollView>
+    </View>
   )
 }
 
