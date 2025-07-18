@@ -16,27 +16,21 @@ import React, {
 } from "react";
 import icons from "../constants/icons";
 
-import { Canvas, Rect, SweepGradient, vec } from "@shopify/react-native-skia";
-import Animated, {
-  interpolate,
-  useSharedValue,
-  withReanimatedTimer,
-  withRepeat,
-  withTiming,
-  Easing,
-  withSpring,
-} from "react-native-reanimated";
 import tailwindConfig from "../tailwind.config";
-import { HabitHistoryRepository } from "../db/sqliteManager";
+import { dateToSQL, HabitHistoryRepository, HabitsRepository } from "../db/sqliteManager";
 import { DateContext, useDateContext } from "../contexts/DateContext";
 import { useLoading } from "./LoadingProvider";
 import { formatRepeatText } from "../utils/formatters";
 import HabitBase from "./HabitBase";
 import * as Haptics from 'expo-haptics'
+import { useHabitBrief } from "../contexts/HabitBriefContext";
+import { calculateEMA } from "../utils/formulas";
 
 const Habit = memo(({ data, canSubtract, updateSelectedAmount = null, providedSelectedDate }) => {
   const historyRepo = new HabitHistoryRepository();
+  const habitsRepo = new HabitsRepository();
   const { isLoading } = useLoading();
+  const { addToBrief } = useHabitBrief()
   const { selectedDate : selectedDateContext } = useDateContext();
 
   const selectedDate = providedSelectedDate || selectedDateContext
@@ -52,9 +46,10 @@ const Habit = memo(({ data, canSubtract, updateSelectedAmount = null, providedSe
     label,
     color,
     referenceGoal,
+    maxGoal,
     location,
     date,
-    completed,
+    completed
   } = useMemo(() => data, [data]);
 
   const [amount, setAmount] = useState(0);
@@ -69,6 +64,165 @@ const Habit = memo(({ data, canSubtract, updateSelectedAmount = null, providedSe
   const backgroundColor =
     tailwindConfig.theme.extend.colors["background"]["90"];
   const tailwindColors = tailwindConfig.theme.extend.colors;
+
+
+  useEffect(() => {
+    const dynmaicHabitResponse = async () => {
+
+      try {
+        const data = await habitsRepo.get(id)
+        const lastAdjustment = data.lastAdjustmentDate
+
+        const daysSinceLastAdjustment = Math.floor(
+          (new Date() - new Date(/*"2025-7-6"*/lastAdjustment)) / (1000 * 60 * 60 * 24) // FIX AFTER TESTING
+        )
+
+        console.log("Days since last adjustment:", name, daysSinceLastAdjustment, lastAdjustment);
+
+        if (daysSinceLastAdjustment < 7) {return}
+
+
+        const lastSevenEntries = await historyRepo.getPreviousDays(id, 7)
+
+        console.log("ENTRIES", lastSevenEntries)
+
+        if (lastSevenEntries) {
+
+          // Get sentimentLevels
+
+            // const sentimentLevels = Array.from({ length: 50 }, (_, i) => (i * 2) / 100)
+            const sentimentLevels = Array.from({ length: 10 }, (_, i) => i / 10)
+            // get completionRates
+
+            // const completionRates = Array.from({length: 10}, (_, i) => {
+            //   const percent = lastSevenEntries.reduce((accumulator, currentValue) => {
+            //     const completionRatio = ((currentValue.completionCount / (currentValue?.goal || data?.goal)) || 0)
+
+            //     return accumulator + ((completionRatio >= i / 10) ? 1 : 0 )
+            //   }, 0);
+            //   return parseFloat((percent / lastSevenEntries.length).toFixed(2))
+            // })
+
+            const completionRates = lastSevenEntries.map(entry => 
+              entry.goal ? (entry.completionCount / entry.goal) : 0
+            )
+
+            console.log("COMPLETION RATES", name, completionRates)
+
+            const habitHealthStatuses = [
+              { completionRate: 0, name: "Nonexistent" },
+              { completionRate: 0.25, name: "Struggling" },
+              { completionRate: 0.5, name: "Developing" },
+              { completionRate: 0.75, name: "Consistent" },
+              { completionRate: 1, name: "Mastered" }
+            ]
+
+            const calcMeanCompletionRate = completionRates.reduce((total, cur) => total + cur) / completionRates.length
+            const emaCompletionRate = calculateEMA(completionRates, 0.2)
+
+            console.log("CRS", name, "MEAN:", calcMeanCompletionRate, "EMA:", emaCompletionRate)
+
+
+            const calcTotalCompletionRate = completionRates.reduce((total, cur) => total + (cur >= .9 ? 1 : 0))
+            const highDayRate = calcTotalCompletionRate / 7
+
+
+            const calcMeanStreak = lastSevenEntries.reduce((total, cur) => total + (cur.streak || 0), 0) / lastSevenEntries.length
+
+            const streaks = lastSevenEntries.map(entry => entry.streak || 0)
+
+            const emaStreak = calculateEMA(streaks, 0.2)
+            const normStreak = Math.min(emaStreak / 30, 1)
+            console.log("STREAKS", name, "MEAN: ", calcMeanStreak, "EMA: ", emaStreak)
+
+            const score = Math.max((
+              (emaCompletionRate * 0.5) +
+              (highDayRate * 0.3) +
+              (normStreak * 0.2)
+            ), 0)
+
+            const healthStatus = (habitHealthStatuses
+              .filter(s => score >= s.completionRate)
+              .pop() || habitHealthStatuses[0]
+            )
+
+            // Get new goal
+
+            console.log("HEALTH", name, "SCORE:", score, "STATUS:", healthStatus)
+
+            const newGoal =
+              healthStatus.completionRate <= 0.25 ? 
+                sentimentLevels.filter((val, index) => completionRates[index] >= calcMeanCompletionRate).pop() :
+              healthStatus.completionRate >= 0.75 && 
+                Math.ceil((sentimentLevels.filter((val, index) => (completionRates[index] >= .90)).pop() * .1) + 1)
+
+              
+            console.log("NEW GOAL", newGoal)
+
+
+
+            if (typeof newGoal == 'number' ) {
+              await habitsRepo.updateAdjustmentDate(id, new Date());
+
+              const rawGoal = Math.max(referenceGoal * newGoal, 1)
+
+              const clampedGoal = Math.round(rawGoal)
+              const maxUp = referenceGoal * 1.15
+              const maxDown = referenceGoal * .85
+
+              const calculatedGoal = Math.ceil(Math.min(Math.floor(Math.max(maxDown, rawGoal)), maxUp))
+
+
+              if (calculatedGoal <= maxGoal) {
+                console.log("ADJUSTING GOAL")
+
+                habitsRepo.setValues(id, ["referenceGoal"], [calculatedGoal])
+
+                console.log("ADD TO BRIEF", {
+                  id,
+                  name,
+                  title: referenceGoal < calculatedGoal ? "Advanced your goal" : "Reduced your goal",
+                  description: referenceGoal < calculatedGoal ? "Keep going strong!" : "This is a reajustment, not a setback.",
+                  oldValue: referenceGoal,
+                  newValue: calculatedGoal,
+                  type: "dynamic"
+                })
+
+                addToBrief({
+                  id,
+                  name,
+                  title: referenceGoal < calculatedGoal ? "Advanced your goal" : "Reduced your goal",
+                  description: referenceGoal < calculatedGoal ? "Keep going strong!" : "This is a reajustment, not a setback.",
+                  oldValue: referenceGoal,
+                  newValue: calculatedGoal,
+                  type: "dynamic"
+                })
+              }
+              
+            } else {
+              addToBrief({
+                id,
+                name,
+                title: "Your in the development faze",
+                description: "Keep building a foundation and soon your habit will be adjusted.",
+                oldValue: referenceGoal,
+                newValue: referenceGoal,
+                type: "dynamic"
+              })
+            }
+          
+        }
+
+      } catch (error) {
+        console.error("Error fetching last seven entries:", error);
+      }
+    }
+
+    if (setting === 'dynamic') {
+      dynmaicHabitResponse()
+    }
+  }, []);
+
 
   const fetchHabitData = useCallback(async () => {
     try {
@@ -288,7 +442,7 @@ const Habit = memo(({ data, canSubtract, updateSelectedAmount = null, providedSe
       <Text className="text-highlight-80 text-lg font-generalsans-medium">
         {" "}
         {/* EDIT remove text-xs*/}
-        {periodAmount} / {goal} {label}
+        {periodAmount} / {goal} {label} {maxGoal}
       </Text>
     );
   };

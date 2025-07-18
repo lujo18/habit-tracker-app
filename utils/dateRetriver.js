@@ -14,10 +14,11 @@ export const generateDates = (startDate, endDate) => {
 export const formatChartData = async (data, timeframe, repeat) => {
   let currentGoal = data[0]?.goal || 0;
 
-  const endDate = new Date()
-  const startDate = new Date(new Date().setDate(endDate.getDate() - timeframe + 1))
+  // Normalize endDate to UTC midnight
+  const endDate = new Date();
+  endDate.setUTCHours(0, 0, 0, 0);
 
-  console.log("STRAT", startDate)
+  const startDate = new Date(new Date().setDate(endDate.getDate() - timeframe + 1))
 
   const dates = generateDates(startDate, endDate)
 
@@ -51,7 +52,7 @@ export const formatChartData = async (data, timeframe, repeat) => {
   })
 
   const chartData = await Promise.all(chartDataPromises)
-  console.log(chartData)
+  //console.log(chartData)
   return chartData
 }
 

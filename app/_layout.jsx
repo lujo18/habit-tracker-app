@@ -1,28 +1,19 @@
-import { Stack } from "expo-router";
+import { Slot } from "expo-router";
 
 import "../global.css";
 
 import { LoadingProvider } from "../components/LoadingProvider";
-import { DateProvider } from "../contexts/DateContext";
-import { HabitUpdateProvider } from "../contexts/HabitUpdateContext";
-
+import { AuthProvider } from "../contexts/AuthContext";
 
 const RootLayout = () => {
   console.log("\n\nNEW RUN " + "\n\n");
 
-  return ( 
-    <HabitUpdateProvider>
+  return (
+    <AuthProvider>
       <LoadingProvider>
-        <DateProvider>
-          <Stack screenOptions={{headerShown: false}}>
-            <Stack.Screen name="index" />
-            <Stack.Screen name="(tabs)" />
-            <Stack.Screen name="habitAnalytics" />
-            <Stack.Screen name="habitEditor" />
-          </Stack>
-        </DateProvider>
-      </LoadingProvider> 
-    </HabitUpdateProvider>
+        <Slot />
+      </LoadingProvider>
+    </AuthProvider>
   );
 };
 

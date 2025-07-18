@@ -1,18 +1,14 @@
 import { View, Text, SafeAreaView } from "react-native";
-import React, { useEffect, useState } from "react";
-import { DateContext } from "../../contexts/DateContext";
-import { CartesianChart, Line, Area } from "victory-native";
-import { HabitHistoryRepository } from "../../db/sqliteManager";
-import tailwindConfig from "../../tailwind.config";
-import CartesianAnalytics from "../../components/CartesianAnalytics";
-import { FontStyle, Skia } from "@shopify/react-native-skia";
+import { useEffect, useState } from "react";
+import { HabitHistoryRepository } from "../../../db/sqliteManager";
+import CartesianAnalytics from "../../../components/CartesianAnalytics";
 
 const Analytics = () => {
   const habitHistoryRepo = new HabitHistoryRepository();
 
 
   const [chartData, setChartData] = useState([]);
-  const tailwindColors = tailwindConfig.theme.extend.colors 
+  
   useEffect(() => {
     const getData = async () => {
       const date = new Date("2024-12-01");

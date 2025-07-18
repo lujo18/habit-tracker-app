@@ -16,7 +16,7 @@ import icons from "../constants/icons";
 import tailwindConfig from "../tailwind.config";
 import ColorSwatch from "./ColorSwatch";
 
-
+import * as Haptics from 'expo-haptics'
 import {
   DevRepository,
   getHabitLabels,
@@ -96,6 +96,8 @@ const HabitCreator = ({ isVisible, onClose }) => {
   const [habitRepeat, setHabitRepeat] = useState("");
   const [habitLocation, setHabitLocation] = useState("");
 
+  const [habitMaxGoal, setHabitMaxGoal] = useState("")
+
   // Automatic Habit Data
   const [startTime, setStartTime] = useState(new Date());
   const [labelOption, setLabelOption] = useState([]);
@@ -126,10 +128,15 @@ const HabitCreator = ({ isVisible, onClose }) => {
         forwardName: "Next",
         constraints:
           habitName.length < 1 ||
-          habitGoal === "" ||
-          habitLabel === "" ||
-          habitRepeat === "" ||
-          habitLocation === "",
+
+          (habitSetting === 'dynamic' && habitMaxGoal === "") ||
+
+          ((habitSetting === 'dynamic' || habitSetting === 'build') && habitGoal === "") ||
+
+          (
+            (habitSetting === 'dynamic' || habitSetting === 'build' || habitSetting === 'tally') &&
+            (habitLabel === "" || habitRepeat === "" || habitLocation === "")
+          ),
         backAction: () => shiftCurrentPage(-1),
         forwardAction: () => shiftCurrentPage(),
       },
@@ -152,6 +159,7 @@ const HabitCreator = ({ isVisible, onClose }) => {
     ],
     [
       habitSetting,
+      habitName,
       habitLimit,
       habitLabel,
       habitRepeat,
@@ -166,7 +174,10 @@ const HabitCreator = ({ isVisible, onClose }) => {
   );
 
   useEffect(() => {
-    setHabitSetting("");
+    if (!isVisible) {
+       setHabitSetting("");
+       setCurrentPage(0)
+    }
     setHabitName("");
     setHabitGoal("");
     setHabitLimit("");
@@ -175,7 +186,7 @@ const HabitCreator = ({ isVisible, onClose }) => {
     setHabitLocation("");
     setStartTime(new Date());
     setSelectedColor("");
-  }, [isVisible]);
+  }, [isVisible, habitSetting]);
 
   const retrieveOptions = async () => {
     setLabelOption(await habitSettingRepo.getHabitLabels());
@@ -190,9 +201,9 @@ const HabitCreator = ({ isVisible, onClose }) => {
     setCurrentPage((prev) => prev + direction);
   };
 
-  const changeHabitGoal = useCallback((value) => {
+  const changeHabitGoal = (value) => {
     setHabitGoal(value);
-  }, []);
+  };
 
   const createHabit = async () => {
     if (!habitName) {
@@ -201,7 +212,7 @@ const HabitCreator = ({ isVisible, onClose }) => {
     }
 
     try {
-      if (habitSetting == "build") {
+      if (habitSetting === "build" || habitSetting === "dynamic") {
         await habitRepo.createHabit([
           habitName,
           habitSetting,
@@ -209,6 +220,7 @@ const HabitCreator = ({ isVisible, onClose }) => {
           habitLabel,
           "atleast",
           habitGoal,
+          habitMaxGoal,
           selectedColor,
           habitLocation,
         ]);
@@ -245,6 +257,12 @@ const HabitCreator = ({ isVisible, onClose }) => {
   const setColor = (color) => {
     setSelectedColor(color);
   };
+
+  const setMaxGoal = (value) => {
+    console.log("DYNM", value)
+    setHabitMaxGoal(value)
+    //changeHabitGoal(Math.max(Math.round(value * .10), 1))
+  }
 
   const setType = (value) => {
     setHabitLimit(value);
@@ -289,14 +307,6 @@ const HabitCreator = ({ isVisible, onClose }) => {
   };
 
 
-  useEffect(() => {
-    console.log("TESTING habitName === ''", habitName === "");
-    console.log("TESTING habitGoal === ''", habitGoal === "");
-    console.log("TESTING habitLabel === ''", habitLabel === "");
-    console.log("TESTING habitRepeat === ''", habitRepeat === "");
-    console.log("TESTING habitLocation === ''", habitLocation === "");
-  }, [habitName, habitGoal, habitLabel, habitRepeat, habitLocation]);
-
   return (
     <Modal
       animationType="slide"
@@ -306,7 +316,8 @@ const HabitCreator = ({ isVisible, onClose }) => {
     >
       <SafeAreaView
           className="w-full h-full relative flex items-center justify-end bg-background"
-          
+          edges={isVisible ? ['bottom'] : null}
+
         >
       <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} className="w-full h-[90vh] justify-center rounded-t-3xl">
         <TouchableWithoutFeedback
@@ -337,6 +348,7 @@ const HabitCreator = ({ isVisible, onClose }) => {
                   habitRepeat={habitRepeat}
                   habitGoal={habitGoal}
                   habitLocation={habitLocation}
+                  habitMaxGaol={habitMaxGoal}
                   onGoalChange={changeHabitGoal}
                   openMenu={openMenu}
                   handleOpen={handleOpen}
@@ -345,6 +357,7 @@ const HabitCreator = ({ isVisible, onClose }) => {
                   setLabel={setLabel}
                   setRepeat={setRepeat}
                   setLocation={setLocation}
+                  setMaxGoal={setMaxGoal}
                   goalOption={goalOption}
                   repeatOption={repeatOption}
                   labelOption={labelOption}
@@ -426,13 +439,13 @@ const HabitCreator = ({ isVisible, onClose }) => {
                 <TextButton
                   text={pageButtonContraints[currentPage].backName}
                   type={"outline"}
-                  onPress={pageButtonContraints[currentPage].backAction}
+                  onPress={() => {Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Rigid); pageButtonContraints[currentPage].backAction()}}
                   containerStyles="flex-1 bg-background-80"
                 />
                 <TextButton
                   text={pageButtonContraints[currentPage].forwardName}
                   type={"solid"}
-                  onPress={pageButtonContraints[currentPage].forwardAction}
+                  onPress={() => {Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Soft); pageButtonContraints[currentPage].forwardAction()}}
                   containerStyles={`flex-1`}
                   //specialStyles={{ backgroundColor: selectedColor }}
                   disabled={pageButtonContraints[currentPage].constraints}

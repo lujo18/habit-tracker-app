@@ -1,42 +1,34 @@
 import { View, Text, FlatList, TouchableOpacity, Image } from "react-native";
-import React, {
+import {
   memo,
   useMemo,
   useCallback,
-  useContext,
   useEffect,
   useState,
-  createContext,
-  useRef,
 } from "react";
-import icons from "../../constants/icons";
+import icons from "../../../constants/icons";
 import { SafeAreaView } from "react-native-safe-area-context";
-import Habit from "../../components/Habit";
-import tailwindConfig from "../../tailwind.config";
-import HabitCreator from "../../components/HabitCreator";
+import Habit from "../../../components/Habit";
+import tailwindConfig from "../../../tailwind.config";
+import HabitCreator from "../../../components/HabitCreator";
 import {
   DevRepository,
   HabitHistoryRepository,
   HabitsRepository,
-} from "../../db/sqliteManager";
-import DateSelector from "../../components/DateSelector";
-import { useLoading } from "../../components/LoadingProvider";
+} from "../../../db/sqliteManager";
+import DateSelector from "../../../components/DateSelector";
+import { useLoading } from "../../../components/LoadingProvider";
 //import { Image } from 'expo-image'
-import { DateContext, useDateContext } from "../../contexts/DateContext";
-import QuitHabit from "../../components/QuitHabit";
-import TimerResetModal from "../../components/TimerResetModal";
-import Animated, {
-  useAnimatedStyle,
-  useSharedValue,
-  withSpring,
-  withTiming,
-  Easing,
-  measure,
-} from "react-native-reanimated";
-import { Link, useFocusEffect } from "expo-router";
-import { ScrollView } from "react-native";
-import { useHabitUpdate } from "../../contexts/HabitUpdateContext";
-import HabitGroup from "../../components/HabitGroup";
+import { useDateContext } from "../../../contexts/DateContext";
+import QuitHabit from "../../../components/QuitHabit";
+import TimerResetModal from "../../../components/TimerResetModal";
+import { useFocusEffect } from "expo-router";
+import { useHabitUpdate } from "../../../contexts/HabitUpdateContext";
+import HabitGroup from "../../../components/HabitGroup";
+import Header from "../../../components/Text/Header";
+import Subheader from "../../../components/Text/Subheader";
+import { useHabitBrief } from "../../../contexts/HabitBriefContext";
+import HabitBrief from "../../../components/HabitBrief";
 
 const tailwindColors = tailwindConfig.theme.extend.colors;
 
@@ -78,7 +70,9 @@ const Home = () => {
   const historyRepo = useMemo(() => new HabitHistoryRepository(), []); // DELETE THIS
   const devRepo = useMemo(() => new DevRepository(), []); //DELETE THIS
 
-  const { lastUpdateTimestamp } = useHabitUpdate();
+  const {lastUpdateTimestamp, triggerUpdate} = useHabitUpdate();
+  const {habitBriefContent} = useHabitBrief();
+  const [habitBriefOpen, setHabitBriefOpen] = useState(true)
 
   const [history, setHistory] = useState();
 
@@ -154,7 +148,9 @@ const Home = () => {
     setResetTimerModal(data);
   };
 
-  
+  const closeHabitBrief = () => {
+    setHabitBriefOpen(false)
+  }
 
   return (
     <>
@@ -169,7 +165,7 @@ const Home = () => {
             <Text>Other Option</Text>
           </View>
           <View className="flex-1">
-            <Text>Today's Progress</Text>
+            <Subheader>Habit Tracker</Subheader>
           </View>
           <TouchableOpacity
             className={`bg-background-80 p-4 rounded-full ${
@@ -187,36 +183,50 @@ const Home = () => {
           <TouchableOpacity
             className="w-10 h-10 bg-red-50"
             onPress={() => {
-              devRepo.DropTables();
-            }}
-          >
-            <Text>Drop Table</Text>
-          </TouchableOpacity>
+                devRepo.DropTables();
+              }}
+              >
+              <Text>Drop Table</Text>
+              </TouchableOpacity>
 
-          <HabitCreator isVisible={showCreateHabit} onClose={onModalClose} />
-        </View>
+              <HabitCreator isVisible={showCreateHabit} onClose={onModalClose} />
+            </View>
 
-        <View>
-          <DateSelector start={oneYearAgo} end={oneYearAhead} />
-        </View>
+            <View>
+              <DateSelector start={oneYearAgo} end={oneYearAhead} />
+            </View>
 
-        
-          <FlatList
-            data={habitGroupsInfo}
-            keyExtractor={(item) => item.type}
-            renderItem={({ item: group }) => <HabitGroup group={group} habits={habits} onTimerResetOpen={onTimerResetOpen} />}
-            className="px-4"
-          />
+              {
+              habits.length === 0 && quitHabits.length === 0 ? (
+                <View className="flex items-center justify-center h-1/2 gap-4">
+                <Header>Your legacy is about to begin.</Header>
+                <View className="flex items-center">
+                  <Subheader>Click the plus in the top right corner</Subheader>
+                  <Subheader>to create your first habit.</Subheader>
+                </View>
+                </View>
+              ) : (
+                <FlatList
+                data={habitGroupsInfo}
+                keyExtractor={(item) => item.type}
+                renderItem={({ item: group }) => <HabitGroup group={group} habits={habits} onTimerResetOpen={onTimerResetOpen} />}
+                className="px-4"
+                />
+              )
+              }
 
-        <TimerResetModal
-          data={resetTimerModal}
-          onClose={onTimerResetClose}
-          showLoading={showLoading}
-          hideLoading={hideLoading}
-        />
-      </SafeAreaView>
+            <TimerResetModal
+              data={resetTimerModal}
+              onClose={onTimerResetClose}
+              showLoading={showLoading}
+              hideLoading={hideLoading}
+            />
 
-      {/*</DateContext.Provider>*/}
+            {/* Slide-up Modal for Habit Brief */}
+
+            <HabitBrief habitBriefOpen={habitBriefOpen} closeHabitBrief={closeHabitBrief} />
+            
+          </SafeAreaView>
     </>
   );
 };

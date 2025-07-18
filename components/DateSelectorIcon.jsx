@@ -14,7 +14,7 @@ const DateSelectorIcon = ({date, currentDate, setDate}) => {
 
   return (
     <TouchableOpacity  // was h-16
-      className={`w-16 h-16 items-center justify-center bg-background-90 rounded-xl ${new Date(currentDate).toDateString() === new Date(date).toDateString() && "border-habitColors-hBlue border-2"}`}
+      className={`w-16 h-16 items-center justify-center rounded-xl border-2 border-background-90 ${new Date(currentDate).toDateString() === new Date(date).toDateString() && "bg-background-90 border-0"}`}
       onPress={() => {setDate(date)}}  
     >
       {

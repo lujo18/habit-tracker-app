@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react'
 import BuildInput from './BuildInput'
 import TextButton from './TextButton'
 import PopupModalBase from './PopupModalBase'
+import Header from './Text/Header'
 
 
 
@@ -32,8 +33,8 @@ const SingleInputModal = ({isVisible, header, handleModalOpen, placeholder, subm
   const modalContent = () => {
     return (
       <View className='w-full p-4'>
-        <View className='border-b-2 border-b-background-80 items-center'>
-          <Text className="text-xl text-highlight">{header}</Text>
+        <View className='items-center'>
+          <Header className="text-xl text-highlight">{header}</Header>
         </View>
         <View className="justify-center py-4">
           <BuildInput

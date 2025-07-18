@@ -2,6 +2,7 @@ import { View, Text, TouchableOpacity, Image, ScrollView, SafeAreaView} from "re
 import React, { memo, useCallback, useEffect, useState } from "react";
 import icons from "../constants/icons";
 import SingleInputModal from "./SingleInputModal";
+import Subheader from "./Text/Subheader";
 
 const DropdownMenu = ({
   value, // Dropdown value passed in
@@ -50,10 +51,10 @@ const DropdownMenu = ({
         </View>
       )}
 
-      <View className="gap-1">
-        <Text className="text-highlight-90 text-xl">{item.name}</Text>
+      <View>
+        <Text className="text-highlight-90 text-xl font-generalsans-semibold">{item.name}</Text>
 
-        {item.desc && <Text className="text-highlight-60">{item.desc}</Text>}
+        {item.desc && <Subheader>{item.desc}</Subheader>}
       </View>
     </TouchableOpacity>
   );
@@ -62,7 +63,7 @@ const DropdownMenu = ({
   const defaultAddItem = () => (
     <TouchableOpacity
       key={"custom"}
-      className="mb-2 p-3 bg-habitColors-hBlue items-center justify-center rounded-xl flex-row gap-2 top-0"
+      className="mb-2 p-3 bg-highlight items-center justify-center rounded-xl flex-row gap-2 top-0"
       onPress={(e) => {
         e.stopPropagation();
         handleModalOpen();
@@ -73,11 +74,11 @@ const DropdownMenu = ({
           source={icons.add}
           className="w-8 h-8"
           resizeMode="contain"
-          style={{ tintColor: "#fff" }}
+          style={{ tintColor: "#000" }}
         />
       </View>
       <View className="gap-1">
-        <Text className="text-highlight-90 text-xl">Add Option</Text>
+        <Text className="text-background text-xl font-generalsans-medium">Add Option</Text>
       </View>
     </TouchableOpacity>
   );
@@ -95,7 +96,7 @@ const DropdownMenu = ({
         {renderButton ? 
           renderButton(isDisabled, disabledPlaceholder, placeholder) : 
           <Text
-            className={`text-xl 
+            className={`text-xl font-generalsans-medium
             ${isDisabled ? "text-highlight-60" : "text-highlight-90"} ${
               value ? "text-lg" : "text-xl"
             }`}

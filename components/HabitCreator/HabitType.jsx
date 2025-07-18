@@ -2,6 +2,7 @@ import { View, Text, TouchableOpacity } from 'react-native'
 import React from 'react'
 import Header from '../Text/Header'
 import Subheader from '../Text/Subheader'
+import * as Haptics from 'expo-haptics'
 
 const colorClasses = {
   red: "border-habitColors-red-up bg-transparent",
@@ -49,7 +50,7 @@ const HabitType = ({habitType, setHabitType}) => {
           style={{
             aspectRatio: 1,
           }}
-          onPress={() => setHabitType(item.type)}
+          onPress={() => {Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium); setHabitType(item.type)}}
           disabled={habitType === item.type}
         >
           <Header>{item.title}</Header>

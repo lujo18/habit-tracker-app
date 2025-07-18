@@ -1,10 +1,10 @@
 import { View, Text, SafeAreaView, TouchableOpacity, Image, FlatList } from 'react-native'
 import React, { useEffect, useState } from 'react'
-import icons from '../../constants/icons'
-import tailwindConfig from '../../tailwind.config'
-import CreateJournalEntry from '../../components/CreateJournalEntry'
-import { JournalEntryRepository, HabitsRepository } from '../../db/sqliteManager'
-import JournalEntry from '../../components/JournalEntry'
+import icons from '../../../constants/icons'
+import tailwindConfig from '../../../tailwind.config'
+import CreateJournalEntry from '../../../components/CreateJournalEntry'
+import { JournalEntryRepository, HabitsRepository } from '../../../db/sqliteManager'
+import JournalEntry from '../../../components/JournalEntry'
 
 const tailwindColors = tailwindConfig.theme.extend.colors
 
@@ -46,7 +46,7 @@ const Journal = () => {
 
 
   const changeEntryId = (value) => {
-    entryId(value);
+    setEntryId(value);
   }
 
   const changeEntryTitle = (value) => {

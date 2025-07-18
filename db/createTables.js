@@ -8,11 +8,13 @@ export const SCHEMA_SQL = `--sql
     label TEXT,
     limitType TEXT,
     referenceGoal INTEGER,
+    maxGoal INTEGER,
     color TEXT,
     location TEXT,
     groupName TEXT,
     currentStreak INTEGER,
-    highestStreak INTEGER
+    highestStreak INTEGER,
+    lastAdjustmentDate DATE
   );
 
   CREATE TABLE IF NOT EXISTS HabitHistory (
@@ -66,6 +68,11 @@ export const SCHEMA_SQL = `--sql
   );
   
   CREATE TABLE IF NOT EXISTS HabitLocation (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT UNIQUE
+  );
+
+   CREATE TABLE IF NOT EXISTS HabitGroups (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     name TEXT UNIQUE
   );

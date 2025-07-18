@@ -1,19 +1,18 @@
 import { View, Text, TouchableOpacity, ScrollView } from "react-native";
-import React, { useState, useEffect, useContext, createContext, memo, useMemo } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Link, useLocalSearchParams, useRouter } from "expo-router";
-import CartesianAnalytics from "../../components/CartesianAnalytics";
-import { HabitHistoryRepository, HabitsRepository } from "../../db/sqliteManager";
-import tailwindConfig from "../../tailwind.config";
-import Calendar from "../../components/Calendar";
-import Habit from "../../components/Habit";
-import { DateContext, useDateContext } from "../../contexts/DateContext";
-import HeatMapCalendar from "../../components/HeatMapCalendar";
-import ScrollingPager from "../../components/Paging/ScrollingPager";
-import OverviewPage from "../../components/habitAnalytics/OverviewPage";
-import { HabitDataContext, StandardHabitDataContext } from "../../contexts/HabitContexts";
-import Charts from "../../components/habitAnalytics/Charts";
-import { useHabitUpdate } from "../../contexts/HabitUpdateContext";
+import CartesianAnalytics from "../../../components/CartesianAnalytics";
+import { HabitHistoryRepository, HabitsRepository } from "../../../db/sqliteManager";
+import Habit from "../../../components/Habit";
+import { useDateContext } from "../../../contexts/DateContext";
+import HeatMapCalendar from "../../../components/HeatMapCalendar";
+import ScrollingPager from "../../../components/Paging/ScrollingPager";
+import OverviewPage from "../../../components/habitAnalytics/OverviewPage";
+import { HabitDataContext, StandardHabitDataContext } from "../../../contexts/HabitContexts";
+import Charts from "../../../components/habitAnalytics/Charts";
+import { useHabitUpdate } from "../../../contexts/HabitUpdateContext";
+
 
 const habitAnalytics = () => {
   const habitRepo = useMemo(() => new HabitsRepository(), [])
@@ -80,7 +79,7 @@ const habitAnalytics = () => {
             <View>
               <Link
                  href={{
-                  pathname: 'habitEditor',
+                  pathname: '/(app)/habitEditor',
                   params: { data: JSON.stringify(standardHabitData), adaptiveSuggestion: null}
                 }}
               >

@@ -1,9 +1,8 @@
-import { Image, Text, View } from 'react-native'
+import { Image, View } from 'react-native'
 import { Tabs } from 'expo-router'
 
-import icons from '../../constants/icons'
-import tailwindConfig from '../../tailwind.config'
-import { useEffect } from 'react'
+import icons from '../../../constants/icons'
+import tailwindConfig from '../../../tailwind.config'
 
 
 const tailwindColors = tailwindConfig.theme.extend.colors

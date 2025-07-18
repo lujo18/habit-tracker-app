@@ -1,80 +1,84 @@
-import { useFonts } from 'expo-font';
-import { Link } from 'expo-router';
-import { StatusBar } from 'expo-status-bar';
-import { useCallback, useState } from 'react';
-import { Text, View } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import * as SplashScreen from 'expo-splash-screen'
+import { useRouter } from "expo-router";
+import { useCallback, useState, useEffect } from "react";
+import { Text } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
+import * as SplashScreen from "expo-splash-screen";
+import { useAuth } from "../contexts/AuthContext";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
-
-SplashScreen.preventAutoHideAsync()
+SplashScreen.preventAutoHideAsync();
 
 SplashScreen.setOptions({
   duration: 1000,
   fade: true,
-})
+});
 
 export default function App() {
-  const [fontsLoaded, fontError] = useFonts({
-    'GeneralSans-Regular': require('../assets/fonts/GeneralSans/GeneralSans-Regular.otf'),
-    'GeneralSans-Italic': require('../assets/fonts/GeneralSans/GeneralSans-Italic.otf'),
-    'GeneralSans-Medium': require('../assets/fonts/GeneralSans/GeneralSans-Medium.otf'),
-    'GeneralSans-MediumItalic': require('../assets/fonts/GeneralSans/GeneralSans-MediumItalic.otf'),
-    'GeneralSans-SemiBold': require('../assets/fonts/GeneralSans/GeneralSans-Semibold.otf'),
-    'GeneralSans-SemiBoldItalic': require('../assets/fonts/GeneralSans/GeneralSans-SemiboldItalic.otf'),
-    'GeneralSans-Bold': require('../assets/fonts/GeneralSans/GeneralSans-Bold.otf'),
-    'GeneralSans-BoldItalic': require('../assets/fonts/GeneralSans/GeneralSans-BoldItalic.otf'),
-    'GeneralSans-Light': require('../assets/fonts/GeneralSans/GeneralSans-Light.otf'),
-    'GeneralSans-LightItalic': require('../assets/fonts/GeneralSans/GeneralSans-LightItalic.otf'),
-    'GeneralSans-ExtraLight': require('../assets/fonts/GeneralSans/GeneralSans-Extralight.otf'),
-    'GeneralSans-ExtraLightItalic': require('../assets/fonts/GeneralSans/GeneralSans-ExtralightItalic.otf'),
-    'Lora-Regular': require('../assets/fonts/Lora/Lora-Regular.ttf'),
-    'Lora-Medium': require('../assets/fonts/Lora/Lora-Medium.ttf'),
-    'Lora-SemiBold': require('../assets/fonts/Lora/Lora-SemiBold.ttf'),
-    'Lora-Bold': require('../assets/fonts/Lora/Lora-Bold.ttf'),
-    'Lora-Italic': require('../assets/fonts/Lora/Lora-Italic.ttf'),
-    'Lora-MediumItalic': require('../assets/fonts/Lora/Lora-MediumItalic.ttf'),
-    'Lora-SemiBoldItalic': require('../assets/fonts/Lora/Lora-SemiBoldItalic.ttf'),
-    'Lora-BoldItalic': require('../assets/fonts/Lora/Lora-BoldItalic.ttf'),
-    'SourceSans3-ExtraLight': require('../assets/fonts/SourceSans/SourceSans3-ExtraLight.ttf'),
-    'SourceSans3-Light': require('../assets/fonts/SourceSans/SourceSans3-Light.ttf'),
-    'SourceSans3-Regular': require('../assets/fonts/SourceSans/SourceSans3-Regular.ttf'),
-    'SourceSans3-Medium': require('../assets/fonts/SourceSans/SourceSans3-Medium.ttf'),
-    'SourceSans3-SemiBold': require('../assets/fonts/SourceSans/SourceSans3-SemiBold.ttf'),
-    'SourceSans3-Bold': require('../assets/fonts/SourceSans/SourceSans3-Bold.ttf'),
-    'SourceSans3-ExtraBold': require('../assets/fonts/SourceSans/SourceSans3-ExtraBold.ttf'),
-    'SourceSans3-Black': require('../assets/fonts/SourceSans/SourceSans3-Black.ttf'),
-    'SourceSans3-ExtraLightItalic': require('../assets/fonts/SourceSans/SourceSans3-ExtraLightItalic.ttf'),
-    'SourceSans3-LightItalic': require('../assets/fonts/SourceSans/SourceSans3-LightItalic.ttf'),
-    'SourceSans3-Italic': require('../assets/fonts/SourceSans/SourceSans3-Italic.ttf'),
-    'SourceSans3-MediumItalic': require('../assets/fonts/SourceSans/SourceSans3-MediumItalic.ttf'),
-    'SourceSans3-SemiBoldItalic': require('../assets/fonts/SourceSans/SourceSans3-SemiBoldItalic.ttf'),
-    'SourceSans3-BoldItalic': require('../assets/fonts/SourceSans/SourceSans3-BoldItalic.ttf'),
-    'SourceSans3-ExtraBoldItalic': require('../assets/fonts/SourceSans/SourceSans3-ExtraBoldItalic.ttf'),
-    'SourceSans3-BlackItalic': require('../assets/fonts/SourceSans/SourceSans3-BlackItalic.ttf'),
-  })
+  const router = useRouter();
+  const { session, error, userProfile, isLoading } = useAuth();
+  const [appReady, setAppReady] = useState(false);
+  const [initialLoadComplete, setInitialLoadComplete] = useState(false);
 
- 
-
-  const [appReady, setAppReady] = useState(false)
-
+  // Handle initial splash screen (simplified without font loading)
   const onLayoutRootView = useCallback(async () => {
-    if (fontsLoaded || fontError) {
-      // Wait for 2 seconds before hiding the splash screen
-      setTimeout(() => {
-        SplashScreen.hideAsync();
-      }, 2000);
-    }
-  }, [fontsLoaded, fontError]);
+    // Fonts are loaded by expo-font plugin, so we can hide splash immediately
+    await SplashScreen.hideAsync();
+    setInitialLoadComplete(true);
+  }, []);
 
-  if (!fontsLoaded && !fontError) {
-    return null;
-  }
+  // Handle navigation based on auth state changes
+  useEffect(() => {
+    console.log("🎯 INDEX.JSX - Auth state changed:", { 
+      session: session ? 'EXISTS' : 'NO_SESSION', 
+      isLoading, 
+      error: error ? 'HAS_ERROR' : 'NO_ERROR',
+      initialLoadComplete
+    });
+
+    // Only handle navigation after initial load is complete
+    if (!initialLoadComplete) {
+      console.log("⏳ Initial load not complete, skipping navigation");
+      return;
+    }
+
+    // Don't navigate if auth is still loading
+    if (isLoading) {
+      console.log("🔄 Auth still loading, skipping navigation");
+      return;
+    }
+
+    // Don't navigate if there's an auth error
+    if (error) {
+      console.log("❌ Auth error present, not navigating:", error.message);
+      return;
+    }
+
+    // Handle navigation based on session state
+    const handleNavigation = async () => {
+      if (session) {
+        console.log("✅ User is logged in, navigating to home");
+        router.replace("/(app)/home");
+      } else {
+        console.log("🔐 No session, checking onboarding status");
+        const hasOnboarded = await AsyncStorage.getItem("hasOnboarded");
+        if (hasOnboarded === 'true') {
+          router.replace("/auth/signin");
+        } else {
+          router.replace("/onboarding/screen1");
+        }
+      }
+      setAppReady(true);
+    };
+
+    handleNavigation();
+  }, [session, isLoading, error, initialLoadComplete, router]);
 
   return (
-    <SafeAreaView className="justify-center items-center w-full h-full bg-background" onLayout={onLayoutRootView}>
-      <Text className="text-2xl text-white">Habit Tracker</Text>
-      <Link href="/home" className='text-blue-500 mt-5'>Testing</Link>
+    <SafeAreaView
+      className="justify-center items-center w-full h-full bg-background"
+      onLayout={onLayoutRootView}
+    >
+      <Text className="text-2xl text-white">H</Text>
     </SafeAreaView>
   );
 }

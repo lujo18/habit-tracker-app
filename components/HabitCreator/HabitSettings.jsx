@@ -14,6 +14,7 @@ const RenderHabitSettingPage = memo(({
   habitRepeat,
   habitGoal,
   habitLocation,
+  habitMaxGoal,
   onGoalChange,
   openMenu,
   handleOpen,
@@ -21,6 +22,7 @@ const RenderHabitSettingPage = memo(({
   setLabel,
   setRepeat,
   setLocation,
+  setMaxGoal,
   goalOption,
   repeatOption,
   labelOption,
@@ -39,6 +41,7 @@ const RenderHabitSettingPage = memo(({
           habitRepeat={habitRepeat}
           habitGoal={habitGoal}
           habitLocation={habitLocation}
+          habitMaxGoal={habitMaxGoal}
           onGoalChange={onGoalChange}
           openMenu={openMenu}
           handleOpen={handleOpen}
@@ -46,6 +49,7 @@ const RenderHabitSettingPage = memo(({
           setLabel={setLabel}
           setRepeat={setRepeat}
           setLocation={setLocation}
+          setMaxGoal={setMaxGoal}
           goalOption={goalOption}
           repeatOption={repeatOption}
           labelOption={labelOption}
@@ -105,6 +109,7 @@ const HabitSettings = ({
   habitRepeat,
   habitGoal,
   habitLocation,
+  habitMaxGoal,
   onGoalChange,
   openMenu,
   handleOpen,
@@ -113,6 +118,7 @@ const HabitSettings = ({
   setLabel,
   setRepeat,
   setLocation,
+  setMaxGoal,
   goalOption,
   repeatOption,
   labelOption,
@@ -130,6 +136,7 @@ const HabitSettings = ({
     habitRepeat,
     habitGoal,
     habitLocation,
+    habitMaxGoal,
     onGoalChange,
     openMenu,
     handleOpen,
@@ -137,6 +144,7 @@ const HabitSettings = ({
     setLabel,
     setRepeat,
     setLocation,
+    setMaxGoal,
     goalOption,
     repeatOption,
     labelOption,
@@ -152,6 +160,7 @@ const HabitSettings = ({
     habitRepeat,
     habitGoal,
     habitLocation,
+    habitMaxGoal,
     onGoalChange,
     openMenu,
     handleOpen,
@@ -159,6 +168,7 @@ const HabitSettings = ({
     setLabel,
     setRepeat,
     setLocation,
+    setMaxGoal,
     goalOption,
     repeatOption,
     labelOption,

@@ -20,6 +20,14 @@ import habitAtMost from "../assets/icons/habit-at-most.png"
 
 import resetArrow from "../assets/icons/reset-arrow.png"
 
+import shining from "../assets/icons/shining-fill.png"
+import arrowRight from "../assets/icons/arrow-right.png"
+import arrowRightSLine from "../assets/icons/arrow-right-s-line.png"
+import arrowLeftSLine from "../assets/icons/arrow-left-s-line.png"
+
+
+
+
 export default {
     add,
     chart,
@@ -38,5 +46,9 @@ export default {
     dropdown,
     streakFire,
     subtractLine,
-    resetArrow
+    resetArrow,
+    shining,
+    arrowRight,
+    arrowRightSLine,
+    arrowLeftSLine
 }

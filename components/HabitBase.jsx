@@ -1,28 +1,55 @@
-import { View, Text, Image, TouchableOpacity, ActivityIndicator } from 'react-native'
-import React, { memo, useContext, useEffect, useRef, useState } from 'react'
-import icons from '../constants/icons'
+import {
+  View,
+  Text,
+  Image,
+  TouchableOpacity,
+  ActivityIndicator,
+} from "react-native";
+import React, { memo, useContext, useEffect, useRef, useState } from "react";
+import icons from "../constants/icons";
 
-import { Canvas, Rect, SweepGradient, vec} from '@shopify/react-native-skia'
-import Animated, { interpolate, useSharedValue, withReanimatedTimer, withRepeat, withTiming, Easing, withSpring } from 'react-native-reanimated'
-import tailwindConfig from '../tailwind.config'
-import { HabitHistoryRepository } from '../db/sqliteManager'
-import { DateContext, useDateContext } from '../contexts/DateContext'
-import { useLoading } from './LoadingProvider'
-import { formatRepeatText } from '../utils/formatters'
-import { Link } from 'expo-router'
-import { setDate } from 'date-fns'
+import { Canvas, Rect, SweepGradient, vec } from "@shopify/react-native-skia";
+import Animated, {
+  interpolate,
+  useSharedValue,
+  withReanimatedTimer,
+  withRepeat,
+  withTiming,
+  Easing,
+  withSpring,
+} from "react-native-reanimated";
+import tailwindConfig from "../tailwind.config";
+import { HabitHistoryRepository } from "../db/sqliteManager";
+import { DateContext, useDateContext } from "../contexts/DateContext";
+import { useLoading } from "./LoadingProvider";
+import { formatRepeatText } from "../utils/formatters";
+import { Link } from "expo-router";
+import { setDate } from "date-fns";
 
 // onPress: function ran when clicking habit's button (can vary for normal and timer based habits)
-const HabitBase = ({ data, habitCompletionDisplay, habitButton, habitSubtractButton, enableStreak = false, currentStreak = 0, amount = 0, goal, isCompleted = false, ...props }) => {
-  const {selectedDate} = useDateContext()
-  
-  const [canvasSize, setCanvasSize] = useState({ width: 0, height: 0 })
+const HabitBase = ({
+  data,
+  habitCompletionDisplay,
+  habitButton,
+  habitSubtractButton,
+  enableStreak = false,
+  currentStreak = 0,
+  amount = 0,
+  goal,
+  isCompleted = false,
+  ...props
+}) => {
+  const { selectedDate } = useDateContext();
 
-  const {name, repeat, color} = data
+  const [canvasSize, setCanvasSize] = useState({ width: 0, height: 0 });
 
-  const borderColor = color
-  const backgroundColor = tailwindConfig.theme.extend.colors["background"]["90"]
-  const tailwindColors = tailwindConfig.theme.extend.colors
+  const { name, repeat, color } = data;
+
+  const borderColor = color;
+  const bgColor = `bg-[${color}]`;
+  const backgroundColor =
+    tailwindConfig.theme.extend.colors["background"]["90"];
+  const tailwindColors = tailwindConfig.theme.extend.colors;
 
   const HabitStreak = () => {
     return (
@@ -46,55 +73,63 @@ const HabitBase = ({ data, habitCompletionDisplay, habitButton, habitSubtractBut
           }
         />
       </View>
-    )
-  }
+    );
+  };
 
   return (
-    
     <View
-      className="rounded-2xl overflow-hidden justify-center relative items-center my-4"
+      className="rounded-2xl overflow-hidden justify-center relative items-center my-4 p-1"
       onLayout={({ nativeEvent: { layout } }) => {
         setCanvasSize(layout);
       }}
->
-        <View
-          className={`${
-            amount < goal ? "bg-background-90" : `bg-[${color}]`
-          } flex-row w-full p-4 gap-3 rounded-2xl z-10`}
-        >
-          {habitSubtractButton && habitSubtractButton()}
+    >
+      <View
+        className={`${
+          amount < goal ? "bg-background-90" : bgColor
+        } flex-row w-full gap-3 rounded-2xl z-10 p-3`}
+      >
+        {habitSubtractButton && habitSubtractButton()}
 
-          <Link
-            className="flex-1"
-            href={{
-              pathname: '/habitAnalytics',
-              params: { data: JSON.stringify(data), selectedDate },
-            }}
-          >
-            <View className='flex-1 flex flex-row justify-between'>
-            
-              <View className="flex-1 gap-2">
-                <View className="flex-row items-center gap-4">
-                  <Text className="text-highlight text-2xl font-generalsans-semibold">{name}</Text>
-            
-                  {enableStreak && <HabitStreak />}
-                </View>
-                {/** contains current completion under habit name (x/y label | x time) */}
-                { habitCompletionDisplay() }
-              </View>
-              
-              <View>
-                <View className="p-2">
-                  <Text className="text-highlight-60 text-lg font-generalsans-medium">
-                    {formatRepeatText(repeat)}
+        <Link
+          className="flex-1"
+          href={{
+            pathname: "/(app)/habitAnalytics",
+            params: { data: JSON.stringify(data), selectedDate },
+          }}
+        >
+          <View className="flex-1 flex flex-row justify-between">
+            <View className="flex-1 gap-2">
+              <View className="flex-row items-center gap-4">
+                <View className="flex-row items-center gap-2">
+                  { data.setting === 'dynamic' && <Image
+                    source={icons.shining}
+                    className="w-6 h-6"
+                    contentFit="cover"
+                    tintColor={tailwindColors["highlight"]["90"]}
+                  />}
+                  <Text className="text-highlight text-2xl font-generalsans-semibold">
+                    {name}
                   </Text>
                 </View>
+
+                {enableStreak && <HabitStreak />}
+              </View>
+              {/** contains current completion under habit name (x/y label | x time) */}
+              {habitCompletionDisplay()}
+            </View>
+
+            <View>
+              <View className="p-2">
+                <Text className="text-highlight-60 text-lg font-generalsans-medium">
+                  {formatRepeatText(repeat)}
+                </Text>
               </View>
             </View>
-          </Link>
+          </View>
+        </Link>
 
-          { habitButton() }
-        </View>
+        {habitButton()}
+      </View>
 
       <Canvas
         style={{
@@ -116,7 +151,14 @@ const HabitBase = ({ data, habitCompletionDisplay, habitButton, habitSubtractBut
               backgroundColor,
               backgroundColor,
             ]}
-            positions={[0, amount / goal, amount / (goal - goal / 7), 1]}
+            positions={[
+              0,
+              goal > 0 ? Math.min(Math.max(amount / goal, 0), 1) : 0,
+              goal > 0
+                ? Math.min(Math.max(amount / (goal - goal / 7), 0), 1)
+                : 0,
+              1,
+            ]}
             transform={[{ rotate: -Math.PI / 2 }]}
           />
         </Rect>

@@ -1,27 +1,33 @@
-import { View, Text, Modal } from "react-native";
+import { View, Text, Modal, KeyboardAvoidingView, Platform } from "react-native";
 import TextButton from "./TextButton";
 
 const PopupModalBase = ({ isVisible, handleCancel, handleSubmit, submitButtonText, children }) => {
   return (
     <Modal animationType="fade" transparent={true} visible={isVisible}>
       <View className="w-full h-full justify-center items-center p-4 bg-black/70">
-        <View className="bg-background-90 w-full rounded-xl border-2 border-background-80 items-center justify-center">
+        <KeyboardAvoidingView
+          behavior={Platform.OS === "ios" ? "padding" : "height"}
+          style={{ width: "100%" }}
+         
+        >
+          <View className="bg-background w-full rounded-xl border-2 border-background-90 items-center justify-center">
 
-          {children}
-          
-          <View className="flex-row gap-4 p-4">
-            <TextButton
-              text="Cancel"
-              onPress={handleCancel}
-              containerStyles="flex-1 bg-background-80"
-            />
-            <TextButton
-              text={submitButtonText}
-              containerStyles={`flex-1 bg-habitColors-hBlue`}
-              onPress={handleSubmit}
-            />
+            {children}
+            
+            <View className="flex-row gap-4 p-4">
+              <TextButton
+                text="Cancel"
+                type={"outline"}
+                onPress={handleCancel}
+              />
+              <TextButton
+                text={submitButtonText}
+                type={"solid"}
+                onPress={handleSubmit}
+              />
+            </View>
           </View>
-        </View>
+        </KeyboardAvoidingView>
       </View>
     </Modal>
   );

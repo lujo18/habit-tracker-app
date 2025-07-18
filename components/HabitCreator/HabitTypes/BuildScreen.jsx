@@ -4,29 +4,7 @@ import DropdownMenu from "../../DropdownMenu";
 import BuildInput from "../../BuildInput";
 import { HabitSettingRepository } from "../../../db/sqliteManager";
 import Subheader from "../../Text/Subheader";
-
-const GoalInput = memo(({ onGoalChange, habitGoal }) => {
-
-  const [localGoal, setLocalGoal] = useState(habitGoal);
-
-  const handleChange = useCallback(
-    (value) => {
-      setLocalGoal(value);
-      onGoalChange(value);
-    },
-    [onGoalChange]
-  );
-
-  return (
-    <BuildInput
-      value={localGoal}
-      handleChange={handleChange}
-      placeholder="#"
-      keyboardType="numeric"
-      inputStyles={"w-[100px] rounded-2xl text-2xl text-center"}
-    />
-  );
-});
+import GoalInput from "../../Inputs/GoalInput";
 
 const BuildScreen = memo(
   ({

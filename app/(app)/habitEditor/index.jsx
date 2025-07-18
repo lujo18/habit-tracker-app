@@ -1,21 +1,18 @@
 import { View, Text, Keyboard, TouchableWithoutFeedback } from 'react-native'
-import React, { useContext, useMemo, useState } from 'react'
+import { useMemo, useState, useEffect } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { TouchableOpacity } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
-import Subheader from '../../components/Text/Subheader';
-import { StandardHabitDataContext } from '../../contexts/HabitContexts';
-import BuildInput from '../../components/BuildInput';
-import { useEffect } from 'react';
-import DropdownMenu from '../../components/DropdownMenu';
-import { HabitSettingRepository, HabitsRepository } from '../../db/sqliteManager';
-import PopupModalBase from '../../components/PopupModalBase';
-import { Canvas, Fill, Shader, Skia } from '@shopify/react-native-skia';
-import Header from '../../components/Text/Header';
-import XLHeader from '../../components/Text/XLHeader';
-import FancyContainer from '../../components/containers/FancyContainer';
-import TextButton from '../../components/TextButton';
-import { useHabitUpdate } from '../../contexts/HabitUpdateContext'
+import Subheader from '../../../components/Text/Subheader';
+import BuildInput from '../../../components/BuildInput';
+import DropdownMenu from '../../../components/DropdownMenu';
+import { HabitSettingRepository, HabitsRepository } from '../../../db/sqliteManager';
+import PopupModalBase from '../../../components/PopupModalBase';
+import Header from '../../../components/Text/Header';
+import XLHeader from '../../../components/Text/XLHeader';
+import FancyContainer from '../../../components/containers/FancyContainer';
+import TextButton from '../../../components/TextButton';
+import { useHabitUpdate } from '../../../contexts/HabitUpdateContext'
 
 const habitSettingRepo = new HabitSettingRepository()
 
@@ -30,7 +27,7 @@ const habitEditor = () => {
   const standardHabitData = JSON.parse(params.data)
   const adaptiveSuggestion = params.adaptiveSuggestion ? JSON.parse(params?.adaptiveSuggestion) : null
 
-  const adaptiveNewGoal = adaptiveSuggestion ? Math.max(Math.round(adaptiveSuggestion.newGoal * standardHabitData.referenceGoal), 1) : null 
+  const adaptiveNewGoal = adaptiveSuggestion.newGoal || null 
 
   const [editedHabitData, setEditedHabitData] = useState(standardHabitData)
   
@@ -46,10 +43,6 @@ const habitEditor = () => {
   const [locationOption, setLocationOption] = useState([])
 
   const [adaptiveModalVisible, setAdaptiveModalVisible] = useState(adaptiveSuggestion ? true : false)
-
-
-  
-
 
   
 
@@ -87,6 +80,10 @@ const habitEditor = () => {
         ["name", "referenceGoal", "label"],
         [editedHabitData.name, editedHabitData.referenceGoal, editedHabitData.label]
       );
+
+      if (editedHabitData.referenceGoal != standardHabitData.referenceGoal) {
+        await HabitsRepo.updateAdjustmentDate(standardHabitData.id, new Date())
+      }
 
       triggerUpdate()
     } catch (error) {

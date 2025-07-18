@@ -1,5 +1,6 @@
 import * as SQLite from 'expo-sqlite';
 import { SCHEMA_SQL } from './createTables';
+import { formatChartData, getPeriodData } from '../utils/dateRetriver';
 
 
 class Database {
@@ -43,7 +44,7 @@ class BaseRepository {
 
       return result
     } catch (error) {
-      console.log("Failed to executeQuery", error)
+      console.log("Failed to executeQuery", error, query, ...params)
     }
     
   }
@@ -51,7 +52,7 @@ class BaseRepository {
   async getAllQuery (query, ...params) {
     try {
       const db = await this.db
-      const result = await db.getAllAsync(query, ...params)
+      const result = await db.getAllAsync(query, ...params);
 
       //console.log("getAllQuery rows:", result);
       
@@ -113,9 +114,9 @@ export class HabitsRepository extends BaseRepository {
 
   async createHabit(data) {
     const query = `--sql
-    INSERT INTO Habits (name, setting, repeat, label, limitType, referenceGoal, color, location) VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+    INSERT INTO Habits (name, setting, repeat, label, limitType, referenceGoal, maxGoal, color, location, lastAdjustmentDate) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     `
-    const params = data;
+    const params = [...data, await dateToSQL(new Date())];
 
     /* Data array
         habitName,
@@ -124,6 +125,7 @@ export class HabitsRepository extends BaseRepository {
         habitLabel,
         habitLimit,
         habitGoal,
+        habitMaxGoal,
         selectedColor,
         habitLocation,
         currentStreak,
@@ -183,7 +185,7 @@ export class HabitsRepository extends BaseRepository {
   async setValues(id, properties, values) {
     properties = properties.map((val) => `${val} = ?`)
 
-    console.log("PRPS", ...properties, id)
+    //console.log("PRPS", ...properties, id)
 
     const query = `--sql
       UPDATE Habits
@@ -208,7 +210,7 @@ export class HabitsRepository extends BaseRepository {
       FROM Habits
     `
     const res = await this.getAllQuery(query, [])
-    console.log("GET ALL RES: ", res)
+    //console.log("GET ALL RES: ", res)
 
     return res
   }
@@ -267,6 +269,23 @@ export class HabitsRepository extends BaseRepository {
       return this.getAllQuery(query, params)
     } catch (error) {
       console.log("Failed to retrieve habits ", error)
+    }
+  }
+
+  async updateAdjustmentDate(id, date) {
+    date = await dateToSQL(date)
+
+    const query = `--sql
+      UPDATE Habits
+      SET lastAdjustmentDate = ?
+      WHERE id = ?
+    `
+    const params = [date, id];
+
+    try {
+      await this.executeQuery(query, params);
+    } catch (error) {
+      console.log("Failed to update lastAdjustmentDate", error);
     }
   }
 
@@ -718,6 +737,71 @@ export class HabitHistoryRepository extends BaseRepository {
     } catch (error) {
       console.log("Failed to retrieve habits ", error)
     }
+  }
+
+  async getPreviousDays(habitId, numDays) {
+    try {
+      const HabitRepo = new HabitsRepository();
+
+      // Calculate the previous date (numDays ago)
+      const prevDate = new Date();
+      prevDate.setDate(prevDate.getDate() - numDays);
+      const prev = await dateToSQL(prevDate);
+
+      const query = `--sql
+      SELECT *
+      FROM (
+        SELECT *,
+        ROW_NUMBER() OVER (PARTITION BY periodKey ORDER BY date) AS rn
+        FROM HabitHistory
+        WHERE habitId = ?
+      ) t
+      WHERE rn = 1
+      ORDER BY date DESC
+      LIMIT ?
+      `;
+
+      const params = [habitId, numDays];
+
+      const previousDays = await this.getAllQuery(query, params);
+      const data = previousDays.reverse();
+
+      if (!data || data.length === 0) return null;
+
+      // const timeframe = Math.abs(
+      //   Math.floor(
+      //     (new Date() - new Date(data[0].date)) / (1000 * 60 * 60 * 24)
+      //   )
+      // );
+
+      // console.log("Timeframe", timeframe)
+
+      // if (timeframe < 7) {
+      //   return null;
+      // }
+
+      const habitData = await HabitRepo.get(habitId);
+      const repeat = habitData.repeat;
+
+      const filledData = await formatChartData(data, numDays + 1, repeat);
+
+      const returnDays = Array.from(filledData).slice(-numDays) || null;
+
+      const hasGoal = returnDays.some(day => day && day.goal !== undefined);
+     
+      console.log("Return", returnDays)
+      
+      if (!hasGoal) {
+        return null
+      }
+
+      return returnDays
+    } catch (error) {
+      console.error("Failed to get previous days:", error);
+      return null;
+    }
+
+    // use the function to fill in the empty days right away to make things easier to use
   }
 
   /**

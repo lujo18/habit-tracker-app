@@ -4,29 +4,7 @@ import DropdownMenu from "../../DropdownMenu";
 import BuildInput from "../../BuildInput";
 import { HabitSettingRepository } from "../../../db/sqliteManager";
 import Subheader from "../../Text/Subheader";
-
-const GoalInput = memo(({ onGoalChange, habitGoal }) => {
-
-  const [localGoal, setLocalGoal] = useState(habitGoal);
-
-  const handleChange = useCallback(
-    (value) => {
-      setLocalGoal(value);
-      onGoalChange(value);
-    },
-    [onGoalChange]
-  );
-
-  return (
-    <BuildInput
-      value={localGoal}
-      handleChange={handleChange}
-      placeholder="#"
-      keyboardType="numeric"
-      inputStyles={"w-[100px] rounded-2xl text-2xl text-center"}
-    />
-  );
-});
+import GoalInput from "../../Inputs/GoalInput";
 
 const DynamicScreen = memo(
   ({
@@ -35,6 +13,7 @@ const DynamicScreen = memo(
     habitRepeat,
     habitGoal,
     habitLocation,
+    habitMaxGoal,
     onGoalChange,
     handleOpen,
     openMenu,
@@ -42,6 +21,7 @@ const DynamicScreen = memo(
     setLabel,
     setRepeat,
     setLocation,
+    setMaxGoal,
     goalOption,
     labelOption,
     repeatOption,
@@ -52,17 +32,24 @@ const DynamicScreen = memo(
     const habitSettingRepo = new HabitSettingRepository();
 
     return (
-      <View className="p-5 gap-4">
+      <View className="p-5 gap-4 pb-40">
         <View>
           <Text className="text-highlight-80">
             Establish a goal of building your habit with the following rules:
           </Text>
         </View>
-        <View className="flex-row items-center gap-4">
-          <Subheader className="text-xl text-highlight-60">I will do</Subheader>
+        <View className="flex flex-row justify-between">
+          <View className="flex items-center gap-4">
+            <Subheader className="text-xl text-highlight-60">I will start at</Subheader>
+            <GoalInput onGoalChange={onGoalChange} habitGoal={habitGoal}/>
+          </View>
+          <Subheader>AND</Subheader>
+          <View className="flex items-center gap-4">
+            <Subheader className="text-xl text-highlight-60">Max out at</Subheader>
+            <GoalInput onGoalChange={setMaxGoal} habitGoal={habitMaxGoal}/>
+          </View>
         </View>
-        <View className="flex-row items-center gap-4">
-          <GoalInput onGoalChange={onGoalChange} habitGoal={habitGoal}/>
+        <View className="flex-row">
           <DropdownMenu
             value={habitLabel}
             onChange={setLabel}
