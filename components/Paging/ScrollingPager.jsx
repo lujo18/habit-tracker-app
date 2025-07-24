@@ -82,7 +82,7 @@ const ScrollingPager = ({children, isControlled = false, currentPage}) => {
   }
 
   return (
-    <View className='flex-1 w-full'>
+    <View className='w-full flex-1'>
     <ScrollView className="w-full bg-background" contentContainerStyle={{flexGrow: 1, justifyContent:"center"}}>
       <AnimatedNavbar
         pages={data.map((page) => page.pageTitle)}

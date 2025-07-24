@@ -1,0 +1,942 @@
+{
+  "Career": [
+    {
+      "name": "Learn new skill",
+      "setting": "build",
+      "repeat": "day",
+      "label": "minutes",
+      "referenceGoal": 30,
+      "color": "#0A72D4",
+      "location": "Desk"
+    },
+    {
+      "name": "Network outreach",
+      "setting": "build",
+      "repeat": "week",
+      "label": "people",
+      "referenceGoal": 3,
+      "color": "#C412FF",
+      "location": "Online"
+    },
+    {
+      "name": "Update resume/portfolio",
+      "setting": "build",
+      "repeat": "month",
+      "label": "updates",
+      "referenceGoal": 1,
+      "color": "#EFB002",
+      "location": "Computer"
+    },
+    {
+      "name": "Read industry news",
+      "setting": "build",
+      "repeat": "day",
+      "label": "minutes",
+      "referenceGoal": 15,
+      "color": "#0989BF",
+      "location": "Anywhere"
+    },
+    {
+      "name": "Practice interview skills",
+      "setting": "build",
+      "repeat": "week",
+      "label": "sessions",
+      "referenceGoal": 1,
+      "color": "#B84C2C",
+      "location": "Home"
+    }
+  ],
+  "Finance": [
+    {
+      "name": "Track expenses",
+      "setting": "build",
+      "repeat": "day",
+      "label": "items",
+      "referenceGoal": 5,
+      "color": "#0989BF",
+      "location": "Phone"
+    },
+    {
+      "name": "Avoid impulse purchase",
+      "setting": "quit",
+      "repeat": "day",
+      "label": "purchases",
+      "referenceGoal": 0,
+      "color": "#882C40",
+      "location": "Stores"
+    },
+    {
+      "name": "Review budget",
+      "setting": "build",
+      "repeat": "week",
+      "label": "minutes",
+      "referenceGoal": 20,
+      "color": "#0A72D4",
+      "location": "Desk"
+    },
+    {
+      "name": "Add to savings",
+      "setting": "build",
+      "repeat": "month",
+      "label": "dollars",
+      "referenceGoal": 200,
+      "color": "#EFB002",
+      "location": "Bank"
+    },
+    {
+      "name": "Pay bills on time",
+      "setting": "build",
+      "repeat": "month",
+      "label": "bills",
+      "referenceGoal": 5,
+      "color": "#BFE609",
+      "location": "Online"
+    }
+  ],
+  "Health": [
+    {
+      "name": "Exercise",
+      "setting": "build",
+      "repeat": "day",
+      "label": "minutes",
+      "referenceGoal": 45,
+      "color": "#39BF09",
+      "location": "Gym"
+    },
+    {
+      "name": "Drink water",
+      "setting": "build",
+      "repeat": "day",
+      "label": "cups",
+      "referenceGoal": 8,
+      "color": "#0A72D4",
+      "location": "Anywhere"
+    },
+    {
+      "name": "Sleep early",
+      "setting": "build",
+      "repeat": "day",
+      "label": "hours",
+      "referenceGoal": 8,
+      "color": "#124CFF",
+      "location": "Bedroom"
+    },
+    {
+      "name": "Eat vegetables",
+      "setting": "build",
+      "repeat": "day",
+      "label": "servings",
+      "referenceGoal": 3,
+      "color": "#39BF09",
+      "location": "Kitchen"
+    },
+    {
+      "name": "Avoid junk food",
+      "setting": "quit",
+      "repeat": "day",
+      "label": "items",
+      "referenceGoal": 0,
+      "color": "#882C40",
+      "location": "Anywhere"
+    }
+  ],
+  "Relationships": [
+    {
+      "name": "Call a loved one",
+      "setting": "build",
+      "repeat": "week",
+      "label": "calls",
+      "referenceGoal": 3,
+      "color": "#C412FF",
+      "location": "Phone"
+    },
+    {
+      "name": "Plan date night",
+      "setting": "build",
+      "repeat": "week",
+      "label": "dates",
+      "referenceGoal": 1,
+      "color": "#EFB002",
+      "location": "Outdoors"
+    },
+    {
+      "name": "Express gratitude",
+      "setting": "build",
+      "repeat": "day",
+      "label": "messages",
+      "referenceGoal": 1,
+      "color": "#0A72D4",
+      "location": "Anywhere"
+    },
+    {
+      "name": "Limit screen time with partner",
+      "setting": "quit",
+      "repeat": "day",
+      "label": "minutes",
+      "referenceGoal": 30,
+      "color": "#4C2C88",
+      "location": "Home"
+    },
+    {
+      "name": "Ask a deep question",
+      "setting": "build",
+      "repeat": "day",
+      "label": "questions",
+      "referenceGoal": 1,
+      "color": "#BFE609",
+      "location": "Home"
+    }
+  ],
+  "Spirituality": [
+    {
+      "name": "Meditate",
+      "setting": "build",
+      "repeat": "day",
+      "label": "minutes",
+      "referenceGoal": 15,
+      "color": "#124CFF",
+      "location": "Quiet Space"
+    },
+    {
+      "name": "Read spiritual text",
+      "setting": "build",
+      "repeat": "day",
+      "label": "minutes",
+      "referenceGoal": 10,
+      "color": "#C412FF",
+      "location": "Home"
+    },
+    {
+      "name": "Pray",
+      "setting": "build",
+      "repeat": "day",
+      "label": "sessions",
+      "referenceGoal": 2,
+      "color": "#882C40",
+      "location": "Anywhere"
+    },
+    {
+      "name": "Attend service or group",
+      "setting": "build",
+      "repeat": "week",
+      "label": "visits",
+      "referenceGoal": 1,
+      "color": "#EFB002",
+      "location": "Church/Temple"
+    },
+    {
+      "name": "Reflect in journal",
+      "setting": "build",
+      "repeat": "day",
+      "label": "entries",
+      "referenceGoal": 1,
+      "color": "#0A72D4",
+      "location": "Home"
+    }
+  ],
+  "Education": [
+    {
+      "name": "Study new topic",
+      "setting": "build",
+      "repeat": "day",
+      "label": "minutes",
+      "referenceGoal": 30,
+      "color": "#0A72D4",
+      "location": "Desk"
+    },
+    {
+      "name": "Watch educational video",
+      "setting": "build",
+      "repeat": "day",
+      "label": "videos",
+      "referenceGoal": 1,
+      "color": "#C412FF",
+      "location": "Phone"
+    },
+    {
+      "name": "Take notes",
+      "setting": "build",
+      "repeat": "day",
+      "label": "pages",
+      "referenceGoal": 2,
+      "color": "#EFB002",
+      "location": "Notebook"
+    },
+    {
+      "name": "Teach someone else",
+      "setting": "build",
+      "repeat": "week",
+      "label": "sessions",
+      "referenceGoal": 1,
+      "color": "#39BF09",
+      "location": "Online"
+    },
+    {
+      "name": "Review flashcards",
+      "setting": "build",
+      "repeat": "day",
+      "label": "cards",
+      "referenceGoal": 20,
+      "color": "#124CFF",
+      "location": "Phone"
+    }
+  ],
+  "Mental Health": [
+    {
+      "name": "Journal emotions",
+      "setting": "build",
+      "repeat": "day",
+      "label": "entries",
+      "referenceGoal": 1,
+      "color": "#C412FF",
+      "location": "Home"
+    },
+    {
+      "name": "Do a relaxing activity",
+      "setting": "build",
+      "repeat": "day",
+      "label": "minutes",
+      "referenceGoal": 30,
+      "color": "#EFB002",
+      "location": "Anywhere"
+    },
+    {
+      "name": "Practice deep breathing",
+      "setting": "build",
+      "repeat": "day",
+      "label": "sessions",
+      "referenceGoal": 2,
+      "color": "#0A72D4",
+      "location": "Quiet Space"
+    },
+    {
+      "name": "Limit negative self-talk",
+      "setting": "quit",
+      "repeat": "day",
+      "label": "instances",
+      "referenceGoal": 0,
+      "color": "#882C40",
+      "location": "Mind"
+    },
+    {
+      "name": "Practice mindfulness",
+      "setting": "build",
+      "repeat": "day",
+      "label": "minutes",
+      "referenceGoal": 10,
+      "color": "#39BF09",
+      "location": "Anywhere"
+    }
+  ],
+  "Self-Discipline": [
+    {
+      "name": "Wake up on time",
+      "setting": "build",
+      "repeat": "day",
+      "label": "times",
+      "referenceGoal": 1,
+      "color": "#0A72D4",
+      "location": "Bedroom"
+    },
+    {
+      "name": "Avoid snoozing alarm",
+      "setting": "quit",
+      "repeat": "day",
+      "label": "snoozes",
+      "referenceGoal": 0,
+      "color": "#882C40",
+      "location": "Bedroom"
+    },
+    {
+      "name": "Plan daily goals",
+      "setting": "build",
+      "repeat": "day",
+      "label": "goals",
+      "referenceGoal": 3,
+      "color": "#EFB002",
+      "location": "Planner"
+    },
+    {
+      "name": "Stick to a routine",
+      "setting": "build",
+      "repeat": "day",
+      "label": "blocks",
+      "referenceGoal": 5,
+      "color": "#C412FF",
+      "location": "Home"
+    },
+    {
+      "name": "Avoid distractions",
+      "setting": "quit",
+      "repeat": "day",
+      "label": "minutes",
+      "referenceGoal": 30,
+      "color": "#B84C2C",
+      "location": "Workspace"
+    }
+  ],
+  "Creativity": [
+    {
+      "name": "Sketch or draw",
+      "setting": "build",
+      "repeat": "day",
+      "label": "minutes",
+      "referenceGoal": 20,
+      "color": "#C412FF",
+      "location": "Desk"
+    },
+    {
+      "name": "Write something original",
+      "setting": "build",
+      "repeat": "day",
+      "label": "words",
+      "referenceGoal": 300,
+      "color": "#EFB002",
+      "location": "Laptop"
+    },
+    {
+      "name": "Brainstorm ideas",
+      "setting": "build",
+      "repeat": "week",
+      "label": "lists",
+      "referenceGoal": 2,
+      "color": "#0A72D4",
+      "location": "Notebook"
+    },
+    {
+      "name": "Consume creative content",
+      "setting": "build",
+      "repeat": "day",
+      "label": "pieces",
+      "referenceGoal": 1,
+      "color": "#39BF09",
+      "location": "Phone"
+    },
+    {
+      "name": "Experiment with a new medium",
+      "setting": "build",
+      "repeat": "week",
+      "label": "mediums",
+      "referenceGoal": 1,
+      "color": "#882C40",
+      "location": "Studio"
+    }
+  ],
+  "Fitness": [
+    {
+      "name": "Strength training",
+      "setting": "build",
+      "repeat": "week",
+      "label": "sessions",
+      "referenceGoal": 4,
+      "color": "#39BF09",
+      "location": "Gym"
+    },
+    {
+      "name": "Stretching",
+      "setting": "build",
+      "repeat": "day",
+      "label": "minutes",
+      "referenceGoal": 10,
+      "color": "#0A72D4",
+      "location": "Home"
+    },
+    {
+      "name": "Track steps",
+      "setting": "build",
+      "repeat": "day",
+      "label": "steps",
+      "referenceGoal": 10000,
+      "color": "#BFE609",
+      "location": "Everywhere"
+    },
+    {
+      "name": "Cardio session",
+      "setting": "build",
+      "repeat": "week",
+      "label": "sessions",
+      "referenceGoal": 3,
+      "color": "#C412FF",
+      "location": "Outdoors"
+    },
+    {
+      "name": "Take the stairs",
+      "setting": "build",
+      "repeat": "day",
+      "label": "flights",
+      "referenceGoal": 5,
+      "color": "#EFB002",
+      "location": "Office"
+    }
+  ],
+  "Productivity": [
+    {
+      "name": "Prioritize daily tasks",
+      "setting": "build",
+      "repeat": "day",
+      "label": "tasks",
+      "referenceGoal": 3,
+      "color": "#0A72D4",
+      "location": "Planner"
+    },
+    {
+      "name": "Use time blocking",
+      "setting": "build",
+      "repeat": "day",
+      "label": "blocks",
+      "referenceGoal": 4,
+      "color": "#C412FF",
+      "location": "Calendar"
+    },
+    {
+      "name": "Eliminate time wasters",
+      "setting": "quit",
+      "repeat": "day",
+      "label": "minutes",
+      "referenceGoal": 30,
+      "color": "#B84C2C",
+      "location": "Workspace"
+    },
+    {
+      "name": "Review weekly progress",
+      "setting": "build",
+      "repeat": "week",
+      "label": "reviews",
+      "referenceGoal": 1,
+      "color": "#EFB002",
+      "location": "Home"
+    },
+    {
+      "name": "Start with hardest task",
+      "setting": "build",
+      "repeat": "day",
+      "label": "tasks",
+      "referenceGoal": 1,
+      "color": "#39BF09",
+      "location": "Desk"
+    }
+  ],
+  "Fun & Leisure": [
+    {
+      "name": "Play a game",
+      "setting": "build",
+      "repeat": "week",
+      "label": "sessions",
+      "referenceGoal": 2,
+      "color": "#C412FF",
+      "location": "Home"
+    },
+    {
+      "name": "Watch a movie",
+      "setting": "build",
+      "repeat": "week",
+      "label": "movies",
+      "referenceGoal": 1,
+      "color": "#EFB002",
+      "location": "Couch"
+    },
+    {
+      "name": "Explore a new hobby",
+      "setting": "build",
+      "repeat": "week",
+      "label": "sessions",
+      "referenceGoal": 1,
+      "color": "#0A72D4",
+      "location": "Studio"
+    },
+    {
+      "name": "Spend time with friends",
+      "setting": "build",
+      "repeat": "week",
+      "label": "hangouts",
+      "referenceGoal": 2,
+      "color": "#39BF09",
+      "location": "Social"
+    },
+    {
+      "name": "Go outdoors",
+      "setting": "build",
+      "repeat": "week",
+      "label": "hours",
+      "referenceGoal": 3,
+      "color": "#882C40",
+      "location": "Nature"
+    }
+  ],
+  "Confidence": [
+    {
+      "name": "Speak up in conversation",
+      "setting": "build",
+      "repeat": "day",
+      "label": "instances",
+      "referenceGoal": 2,
+      "color": "#0A72D4",
+      "location": "Social"
+    },
+    {
+      "name": "Practice eye contact",
+      "setting": "build",
+      "repeat": "day",
+      "label": "interactions",
+      "referenceGoal": 3,
+      "color": "#C412FF",
+      "location": "Public"
+    },
+    {
+      "name": "Compliment someone",
+      "setting": "build",
+      "repeat": "day",
+      "label": "people",
+      "referenceGoal": 1,
+      "color": "#EFB002",
+      "location": "Anywhere"
+    },
+    {
+      "name": "Practice posture",
+      "setting": "build",
+      "repeat": "day",
+      "label": "minutes",
+      "referenceGoal": 10,
+      "color": "#39BF09",
+      "location": "Home"
+    },
+    {
+      "name": "Dress intentionally",
+      "setting": "build",
+      "repeat": "day",
+      "label": "days",
+      "referenceGoal": 1,
+      "color": "#882C40",
+      "location": "Closet"
+    }
+  ],
+  "Purpose": [
+    {
+      "name": "Reflect on life goals",
+      "setting": "build",
+      "repeat": "week",
+      "label": "sessions",
+      "referenceGoal": 1,
+      "color": "#0A72D4",
+      "location": "Notebook"
+    },
+    {
+      "name": "Write in purpose journal",
+      "setting": "build",
+      "repeat": "week",
+      "label": "entries",
+      "referenceGoal": 1,
+      "color": "#EFB002",
+      "location": "Home"
+    },
+    {
+      "name": "Help someone in need",
+      "setting": "build",
+      "repeat": "week",
+      "label": "acts",
+      "referenceGoal": 1,
+      "color": "#C412FF",
+      "location": "Community"
+    },
+    {
+      "name": "Study someone you admire",
+      "setting": "build",
+      "repeat": "week",
+      "label": "people",
+      "referenceGoal": 1,
+      "color": "#39BF09",
+      "location": "Online"
+    },
+    {
+      "name": "Visualize your legacy",
+      "setting": "build",
+      "repeat": "week",
+      "label": "sessions",
+      "referenceGoal": 1,
+      "color": "#882C40",
+      "location": "Mind"
+    }
+  ],
+  "Environment": [
+    {
+      "name": "Tidy your room",
+      "setting": "build",
+      "repeat": "day",
+      "label": "minutes",
+      "referenceGoal": 10,
+      "color": "#0A72D4",
+      "location": "Home"
+    },
+    {
+      "name": "Declutter workspace",
+      "setting": "build",
+      "repeat": "week",
+      "label": "spaces",
+      "referenceGoal": 1,
+      "color": "#EFB002",
+      "location": "Desk"
+    },
+    {
+      "name": "Add something beautiful",
+      "setting": "build",
+      "repeat": "week",
+      "label": "items",
+      "referenceGoal": 1,
+      "color": "#C412FF",
+      "location": "Room"
+    },
+    {
+      "name": "Take out trash",
+      "setting": "build",
+      "repeat": "week",
+      "label": "times",
+      "referenceGoal": 2,
+      "color": "#39BF09",
+      "location": "Home"
+    },
+    {
+      "name": "Improve lighting",
+      "setting": "build",
+      "repeat": "month",
+      "label": "changes",
+      "referenceGoal": 1,
+      "color": "#882C40",
+      "location": "Workspace"
+    }
+  ],
+  "Focus": [
+    {
+      "name": "Pomodoro Sessions",
+      "setting": "build",
+      "repeat": "day",
+      "label": "minutes",
+      "referenceGoal": 120,
+      "color": "#0A72D4",
+      "location": "Desk"
+    },
+    {
+      "name": "Block Distractions",
+      "setting": "quit",
+      "repeat": "day",
+      "label": "minutes",
+      "referenceGoal": 60,
+      "color": "#EFB002",
+      "location": "Phone"
+    },
+    {
+      "name": "Morning Planning",
+      "setting": "build",
+      "repeat": "day",
+      "label": "minutes",
+      "referenceGoal": 15,
+      "color": "#BFE609",
+      "location": "Home"
+    },
+    {
+      "name": "Deep Work Block",
+      "setting": "build",
+      "repeat": "day",
+      "label": "minutes",
+      "referenceGoal": 90,
+      "color": "#0989BF",
+      "location": "Work"
+    },
+    {
+      "name": "No Multitasking",
+      "setting": "quit",
+      "repeat": "day",
+      "label": "minutes",
+      "referenceGoal": 60,
+      "color": "#B08202",
+      "location": "Work"
+    }
+  ],
+  "Sleep": [
+    {
+      "name": "Bedtime Routine",
+      "setting": "build",
+      "repeat": "day",
+      "label": "minutes",
+      "referenceGoal": 30,
+      "color": "#C412FF",
+      "location": "Bedroom"
+    },
+    {
+      "name": "Sleep by 10 PM",
+      "setting": "build",
+      "repeat": "day",
+      "label": "minutes",
+      "referenceGoal": 480,
+      "color": "#0989BF",
+      "location": "Bedroom"
+    },
+    {
+      "name": "No Screens Before Bed",
+      "setting": "quit",
+      "repeat": "day",
+      "label": "minutes",
+      "referenceGoal": 60,
+      "color": "#E05AFF",
+      "location": "Bedroom"
+    },
+    {
+      "name": "Morning Wakeup",
+      "setting": "build",
+      "repeat": "day",
+      "label": "minutes",
+      "referenceGoal": 15,
+      "color": "#0A2CD4",
+      "location": "Home"
+    },
+    {
+      "name": "Track Sleep Quality",
+      "setting": "build",
+      "repeat": "day",
+      "label": "minutes",
+      "referenceGoal": 5,
+      "color": "#FFF502",
+      "location": "Phone"
+    }
+  ],
+  "Energy": [
+    {
+      "name": "Cold Shower",
+      "setting": "build",
+      "repeat": "day",
+      "label": "minutes",
+      "referenceGoal": 5,
+      "color": "#0989BF",
+      "location": "Bathroom"
+    },
+    {
+      "name": "Midday Walk",
+      "setting": "build",
+      "repeat": "day",
+      "label": "minutes",
+      "referenceGoal": 15,
+      "color": "#39BF09",
+      "location": "Outside"
+    },
+    {
+      "name": "Power Nap",
+      "setting": "build",
+      "repeat": "day",
+      "label": "minutes",
+      "referenceGoal": 20,
+      "color": "#B08202",
+      "location": "Home"
+    },
+    {
+      "name": "Hydration Goal",
+      "setting": "build",
+      "repeat": "day",
+      "label": "minutes",
+      "referenceGoal": 10,
+      "color": "#4CD4A6",
+      "location": "Kitchen"
+    },
+    {
+      "name": "Avoid Energy Drinks",
+      "setting": "quit",
+      "repeat": "day",
+      "label": "minutes",
+      "referenceGoal": 0,
+      "color": "#882C40",
+      "location": "Anywhere"
+    }
+  ],
+  "Discipline": [
+    {
+      "name": "No Snooze Button",
+      "setting": "quit",
+      "repeat": "day",
+      "label": "minutes",
+      "referenceGoal": 0,
+      "color": "#B84C2C",
+      "location": "Bedroom"
+    },
+    {
+      "name": "Daily Cold Exposure",
+      "setting": "build",
+      "repeat": "day",
+      "label": "minutes",
+      "referenceGoal": 3,
+      "color": "#0A2CD4",
+      "location": "Bathroom"
+    },
+    {
+      "name": "Evening Reflection",
+      "setting": "build",
+      "repeat": "day",
+      "label": "minutes",
+      "referenceGoal": 10,
+      "color": "#C412FF",
+      "location": "Desk"
+    },
+    {
+      "name": "Stick to Daily Plan",
+      "setting": "build",
+      "repeat": "day",
+      "label": "minutes",
+      "referenceGoal": 120,
+      "color": "#39BF09",
+      "location": "Work"
+    },
+    {
+      "name": "Say No to Junk Food",
+      "setting": "quit",
+      "repeat": "day",
+      "label": "minutes",
+      "referenceGoal": 0,
+      "color": "#B08202",
+      "location": "Kitchen"
+    }
+  ],
+  "Gratitude": [
+    {
+      "name": "Write 3 Things I'm Grateful For",
+      "setting": "build",
+      "repeat": "day",
+      "label": "minutes",
+      "referenceGoal": 5,
+      "color": "#EFB002",
+      "location": "Home"
+    },
+    {
+      "name": "Gratitude Walk",
+      "setting": "build",
+      "repeat": "week",
+      "label": "minutes",
+      "referenceGoal": 30,
+      "color": "#4CD4A6",
+      "location": "Park"
+    },
+    {
+      "name": "Send Thank You Message",
+      "setting": "build",
+      "repeat": "week",
+      "label": "minutes",
+      "referenceGoal": 10,
+      "color": "#C412FF",
+      "location": "Phone"
+    },
+    {
+      "name": "Read Gratitude Journal",
+      "setting": "build",
+      "repeat": "day",
+      "label": "minutes",
+      "referenceGoal": 5,
+      "color": "#0A72D4",
+      "location": "Desk"
+    },
+    {
+      "name": "Gratitude Meditation",
+      "setting": "build",
+      "repeat": "day",
+      "label": "minutes",
+      "referenceGoal": 10,
+      "color": "#E05AFF",
+      "location": "Bedroom"
+    }
+  ]
+}

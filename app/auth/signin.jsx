@@ -17,20 +17,26 @@ import XLHeader from "../../components/Text/XLHeader";
 import Subheader from "../../components/Text/Subheader";
 
 const signin = () => {
-  const { signin, error, clearError } = useAuth();
+  const { signin } = useAuth();
 
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
- 
+
+  const [localError, setLocalError] = useState(null);
+
   useEffect(() => {
-    if (error) {
-      clearError();
+    if (localError) {
+      setLocalError(null);
     }
   }, [username, email, password]);
 
   const handleSignIn = async () => {
-    await signin({ email, password });
+    try {
+      await signin({ email, password });
+    } catch (err) {
+      setLocalError(err);
+    }
   };
 
   return (
@@ -56,6 +62,7 @@ const signin = () => {
                 autoCapitalize="none"
                 autoCorrect={false}
               /> */}
+
               <BuildInput
                 placeholder={"Email"}
                 value={email}
@@ -64,10 +71,10 @@ const signin = () => {
                 autoCapitalize="none"
                 autoCorrect={false}
                 autoComplete="email"
-                textContentType={
-                  "username"
-                }
+                textContentType={"username"}
                 importantForAutofill="yes"
+                error={localError?.message.toLowerCase().includes("email")}
+
               />
               <BuildInput
                 placeholder={"Password"}
@@ -77,14 +84,13 @@ const signin = () => {
                 autoCapitalize="none"
                 autoCorrect={false}
                 autoComplete="password"
-                textContentType={
-                  "password"
-                }
+                textContentType={"password"}
                 importantForAutofill="yes"
+                error={localError?.message.toLowerCase().includes("password")}
               />
-              {error && (
+              {localError && (
                 <Text className="font-generalsans-medium text-habitColors-red-up">
-                  {error.message}
+                  {localError.message}
                 </Text>
               )}
               <View className="flex-row">

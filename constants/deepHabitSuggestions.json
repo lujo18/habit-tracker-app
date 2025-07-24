@@ -1,0 +1,2862 @@
+{
+  "drifter": {
+    "Health": [
+      {
+        "name": "Track Daily Energy",
+        "setting": "build",
+        "repeat": "day",
+        "label": "checkmark",
+        "referenceGoal": 1,
+        "color": "#10B981",
+        "location": "Phone",
+        "archetype": "drifter",
+        "area": "Health",
+        "whyItHelps": "Creates awareness of your body patterns, giving you data-driven direction for health choices."
+      },
+      {
+        "name": "Schedule Health Check-ins",
+        "setting": "build",
+        "repeat": "week",
+        "label": "minutes",
+        "referenceGoal": 15,
+        "color": "#059669",
+        "location": "Calendar",
+        "archetype": "drifter",
+        "area": "Health",
+        "whyItHelps": "Provides structure and regular touchpoints to prevent health habits from drifting off course."
+      },
+      {
+        "name": "Set Health Intention",
+        "setting": "build",
+        "repeat": "day",
+        "label": "minutes",
+        "referenceGoal": 2,
+        "color": "#047857",
+        "location": "Morning routine",
+        "archetype": "drifter",
+        "area": "Health",
+        "whyItHelps": "Gives each day a clear health focus, preventing aimless choices around food and self-care."
+      }
+    ],
+    "Fitness": [
+      {
+        "name": "Choose Tomorrow's Movement",
+        "setting": "build",
+        "repeat": "day",
+        "label": "minutes",
+        "referenceGoal": 3,
+        "color": "#F59E0B",
+        "location": "Evening",
+        "archetype": "drifter",
+        "area": "Fitness",
+        "whyItHelps": "Pre-deciding eliminates morning confusion and creates clear direction for physical activity."
+      },
+      {
+        "name": "Log Movement Wins",
+        "setting": "build",
+        "repeat": "day",
+        "label": "checkmark",
+        "referenceGoal": 1,
+        "color": "#D97706",
+        "location": "Notes app",
+        "archetype": "drifter",
+        "area": "Fitness",
+        "whyItHelps": "Builds awareness of progress and creates momentum from small fitness victories."
+      },
+      {
+        "name": "Pick One Exercise Focus",
+        "setting": "build",
+        "repeat": "week",
+        "label": "minutes",
+        "referenceGoal": 5,
+        "color": "#92400E",
+        "location": "Planning session",
+        "archetype": "drifter",
+        "area": "Fitness",
+        "whyItHelps": "Prevents jumping between fitness routines by creating weekly focus and direction."
+      }
+    ],
+    "Focus": [
+      {
+        "name": "Set Daily Priority",
+        "setting": "build",
+        "repeat": "day",
+        "label": "minutes",
+        "referenceGoal": 5,
+        "color": "#3B82F6",
+        "location": "Desk",
+        "archetype": "drifter",
+        "area": "Focus",
+        "whyItHelps": "Creates clear direction for the day and prevents scattered attention across too many tasks."
+      },
+      {
+        "name": "Track Focus Sessions",
+        "setting": "build",
+        "repeat": "day",
+        "label": "sessions",
+        "referenceGoal": 3,
+        "color": "#2563EB",
+        "location": "Work space",
+        "archetype": "drifter",
+        "area": "Focus",
+        "whyItHelps": "Builds awareness of concentration patterns and creates structure for deep work."
+      },
+      {
+        "name": "Review Focus Wins",
+        "setting": "build",
+        "repeat": "day",
+        "label": "minutes",
+        "referenceGoal": 3,
+        "color": "#1D4ED8",
+        "location": "Evening reflection",
+        "archetype": "drifter",
+        "area": "Focus",
+        "whyItHelps": "Creates momentum by acknowledging progress and clarifies what focus strategies work best."
+      }
+    ],
+    "Energy": [
+      {
+        "name": "Rate Energy Levels",
+        "setting": "build",
+        "repeat": "day",
+        "label": "checkmark",
+        "referenceGoal": 3,
+        "color": "#EF4444",
+        "location": "Phone",
+        "archetype": "drifter",
+        "area": "Energy",
+        "whyItHelps": "Creates awareness of energy patterns, helping you understand what drains or fuels you."
+      },
+      {
+        "name": "Plan Energy Boosters",
+        "setting": "build",
+        "repeat": "day",
+        "label": "minutes",
+        "referenceGoal": 5,
+        "color": "#DC2626",
+        "location": "Morning planning",
+        "archetype": "drifter",
+        "area": "Energy",
+        "whyItHelps": "Gives direction for maintaining energy instead of randomly hoping for motivation."
+      },
+      {
+        "name": "Track Energy Drains",
+        "setting": "build",
+        "repeat": "day",
+        "label": "notes",
+        "referenceGoal": 1,
+        "color": "#B91C1C",
+        "location": "Notes app",
+        "archetype": "drifter",
+        "area": "Energy",
+        "whyItHelps": "Builds awareness of what depletes you, creating clarity for better energy choices."
+      }
+    ],
+    "Sleep": [
+      {
+        "name": "Set Sleep Intention",
+        "setting": "build",
+        "repeat": "day",
+        "label": "minutes",
+        "referenceGoal": 2,
+        "color": "#6366F1",
+        "location": "Bedroom",
+        "archetype": "drifter",
+        "area": "Sleep",
+        "whyItHelps": "Creates clear direction for bedtime instead of drifting into late-night scrolling."
+      },
+      {
+        "name": "Log Sleep Quality",
+        "setting": "build",
+        "repeat": "day",
+        "label": "rating",
+        "referenceGoal": 1,
+        "color": "#4F46E5",
+        "location": "Morning check-in",
+        "archetype": "drifter",
+        "area": "Sleep",
+        "whyItHelps": "Builds awareness of sleep patterns and creates data to guide better sleep choices."
+      },
+      {
+        "name": "Plan Tomorrow's Bedtime",
+        "setting": "build",
+        "repeat": "day",
+        "label": "minutes",
+        "referenceGoal": 1,
+        "color": "#4338CA",
+        "location": "Evening routine",
+        "archetype": "drifter",
+        "area": "Sleep",
+        "whyItHelps": "Provides structure and intention around sleep instead of letting bedtime happen randomly."
+      }
+    ],
+    "Discipline": [
+      {
+        "name": "Choose One Daily Non-Negotiable",
+        "setting": "build",
+        "repeat": "day",
+        "label": "minutes",
+        "referenceGoal": 2,
+        "color": "#7C3AED",
+        "location": "Morning planning",
+        "archetype": "drifter",
+        "area": "Discipline",
+        "whyItHelps": "Creates clear direction for building consistency instead of trying to be disciplined about everything."
+      },
+      {
+        "name": "Track Commitment Follows",
+        "setting": "build",
+        "repeat": "day",
+        "label": "checkmark",
+        "referenceGoal": 1,
+        "color": "#6D28D9",
+        "location": "Evening check-in",
+        "archetype": "drifter",
+        "area": "Discipline",
+        "whyItHelps": "Builds awareness of follow-through patterns and creates momentum from small wins."
+      },
+      {
+        "name": "Set Weekly Discipline Focus",
+        "setting": "build",
+        "repeat": "week",
+        "label": "minutes",
+        "referenceGoal": 10,
+        "color": "#5B21B6",
+        "location": "Weekly planning",
+        "archetype": "drifter",
+        "area": "Discipline",
+        "whyItHelps": "Prevents scattered efforts by giving clear direction for building one area of self-control."
+      }
+    ],
+    "Gratitude": [
+      {
+        "name": "Notice One Good Thing",
+        "setting": "build",
+        "repeat": "day",
+        "label": "notes",
+        "referenceGoal": 1,
+        "color": "#EC4899",
+        "location": "Evening reflection",
+        "archetype": "drifter",
+        "area": "Gratitude",
+        "whyItHelps": "Creates awareness of positive moments that often go unnoticed when drifting through days."
+      },
+      {
+        "name": "Text Someone Appreciation",
+        "setting": "build",
+        "repeat": "week",
+        "label": "messages",
+        "referenceGoal": 2,
+        "color": "#DB2777",
+        "location": "Phone",
+        "archetype": "drifter",
+        "area": "Gratitude",
+        "whyItHelps": "Gives direction for meaningful connection and creates purpose in relationships."
+      },
+      {
+        "name": "Rate Daily Satisfaction",
+        "setting": "build",
+        "repeat": "day",
+        "label": "rating",
+        "referenceGoal": 1,
+        "color": "#BE185D",
+        "location": "Bedtime routine",
+        "archetype": "drifter",
+        "area": "Gratitude",
+        "whyItHelps": "Builds awareness of what creates fulfillment, guiding better choices for meaningful days."
+      }
+    ],
+    "Relationships": [
+      {
+        "name": "Reach Out to Someone",
+        "setting": "build",
+        "repeat": "day",
+        "label": "checkmark",
+        "referenceGoal": 1,
+        "color": "#14B8A6",
+        "location": "Phone",
+        "archetype": "drifter",
+        "area": "Relationships",
+        "whyItHelps": "Creates consistent connection habits instead of letting relationships drift without intention."
+      },
+      {
+        "name": "Plan Quality Time",
+        "setting": "build",
+        "repeat": "week",
+        "label": "minutes",
+        "referenceGoal": 15,
+        "color": "#0D9488",
+        "location": "Calendar",
+        "archetype": "drifter",
+        "area": "Relationships",
+        "whyItHelps": "Gives structure and direction to relationship building instead of hoping connection will happen."
+      },
+      {
+        "name": "Note Relationship Insights",
+        "setting": "build",
+        "repeat": "day",
+        "label": "notes",
+        "referenceGoal": 1,
+        "color": "#0F766E",
+        "location": "Journal",
+        "archetype": "drifter",
+        "area": "Relationships",
+        "whyItHelps": "Builds awareness of relationship patterns and creates clarity for better social choices."
+      }
+    ],
+    "Spirituality": [
+      {
+        "name": "Set Daily Spiritual Intention",
+        "setting": "build",
+        "repeat": "day",
+        "label": "minutes",
+        "referenceGoal": 3,
+        "color": "#8B5CF6",
+        "location": "Quiet space",
+        "archetype": "drifter",
+        "area": "Spirituality",
+        "whyItHelps": "Creates direction for spiritual growth instead of drifting without deeper connection or purpose."
+      },
+      {
+        "name": "Practice Mindful Moments",
+        "setting": "build",
+        "repeat": "day",
+        "label": "moments",
+        "referenceGoal": 3,
+        "color": "#7C3AED",
+        "location": "Anywhere",
+        "archetype": "drifter",
+        "area": "Spirituality",
+        "whyItHelps": "Builds awareness of present moments that often pass unnoticed when moving through life without focus."
+      },
+      {
+        "name": "Reflect on Life Meaning",
+        "setting": "build",
+        "repeat": "week",
+        "label": "minutes",
+        "referenceGoal": 20,
+        "color": "#6D28D9",
+        "location": "Peaceful space",
+        "archetype": "drifter",
+        "area": "Spirituality",
+        "whyItHelps": "Provides regular touchpoints for finding deeper purpose and direction in spiritual growth."
+      }
+    ],
+    "Creativity": [
+      {
+        "name": "Capture Creative Ideas",
+        "setting": "build",
+        "repeat": "day",
+        "label": "ideas",
+        "referenceGoal": 1,
+        "color": "#F59E0B",
+        "location": "Notes app",
+        "archetype": "drifter",
+        "area": "Creativity",
+        "whyItHelps": "Gives direction for creative energy instead of letting inspiration drift away unrecorded."
+      },
+      {
+        "name": "Schedule Creative Time",
+        "setting": "build",
+        "repeat": "week",
+        "label": "minutes",
+        "referenceGoal": 60,
+        "color": "#D97706",
+        "location": "Creative space",
+        "archetype": "drifter",
+        "area": "Creativity",
+        "whyItHelps": "Creates structure for creative pursuits instead of waiting for inspiration to strike randomly."
+      },
+      {
+        "name": "Try One New Creative Thing",
+        "setting": "build",
+        "repeat": "week",
+        "label": "experiments",
+        "referenceGoal": 1,
+        "color": "#92400E",
+        "location": "Workspace",
+        "archetype": "drifter",
+        "area": "Creativity",
+        "whyItHelps": "Provides direction for creative exploration while building momentum through small experiments."
+      }
+    ],
+    "Productivity": [
+      {
+        "name": "Plan Tomorrow's Top 3",
+        "setting": "build",
+        "repeat": "day",
+        "label": "minutes",
+        "referenceGoal": 5,
+        "color": "#3B82F6",
+        "location": "Desk",
+        "archetype": "drifter",
+        "area": "Productivity",
+        "whyItHelps": "Creates clear direction for the next day instead of drifting into reactive mode."
+      },
+      {
+        "name": "Track Task Completion",
+        "setting": "build",
+        "repeat": "day",
+        "label": "tasks",
+        "referenceGoal": 3,
+        "color": "#2563EB",
+        "location": "Task list",
+        "archetype": "drifter",
+        "area": "Productivity",
+        "whyItHelps": "Builds awareness of productivity patterns and creates momentum from completing focused work."
+      },
+      {
+        "name": "Review Weekly Progress",
+        "setting": "build",
+        "repeat": "week",
+        "label": "minutes",
+        "referenceGoal": 15,
+        "color": "#1D4ED8",
+        "location": "Planning space",
+        "archetype": "drifter",
+        "area": "Productivity",
+        "whyItHelps": "Provides structure for assessing progress and gives direction for improving focus."
+      }
+    ],
+    "Confidence": [
+      {
+        "name": "Note Daily Wins",
+        "setting": "build",
+        "repeat": "day",
+        "label": "wins",
+        "referenceGoal": 1,
+        "color": "#EF4444",
+        "location": "Evening reflection",
+        "archetype": "drifter",
+        "area": "Confidence",
+        "whyItHelps": "Creates awareness of accomplishments that often go unnoticed when drifting through days."
+      },
+      {
+        "name": "Practice One Brave Act",
+        "setting": "build",
+        "repeat": "day",
+        "label": "actions",
+        "referenceGoal": 1,
+        "color": "#DC2626",
+        "location": "Anywhere",
+        "archetype": "drifter",
+        "area": "Confidence",
+        "whyItHelps": "Gives clear direction for building courage instead of waiting for confidence to appear naturally."
+      },
+      {
+        "name": "Set Weekly Confidence Challenge",
+        "setting": "build",
+        "repeat": "week",
+        "label": "challenges",
+        "referenceGoal": 1,
+        "color": "#B91C1C",
+        "location": "Planning session",
+        "archetype": "drifter",
+        "area": "Confidence",
+        "whyItHelps": "Provides structure for growth and gives focused direction for building self-assurance."
+      }
+    ],
+    "Time": [
+      {
+        "name": "Track Time Awareness",
+        "setting": "build",
+        "repeat": "day",
+        "label": "check-ins",
+        "referenceGoal": 3,
+        "color": "#6366F1",
+        "location": "Phone reminder",
+        "archetype": "drifter",
+        "area": "Time",
+        "whyItHelps": "Builds awareness of time passage that often goes unnoticed when drifting through days."
+      },
+      {
+        "name": "Plan Time Blocks",
+        "setting": "build",
+        "repeat": "day",
+        "label": "minutes",
+        "referenceGoal": 10,
+        "color": "#4F46E5",
+        "location": "Calendar",
+        "archetype": "drifter",
+        "area": "Time",
+        "whyItHelps": "Creates structure and intention for time use instead of letting hours drift by without purpose."
+      },
+      {
+        "name": "Review Time Investment",
+        "setting": "build",
+        "repeat": "week",
+        "label": "minutes",
+        "referenceGoal": 15,
+        "color": "#4338CA",
+        "location": "Weekly review",
+        "archetype": "drifter",
+        "area": "Time",
+        "whyItHelps": "Provides clarity on time allocation and gives direction for better time choices."
+      }
+    ],
+    "Mood": [
+      {
+        "name": "Check Mood Triggers",
+        "setting": "build",
+        "repeat": "day",
+        "label": "check-ins",
+        "referenceGoal": 2,
+        "color": "#EC4899",
+        "location": "Mood app",
+        "archetype": "drifter",
+        "area": "Mood",
+        "whyItHelps": "Creates awareness of emotional patterns that often go unnoticed when drifting through feelings."
+      },
+      {
+        "name": "Plan Mood Boosters",
+        "setting": "build",
+        "repeat": "day",
+        "label": "activities",
+        "referenceGoal": 1,
+        "color": "#DB2777",
+        "location": "Morning planning",
+        "archetype": "drifter",
+        "area": "Mood",
+        "whyItHelps": "Gives direction for emotional wellness instead of hoping good moods will happen randomly."
+      },
+      {
+        "name": "Rate Emotional Awareness",
+        "setting": "build",
+        "repeat": "day",
+        "label": "rating",
+        "referenceGoal": 1,
+        "color": "#BE185D",
+        "location": "Evening reflection",
+        "archetype": "drifter",
+        "area": "Mood",
+        "whyItHelps": "Builds consciousness of emotional state and creates clarity for mood management choices."
+      }
+    ],
+    "Purpose": [
+      {
+        "name": "Define Daily Why",
+        "setting": "build",
+        "repeat": "day",
+        "label": "minutes",
+        "referenceGoal": 5,
+        "color": "#8B5CF6",
+        "location": "Morning routine",
+        "archetype": "drifter",
+        "area": "Purpose",
+        "whyItHelps": "Creates clear direction and meaning for each day instead of drifting without deeper intention."
+      },
+      {
+        "name": "Track Meaningful Moments",
+        "setting": "build",
+        "repeat": "day",
+        "label": "moments",
+        "referenceGoal": 1,
+        "color": "#7C3AED",
+        "location": "Notes app",
+        "archetype": "drifter",
+        "area": "Purpose",
+        "whyItHelps": "Builds awareness of what creates fulfillment and gives direction for purposeful living."
+      },
+      {
+        "name": "Reflect on Life Direction",
+        "setting": "build",
+        "repeat": "week",
+        "label": "minutes",
+        "referenceGoal": 30,
+        "color": "#6D28D9",
+        "location": "Quiet space",
+        "archetype": "drifter",
+        "area": "Purpose",
+        "whyItHelps": "Provides regular structure for finding direction and prevents drifting without deeper meaning."
+      }
+    ]
+  },
+  "staller": {
+    "Health": [
+      {
+        "name": "Start Health Check Now",
+        "setting": "build",
+        "repeat": "day",
+        "label": "minutes",
+        "referenceGoal": 1,
+        "color": "#10B981",
+        "location": "Phone",
+        "archetype": "staller",
+        "area": "Health",
+        "whyItHelps": "Forces immediate action instead of waiting for the perfect health plan or motivation."
+      },
+      {
+        "name": "Take One Health Step",
+        "setting": "build",
+        "repeat": "day",
+        "label": "actions",
+        "referenceGoal": 1,
+        "color": "#059669",
+        "location": "Kitchen",
+        "archetype": "staller",
+        "area": "Health",
+        "whyItHelps": "Creates momentum through tiny imperfect actions rather than waiting for the ideal health routine."
+      },
+      {
+        "name": "Log Health Now",
+        "setting": "build",
+        "repeat": "day",
+        "label": "checkmark",
+        "referenceGoal": 1,
+        "color": "#047857",
+        "location": "Health app",
+        "archetype": "staller",
+        "area": "Health",
+        "whyItHelps": "Builds momentum through immediate tracking instead of procrastinating on health awareness."
+      }
+    ],
+    "Fitness": [
+      {
+        "name": "Move for 2 Minutes",
+        "setting": "build",
+        "repeat": "day",
+        "label": "minutes",
+        "referenceGoal": 2,
+        "color": "#F59E0B",
+        "location": "Living room",
+        "archetype": "staller",
+        "area": "Fitness",
+        "whyItHelps": "Creates instant momentum with movement that's too small to fail or postpone."
+      },
+      {
+        "name": "Start Before Ready",
+        "setting": "build",
+        "repeat": "day",
+        "label": "checkmark",
+        "referenceGoal": 1,
+        "color": "#D97706",
+        "location": "Home",
+        "archetype": "staller",
+        "area": "Fitness",
+        "whyItHelps": "Breaks perfectionist paralysis by taking action before feeling fully prepared or motivated."
+      },
+      {
+        "name": "Count Something Simple",
+        "setting": "build",
+        "repeat": "day",
+        "label": "reps",
+        "referenceGoal": 5,
+        "color": "#92400E",
+        "location": "Anywhere",
+        "archetype": "staller",
+        "area": "Fitness",
+        "whyItHelps": "Builds fitness momentum through minimal commitment that's impossible to delay or overthink."
+      }
+    ],
+    "Focus": [
+      {
+        "name": "Start Timer Immediately",
+        "setting": "build",
+        "repeat": "day",
+        "label": "sessions",
+        "referenceGoal": 1,
+        "color": "#3B82F6",
+        "location": "Desk",
+        "archetype": "staller",
+        "area": "Focus",
+        "whyItHelps": "Forces immediate action and breaks the pattern of waiting for perfect focus conditions."
+      },
+      {
+        "name": "Write One Sentence",
+        "setting": "build",
+        "repeat": "day",
+        "label": "sentences",
+        "referenceGoal": 1,
+        "color": "#2563EB",
+        "location": "Work space",
+        "archetype": "staller",
+        "area": "Focus",
+        "whyItHelps": "Creates momentum through the smallest possible start instead of waiting for inspiration."
+      },
+      {
+        "name": "Begin Imperfectly",
+        "setting": "build",
+        "repeat": "day",
+        "label": "checkmark",
+        "referenceGoal": 1,
+        "color": "#1D4ED8",
+        "location": "Workspace",
+        "archetype": "staller",
+        "area": "Focus",
+        "whyItHelps": "Breaks perfectionist paralysis by starting before feeling ready or having ideal conditions."
+      }
+    ],
+    "Energy": [
+      {
+        "name": "Boost Energy Now",
+        "setting": "build",
+        "repeat": "day",
+        "label": "actions",
+        "referenceGoal": 1,
+        "color": "#EF4444",
+        "location": "Anywhere",
+        "archetype": "staller",
+        "area": "Energy",
+        "whyItHelps": "Creates immediate energy momentum instead of waiting for motivation or perfect conditions."
+      },
+      {
+        "name": "Take Energy Break",
+        "setting": "build",
+        "repeat": "day",
+        "label": "breaks",
+        "referenceGoal": 2,
+        "color": "#DC2626",
+        "location": "Current location",
+        "archetype": "staller",
+        "area": "Energy",
+        "whyItHelps": "Forces immediate action for energy management rather than delaying self-care."
+      },
+      {
+        "name": "Rate Energy Instantly",
+        "setting": "build",
+        "repeat": "day",
+        "label": "ratings",
+        "referenceGoal": 1,
+        "color": "#B91C1C",
+        "location": "Phone",
+        "archetype": "staller",
+        "area": "Energy",
+        "whyItHelps": "Builds energy awareness through immediate action instead of procrastinating on self-monitoring."
+      }
+    ],
+    "Sleep": [
+      {
+        "name": "Start Wind-Down Timer",
+        "setting": "build",
+        "repeat": "day",
+        "label": "checkmark",
+        "referenceGoal": 1,
+        "color": "#6366F1",
+        "location": "Phone",
+        "archetype": "staller",
+        "area": "Sleep",
+        "whyItHelps": "Forces immediate bedtime preparation instead of delaying or waiting for perfect timing."
+      },
+      {
+        "name": "Put Phone Away Now",
+        "setting": "build",
+        "repeat": "day",
+        "label": "checkmark",
+        "referenceGoal": 1,
+        "color": "#4F46E5",
+        "location": "Bedroom",
+        "archetype": "staller",
+        "area": "Sleep",
+        "whyItHelps": "Creates immediate action for better sleep instead of procrastinating on digital boundaries."
+      },
+      {
+        "name": "Begin Sleep Ritual",
+        "setting": "build",
+        "repeat": "day",
+        "label": "minutes",
+        "referenceGoal": 5,
+        "color": "#4338CA",
+        "location": "Bedroom",
+        "archetype": "staller",
+        "area": "Sleep",
+        "whyItHelps": "Starts sleep preparation immediately rather than waiting for perfect bedtime conditions."
+      }
+    ],
+    "Discipline": [
+      {
+        "name": "Do One Thing Now",
+        "setting": "build",
+        "repeat": "day",
+        "label": "actions",
+        "referenceGoal": 1,
+        "color": "#7C3AED",
+        "location": "Anywhere",
+        "archetype": "staller",
+        "area": "Discipline",
+        "whyItHelps": "Builds discipline momentum through immediate action instead of waiting for motivation."
+      },
+      {
+        "name": "Start Before Thinking",
+        "setting": "build",
+        "repeat": "day",
+        "label": "checkmark",
+        "referenceGoal": 1,
+        "color": "#6D28D9",
+        "location": "Task location",
+        "archetype": "staller",
+        "area": "Discipline",
+        "whyItHelps": "Breaks overthinking patterns by taking action before perfectionist thoughts can interfere."
+      },
+      {
+        "name": "Count Small Wins",
+        "setting": "build",
+        "repeat": "day",
+        "label": "wins",
+        "referenceGoal": 1,
+        "color": "#5B21B6",
+        "location": "Notes app",
+        "archetype": "staller",
+        "area": "Discipline",
+        "whyItHelps": "Creates momentum through recognizing tiny discipline victories instead of waiting for big changes."
+      }
+    ],
+    "Gratitude": [
+      {
+        "name": "Say Thanks Immediately",
+        "setting": "build",
+        "repeat": "day",
+        "label": "thanks",
+        "referenceGoal": 1,
+        "color": "#EC4899",
+        "location": "Phone",
+        "archetype": "staller",
+        "area": "Gratitude",
+        "whyItHelps": "Creates instant gratitude momentum instead of waiting for the perfect moment to appreciate others."
+      },
+      {
+        "name": "Notice Good Right Now",
+        "setting": "build",
+        "repeat": "day",
+        "label": "moments",
+        "referenceGoal": 1,
+        "color": "#DB2777",
+        "location": "Present moment",
+        "archetype": "staller",
+        "area": "Gratitude",
+        "whyItHelps": "Forces immediate appreciation rather than delaying gratitude practice until later."
+      },
+      {
+        "name": "Text One Appreciation",
+        "setting": "build",
+        "repeat": "day",
+        "label": "messages",
+        "referenceGoal": 1,
+        "color": "#BE185D",
+        "location": "Phone",
+        "archetype": "staller",
+        "area": "Gratitude",
+        "whyItHelps": "Takes immediate action on gratitude instead of procrastinating on expressing appreciation."
+      }
+    ],
+    "Relationships": [
+      {
+        "name": "Reach Out Now",
+        "setting": "build",
+        "repeat": "day",
+        "label": "messages",
+        "referenceGoal": 1,
+        "color": "#14B8A6",
+        "location": "Phone",
+        "archetype": "staller",
+        "area": "Relationships",
+        "whyItHelps": "Creates immediate connection instead of waiting for the perfect time to contact someone."
+      },
+      {
+        "name": "Ask One Question",
+        "setting": "build",
+        "repeat": "day",
+        "label": "questions",
+        "referenceGoal": 1,
+        "color": "#0D9488",
+        "location": "Conversation",
+        "archetype": "staller",
+        "area": "Relationships",
+        "whyItHelps": "Forces immediate engagement rather than delaying meaningful conversations."
+      },
+      {
+        "name": "Listen Without Planning",
+        "setting": "build",
+        "repeat": "day",
+        "label": "checkmark",
+        "referenceGoal": 1,
+        "color": "#0F766E",
+        "location": "Any interaction",
+        "archetype": "staller",
+        "area": "Relationships",
+        "whyItHelps": "Creates present moment connection instead of overthinking what to say next."
+      }
+    ],
+    "Spirituality": [
+      {
+        "name": "Pause for Gratitude",
+        "setting": "build",
+        "repeat": "day",
+        "label": "pauses",
+        "referenceGoal": 1,
+        "color": "#8B5CF6",
+        "location": "Anywhere",
+        "archetype": "staller",
+        "area": "Spirituality",
+        "whyItHelps": "Creates immediate spiritual connection instead of waiting for perfect meditation conditions."
+      },
+      {
+        "name": "Take One Deep Breath",
+        "setting": "build",
+        "repeat": "day",
+        "label": "breaths",
+        "referenceGoal": 3,
+        "color": "#7C3AED",
+        "location": "Present moment",
+        "archetype": "staller",
+        "area": "Spirituality",
+        "whyItHelps": "Forces immediate mindfulness practice rather than delaying spiritual awareness."
+      },
+      {
+        "name": "Notice Something Sacred",
+        "setting": "build",
+        "repeat": "day",
+        "label": "observations",
+        "referenceGoal": 1,
+        "color": "#6D28D9",
+        "location": "Current environment",
+        "archetype": "staller",
+        "area": "Spirituality",
+        "whyItHelps": "Creates instant spiritual awareness instead of procrastinating on deeper connection."
+      }
+    ],
+    "Creativity": [
+      {
+        "name": "Create Something Ugly",
+        "setting": "build",
+        "repeat": "day",
+        "label": "creations",
+        "referenceGoal": 1,
+        "color": "#F59E0B",
+        "location": "Creative space",
+        "archetype": "staller",
+        "area": "Creativity",
+        "whyItHelps": "Breaks perfectionist paralysis by creating without waiting for inspiration or ideal conditions."
+      },
+      {
+        "name": "Start Messy Draft",
+        "setting": "build",
+        "repeat": "day",
+        "label": "drafts",
+        "referenceGoal": 1,
+        "color": "#D97706",
+        "location": "Workspace",
+        "archetype": "staller",
+        "area": "Creativity",
+        "whyItHelps": "Forces immediate creative action instead of waiting for perfect ideas or motivation."
+      },
+      {
+        "name": "Capture Idea Immediately",
+        "setting": "build",
+        "repeat": "day",
+        "label": "ideas",
+        "referenceGoal": 1,
+        "color": "#92400E",
+        "location": "Notes app",
+        "archetype": "staller",
+        "area": "Creativity",
+        "whyItHelps": "Creates instant creative momentum rather than delaying idea capture for later."
+      }
+    ],
+    "Productivity": [
+      {
+        "name": "Start 5-Minute Task",
+        "setting": "build",
+        "repeat": "day",
+        "label": "tasks",
+        "referenceGoal": 1,
+        "color": "#3B82F6",
+        "location": "Desk",
+        "archetype": "staller",
+        "area": "Productivity",
+        "whyItHelps": "Creates immediate productivity momentum instead of waiting for perfect focus or energy."
+      },
+      {
+        "name": "Do Next Small Thing",
+        "setting": "build",
+        "repeat": "day",
+        "label": "actions",
+        "referenceGoal": 1,
+        "color": "#2563EB",
+        "location": "Work space",
+        "archetype": "staller",
+        "area": "Productivity",
+        "whyItHelps": "Forces immediate progress rather than procrastinating on task prioritization."
+      },
+      {
+        "name": "Complete One Item",
+        "setting": "build",
+        "repeat": "day",
+        "label": "completions",
+        "referenceGoal": 1,
+        "color": "#1D4ED8",
+        "location": "Task list",
+        "archetype": "staller",
+        "area": "Productivity",
+        "whyItHelps": "Builds momentum through immediate completion instead of delaying task finishing."
+      }
+    ],
+    "Confidence": [
+      {
+        "name": "Take One Bold Action",
+        "setting": "build",
+        "repeat": "day",
+        "label": "actions",
+        "referenceGoal": 1,
+        "color": "#EF4444",
+        "location": "Anywhere",
+        "archetype": "staller",
+        "area": "Confidence",
+        "whyItHelps": "Builds confidence through immediate brave acts instead of waiting for courage to appear."
+      },
+      {
+        "name": "Speak Up Once",
+        "setting": "build",
+        "repeat": "day",
+        "label": "moments",
+        "referenceGoal": 1,
+        "color": "#DC2626",
+        "location": "Social situations",
+        "archetype": "staller",
+        "area": "Confidence",
+        "whyItHelps": "Creates instant confidence momentum rather than delaying self-advocacy."
+      },
+      {
+        "name": "Celebrate Small Win",
+        "setting": "build",
+        "repeat": "day",
+        "label": "celebrations",
+        "referenceGoal": 1,
+        "color": "#B91C1C",
+        "location": "Anywhere",
+        "archetype": "staller",
+        "area": "Confidence",
+        "whyItHelps": "Forces immediate self-recognition instead of waiting for bigger achievements to celebrate."
+      }
+    ],
+    "Time": [
+      {
+        "name": "Start Timer Right Now",
+        "setting": "build",
+        "repeat": "day",
+        "label": "timers",
+        "referenceGoal": 1,
+        "color": "#6366F1",
+        "location": "Phone",
+        "archetype": "staller",
+        "area": "Time",
+        "whyItHelps": "Creates immediate time awareness instead of procrastinating on time management."
+      },
+      {
+        "name": "Begin Task Immediately",
+        "setting": "build",
+        "repeat": "day",
+        "label": "starts",
+        "referenceGoal": 1,
+        "color": "#4F46E5",
+        "location": "Work area",
+        "archetype": "staller",
+        "area": "Time",
+        "whyItHelps": "Forces instant action rather than waiting for perfect timing or conditions."
+      },
+      {
+        "name": "Stop Something Now",
+        "setting": "build",
+        "repeat": "day",
+        "label": "stops",
+        "referenceGoal": 1,
+        "color": "#4338CA",
+        "location": "Current activity",
+        "archetype": "staller",
+        "area": "Time",
+        "whyItHelps": "Creates boundaries through immediate action instead of delaying time protection."
+      }
+    ],
+    "Mood": [
+      {
+        "name": "Check Mood Instantly",
+        "setting": "build",
+        "repeat": "day",
+        "label": "check-ins",
+        "referenceGoal": 1,
+        "color": "#EC4899",
+        "location": "Phone",
+        "archetype": "staller",
+        "area": "Mood",
+        "whyItHelps": "Creates immediate emotional awareness instead of delaying mood monitoring."
+      },
+      {
+        "name": "Shift Mood Now",
+        "setting": "build",
+        "repeat": "day",
+        "label": "shifts",
+        "referenceGoal": 1,
+        "color": "#DB2777",
+        "location": "Current location",
+        "archetype": "staller",
+        "area": "Mood",
+        "whyItHelps": "Forces immediate mood intervention rather than waiting for feelings to change naturally."
+      },
+      {
+        "name": "Take Mood Action",
+        "setting": "build",
+        "repeat": "day",
+        "label": "actions",
+        "referenceGoal": 1,
+        "color": "#BE185D",
+        "location": "Anywhere",
+        "archetype": "staller",
+        "area": "Mood",
+        "whyItHelps": "Creates instant emotional regulation instead of procrastinating on mood management."
+      }
+    ],
+    "Purpose": [
+      {
+        "name": "Ask Why Right Now",
+        "setting": "build",
+        "repeat": "day",
+        "label": "questions",
+        "referenceGoal": 1,
+        "color": "#8B5CF6",
+        "location": "Current activity",
+        "archetype": "staller",
+        "area": "Purpose",
+        "whyItHelps": "Creates immediate purpose awareness instead of delaying meaning-making."
+      },
+      {
+        "name": "Connect to Values",
+        "setting": "build",
+        "repeat": "day",
+        "label": "connections",
+        "referenceGoal": 1,
+        "color": "#7C3AED",
+        "location": "Present moment",
+        "archetype": "staller",
+        "area": "Purpose",
+        "whyItHelps": "Forces instant value alignment rather than waiting for perfect purpose clarity."
+      },
+      {
+        "name": "Take Meaningful Step",
+        "setting": "build",
+        "repeat": "day",
+        "label": "steps",
+        "referenceGoal": 1,
+        "color": "#6D28D9",
+        "location": "Life context",
+        "archetype": "staller",
+        "area": "Purpose",
+        "whyItHelps": "Creates immediate purposeful action instead of procrastinating on meaningful living."
+      }
+    ]
+  },
+  "burner": {
+    "Health": [
+      {
+        "name": "Gentle Health Check",
+        "setting": "build",
+        "repeat": "day",
+        "label": "minutes",
+        "referenceGoal": 3,
+        "color": "#10B981",
+        "location": "Phone",
+        "archetype": "burner",
+        "area": "Health",
+        "whyItHelps": "Protects energy by monitoring health gently instead of ignoring body signals until burnout."
+      },
+      {
+        "name": "Listen to Body",
+        "setting": "build",
+        "repeat": "day",
+        "label": "check-ins",
+        "referenceGoal": 2,
+        "color": "#059669",
+        "location": "Anywhere",
+        "archetype": "burner",
+        "area": "Health",
+        "whyItHelps": "Prevents burnout by honoring physical needs before they become urgent health crises."
+      },
+      {
+        "name": "Rest When Tired",
+        "setting": "build",
+        "repeat": "day",
+        "label": "rests",
+        "referenceGoal": 1,
+        "color": "#047857",
+        "location": "Home",
+        "archetype": "burner",
+        "area": "Health",
+        "whyItHelps": "Builds sustainable health patterns by resting proactively instead of pushing through exhaustion."
+      }
+    ],
+    "Fitness": [
+      {
+        "name": "Move Gently",
+        "setting": "build",
+        "repeat": "day",
+        "label": "minutes",
+        "referenceGoal": 10,
+        "color": "#F59E0B",
+        "location": "Home",
+        "archetype": "burner",
+        "area": "Fitness",
+        "whyItHelps": "Maintains fitness without depleting energy reserves or triggering burnout patterns."
+      },
+      {
+        "name": "Stretch for Relief",
+        "setting": "build",
+        "repeat": "day",
+        "label": "stretches",
+        "referenceGoal": 3,
+        "color": "#D97706",
+        "location": "Desk area",
+        "archetype": "burner",
+        "area": "Fitness",
+        "whyItHelps": "Releases tension and prevents physical burnout from overwork and stress accumulation."
+      },
+      {
+        "name": "Walk to Recharge",
+        "setting": "build",
+        "repeat": "day",
+        "label": "walks",
+        "referenceGoal": 1,
+        "color": "#92400E",
+        "location": "Outside",
+        "archetype": "burner",
+        "area": "Fitness",
+        "whyItHelps": "Restores energy through gentle movement instead of intense exercise that drains reserves."
+      }
+    ],
+    "Focus": [
+      {
+        "name": "Single-Task Focus",
+        "setting": "build",
+        "repeat": "day",
+        "label": "sessions",
+        "referenceGoal": 2,
+        "color": "#3B82F6",
+        "location": "Workspace",
+        "archetype": "burner",
+        "area": "Focus",
+        "whyItHelps": "Prevents mental overload by focusing on one thing at a time instead of exhausting multitasking."
+      },
+      {
+        "name": "Take Focus Breaks",
+        "setting": "build",
+        "repeat": "day",
+        "label": "breaks",
+        "referenceGoal": 3,
+        "color": "#2563EB",
+        "location": "Away from work",
+        "archetype": "burner",
+        "area": "Focus",
+        "whyItHelps": "Protects mental energy by resting attention before reaching cognitive exhaustion."
+      },
+      {
+        "name": "End Work Cleanly",
+        "setting": "build",
+        "repeat": "day",
+        "label": "transitions",
+        "referenceGoal": 1,
+        "color": "#1D4ED8",
+        "location": "Workspace",
+        "archetype": "burner",
+        "area": "Focus",
+        "whyItHelps": "Creates mental boundaries to prevent work thoughts from burning out personal time."
+      }
+    ],
+    "Energy": [
+      {
+        "name": "Energy Check-In",
+        "setting": "build",
+        "repeat": "day",
+        "label": "ratings",
+        "referenceGoal": 3,
+        "color": "#EF4444",
+        "location": "Phone",
+        "archetype": "burner",
+        "area": "Energy",
+        "whyItHelps": "Prevents energy depletion by monitoring and honoring current energy levels."
+      },
+      {
+        "name": "Recharge Activity",
+        "setting": "build",
+        "repeat": "day",
+        "label": "activities",
+        "referenceGoal": 1,
+        "color": "#DC2626",
+        "location": "Comfort zone",
+        "archetype": "burner",
+        "area": "Energy",
+        "whyItHelps": "Actively restores energy instead of running on empty until forced to stop."
+      },
+      {
+        "name": "Say No to Drain",
+        "setting": "build",
+        "repeat": "day",
+        "label": "boundaries",
+        "referenceGoal": 1,
+        "color": "#B91C1C",
+        "location": "Decisions",
+        "archetype": "burner",
+        "area": "Energy",
+        "whyItHelps": "Protects energy reserves by declining activities that exceed current capacity."
+      }
+    ],
+    "Sleep": [
+      {
+        "name": "Protect Sleep Time",
+        "setting": "build",
+        "repeat": "day",
+        "label": "hours",
+        "referenceGoal": 7,
+        "color": "#6366F1",
+        "location": "Bedroom",
+        "archetype": "burner",
+        "area": "Sleep",
+        "whyItHelps": "Prevents burnout by prioritizing recovery sleep over productivity demands."
+      },
+      {
+        "name": "Wind Down Early",
+        "setting": "build",
+        "repeat": "day",
+        "label": "minutes",
+        "referenceGoal": 30,
+        "color": "#4F46E5",
+        "location": "Home",
+        "archetype": "burner",
+        "area": "Sleep",
+        "whyItHelps": "Creates space for mental decompression before sleep to prevent racing thoughts."
+      },
+      {
+        "name": "No Work in Bed",
+        "setting": "build",
+        "repeat": "day",
+        "label": "checkmark",
+        "referenceGoal": 1,
+        "color": "#4338CA",
+        "location": "Bedroom",
+        "archetype": "burner",
+        "area": "Sleep",
+        "whyItHelps": "Protects sleep quality by maintaining boundaries between work stress and rest space."
+      }
+    ],
+    "Discipline": [
+      {
+        "name": "Gentle Self-Care",
+        "setting": "build",
+        "repeat": "day",
+        "label": "acts",
+        "referenceGoal": 1,
+        "color": "#7C3AED",
+        "location": "Home",
+        "archetype": "burner",
+        "area": "Discipline",
+        "whyItHelps": "Builds sustainable discipline through kindness instead of harsh self-criticism that leads to burnout."
+      },
+      {
+        "name": "Set Small Limits",
+        "setting": "build",
+        "repeat": "day",
+        "label": "boundaries",
+        "referenceGoal": 1,
+        "color": "#6D28D9",
+        "location": "Daily choices",
+        "archetype": "burner",
+        "area": "Discipline",
+        "whyItHelps": "Protects energy by saying no to small demands before they accumulate into overwhelm."
+      },
+      {
+        "name": "Choose Rest",
+        "setting": "build",
+        "repeat": "day",
+        "label": "choices",
+        "referenceGoal": 1,
+        "color": "#5B21B6",
+        "location": "Decision moments",
+        "archetype": "burner",
+        "area": "Discipline",
+        "whyItHelps": "Builds discipline around self-preservation instead of endless productivity demands."
+      }
+    ],
+    "Gratitude": [
+      {
+        "name": "Appreciate Rest",
+        "setting": "build",
+        "repeat": "day",
+        "label": "moments",
+        "referenceGoal": 1,
+        "color": "#EC4899",
+        "location": "Quiet space",
+        "archetype": "burner",
+        "area": "Gratitude",
+        "whyItHelps": "Shifts focus from endless doing to appreciating peaceful moments and recovery."
+      },
+      {
+        "name": "Thank Your Body",
+        "setting": "build",
+        "repeat": "day",
+        "label": "appreciations",
+        "referenceGoal": 1,
+        "color": "#DB2777",
+        "location": "Self-reflection",
+        "archetype": "burner",
+        "area": "Gratitude",
+        "whyItHelps": "Builds body appreciation instead of criticism for not performing at impossible standards."
+      },
+      {
+        "name": "Notice Small Joys",
+        "setting": "build",
+        "repeat": "day",
+        "label": "observations",
+        "referenceGoal": 2,
+        "color": "#BE185D",
+        "location": "Daily life",
+        "archetype": "burner",
+        "area": "Gratitude",
+        "whyItHelps": "Restores perspective by finding beauty in simple moments instead of achievement pressure."
+      }
+    ],
+    "Relationships": [
+      {
+        "name": "Set Gentle Boundaries",
+        "setting": "build",
+        "repeat": "day",
+        "label": "boundaries",
+        "referenceGoal": 1,
+        "color": "#14B8A6",
+        "location": "Interactions",
+        "archetype": "burner",
+        "area": "Relationships",
+        "whyItHelps": "Protects energy for meaningful connections by limiting draining social obligations."
+      },
+      {
+        "name": "Ask for Support",
+        "setting": "build",
+        "repeat": "day",
+        "label": "requests",
+        "referenceGoal": 1,
+        "color": "#0D9488",
+        "location": "Safe relationships",
+        "archetype": "burner",
+        "area": "Relationships",
+        "whyItHelps": "Prevents isolation and burnout by accepting help instead of carrying everything alone."
+      },
+      {
+        "name": "Quality Time Focus",
+        "setting": "build",
+        "repeat": "day",
+        "label": "moments",
+        "referenceGoal": 1,
+        "color": "#0F766E",
+        "location": "With loved ones",
+        "archetype": "burner",
+        "area": "Relationships",
+        "whyItHelps": "Deepens connections through presence instead of busy social performance that drains energy."
+      }
+    ],
+    "Spirituality": [
+      {
+        "name": "Peaceful Meditation",
+        "setting": "build",
+        "repeat": "day",
+        "label": "minutes",
+        "referenceGoal": 5,
+        "color": "#8B5CF6",
+        "location": "Quiet space",
+        "archetype": "burner",
+        "area": "Spirituality",
+        "whyItHelps": "Restores inner peace and prevents spiritual emptiness from constant doing."
+      },
+      {
+        "name": "Connect with Nature",
+        "setting": "build",
+        "repeat": "day",
+        "label": "minutes",
+        "referenceGoal": 10,
+        "color": "#7C3AED",
+        "location": "Outside",
+        "archetype": "burner",
+        "area": "Spirituality",
+        "whyItHelps": "Grounds energy and provides perspective beyond productivity and achievement stress."
+      },
+      {
+        "name": "Practice Surrender",
+        "setting": "build",
+        "repeat": "day",
+        "label": "moments",
+        "referenceGoal": 1,
+        "color": "#6D28D9",
+        "location": "Present moment",
+        "archetype": "burner",
+        "area": "Spirituality",
+        "whyItHelps": "Releases control anxiety and trusts in larger forces beyond personal effort."
+      }
+    ],
+    "Creativity": [
+      {
+        "name": "Creative Play Time",
+        "setting": "build",
+        "repeat": "day",
+        "label": "minutes",
+        "referenceGoal": 15,
+        "color": "#F59E0B",
+        "location": "Creative space",
+        "archetype": "burner",
+        "area": "Creativity",
+        "whyItHelps": "Restores joy and energy through playful creation without performance pressure."
+      },
+      {
+        "name": "Express Feelings",
+        "setting": "build",
+        "repeat": "day",
+        "label": "expressions",
+        "referenceGoal": 1,
+        "color": "#D97706",
+        "location": "Art supplies",
+        "archetype": "burner",
+        "area": "Creativity",
+        "whyItHelps": "Processes burnout emotions through creative expression instead of bottling them up."
+      },
+      {
+        "name": "Create for Joy",
+        "setting": "build",
+        "repeat": "day",
+        "label": "creations",
+        "referenceGoal": 1,
+        "color": "#92400E",
+        "location": "Anywhere",
+        "archetype": "burner",
+        "area": "Creativity",
+        "whyItHelps": "Reconnects with intrinsic motivation through creation purely for personal satisfaction."
+      }
+    ],
+    "Productivity": [
+      {
+        "name": "Do Less, Better",
+        "setting": "build",
+        "repeat": "day",
+        "label": "tasks",
+        "referenceGoal": 3,
+        "color": "#3B82F6",
+        "location": "Work space",
+        "archetype": "burner",
+        "area": "Productivity",
+        "whyItHelps": "Prevents overwhelm by focusing on quality over quantity and protecting energy reserves."
+      },
+      {
+        "name": "Take Real Breaks",
+        "setting": "build",
+        "repeat": "day",
+        "label": "breaks",
+        "referenceGoal": 4,
+        "color": "#2563EB",
+        "location": "Away from work",
+        "archetype": "burner",
+        "area": "Productivity",
+        "whyItHelps": "Restores productivity capacity by truly stepping away instead of pseudo-breaks with screens."
+      },
+      {
+        "name": "End Work Day",
+        "setting": "build",
+        "repeat": "day",
+        "label": "checkmark",
+        "referenceGoal": 1,
+        "color": "#1D4ED8",
+        "location": "Workspace",
+        "archetype": "burner",
+        "area": "Productivity",
+        "whyItHelps": "Creates boundaries to prevent work from consuming all waking hours and energy."
+      }
+    ],
+    "Confidence": [
+      {
+        "name": "Celebrate Small Wins",
+        "setting": "build",
+        "repeat": "day",
+        "label": "celebrations",
+        "referenceGoal": 1,
+        "color": "#EF4444",
+        "location": "Achievement moment",
+        "archetype": "burner",
+        "area": "Confidence",
+        "whyItHelps": "Rebuilds confidence eroded by burnout through recognizing incremental progress."
+      },
+      {
+        "name": "Practice Self-Compassion",
+        "setting": "build",
+        "repeat": "day",
+        "label": "moments",
+        "referenceGoal": 1,
+        "color": "#DC2626",
+        "location": "Self-talk",
+        "archetype": "burner",
+        "area": "Confidence",
+        "whyItHelps": "Heals confidence damage from harsh self-criticism during exhaustion periods."
+      },
+      {
+        "name": "Honor Your Limits",
+        "setting": "build",
+        "repeat": "day",
+        "label": "boundaries",
+        "referenceGoal": 1,
+        "color": "#B91C1C",
+        "location": "Decision points",
+        "archetype": "burner",
+        "area": "Confidence",
+        "whyItHelps": "Builds confidence in self-awareness and boundary-setting instead of endless pushing."
+      }
+    ],
+    "Time": [
+      {
+        "name": "Protect Personal Time",
+        "setting": "build",
+        "repeat": "day",
+        "label": "hours",
+        "referenceGoal": 2,
+        "color": "#6366F1",
+        "location": "Personal space",
+        "archetype": "burner",
+        "area": "Time",
+        "whyItHelps": "Prevents burnout by reserving time for restoration instead of constant productivity."
+      },
+      {
+        "name": "Schedule Rest",
+        "setting": "build",
+        "repeat": "day",
+        "label": "rest periods",
+        "referenceGoal": 1,
+        "color": "#4F46E5",
+        "location": "Calendar",
+        "archetype": "burner",
+        "area": "Time",
+        "whyItHelps": "Makes rest non-negotiable by treating it as important as work appointments."
+      },
+      {
+        "name": "Leave Space Between",
+        "setting": "build",
+        "repeat": "day",
+        "label": "buffers",
+        "referenceGoal": 2,
+        "color": "#4338CA",
+        "location": "Schedule",
+        "archetype": "burner",
+        "area": "Time",
+        "whyItHelps": "Prevents rushed exhaustion by building transition time between activities."
+      }
+    ],
+    "Mood": [
+      {
+        "name": "Check Energy Mood",
+        "setting": "build",
+        "repeat": "day",
+        "label": "check-ins",
+        "referenceGoal": 2,
+        "color": "#EC4899",
+        "location": "Phone",
+        "archetype": "burner",
+        "area": "Mood",
+        "whyItHelps": "Prevents mood crashes by monitoring emotional energy before reaching empty."
+      },
+      {
+        "name": "Practice Mood Care",
+        "setting": "build",
+        "repeat": "day",
+        "label": "care acts",
+        "referenceGoal": 1,
+        "color": "#DB2777",
+        "location": "Self-care",
+        "archetype": "burner",
+        "area": "Mood",
+        "whyItHelps": "Actively nurtures mood instead of expecting emotional resilience without maintenance."
+      },
+      {
+        "name": "Seek Mood Support",
+        "setting": "build",
+        "repeat": "day",
+        "label": "connections",
+        "referenceGoal": 1,
+        "color": "#BE185D",
+        "location": "Support network",
+        "archetype": "burner",
+        "area": "Mood",
+        "whyItHelps": "Prevents isolation during low moods by reaching out for understanding and help."
+      }
+    ],
+    "Purpose": [
+      {
+        "name": "Connect to Why",
+        "setting": "build",
+        "repeat": "day",
+        "label": "reflections",
+        "referenceGoal": 1,
+        "color": "#8B5CF6",
+        "location": "Quiet reflection",
+        "archetype": "burner",
+        "area": "Purpose",
+        "whyItHelps": "Reconnects with deeper meaning beyond productivity and achievement pressures."
+      },
+      {
+        "name": "Align with Values",
+        "setting": "build",
+        "repeat": "day",
+        "label": "choices",
+        "referenceGoal": 1,
+        "color": "#7C3AED",
+        "location": "Decision making",
+        "archetype": "burner",
+        "area": "Purpose",
+        "whyItHelps": "Ensures actions serve authentic purpose instead of external expectations causing burnout."
+      },
+      {
+        "name": "Serve Others Gently",
+        "setting": "build",
+        "repeat": "day",
+        "label": "services",
+        "referenceGoal": 1,
+        "color": "#6D28D9",
+        "location": "Community",
+        "archetype": "burner",
+        "area": "Purpose",
+        "whyItHelps": "Finds meaning through sustainable service that energizes rather than depletes."
+      }
+    ]
+  },
+  "pleaser": {
+    "Health": [
+      {
+        "name": "Check My Health Needs",
+        "setting": "build",
+        "repeat": "day",
+        "label": "check-ins",
+        "referenceGoal": 1,
+        "color": "#10B981",
+        "location": "Private space",
+        "archetype": "pleaser",
+        "area": "Health",
+        "whyItHelps": "Prioritizes personal health needs instead of neglecting them while caring for others."
+      },
+      {
+        "name": "Say No to Health Risks",
+        "setting": "build",
+        "repeat": "day",
+        "label": "boundaries",
+        "referenceGoal": 1,
+        "color": "#059669",
+        "location": "Decision moments",
+        "archetype": "pleaser",
+        "area": "Health",
+        "whyItHelps": "Protects health by declining requests that compromise well-being despite disappointing others."
+      },
+      {
+        "name": "Choose Self-Care",
+        "setting": "build",
+        "repeat": "day",
+        "label": "choices",
+        "referenceGoal": 1,
+        "color": "#047857",
+        "location": "Daily decisions",
+        "archetype": "pleaser",
+        "area": "Health",
+        "whyItHelps": "Values personal health needs as worthy of attention and protection from others' demands."
+      }
+    ],
+    "Fitness": [
+      {
+        "name": "Exercise for Me",
+        "setting": "build",
+        "repeat": "day",
+        "label": "minutes",
+        "referenceGoal": 20,
+        "color": "#F59E0B",
+        "location": "Private space",
+        "archetype": "pleaser",
+        "area": "Fitness",
+        "whyItHelps": "Creates fitness time that's protected from others' needs and focused on personal well-being."
+      },
+      {
+        "name": "Defend Workout Time",
+        "setting": "build",
+        "repeat": "day",
+        "label": "protections",
+        "referenceGoal": 1,
+        "color": "#D97706",
+        "location": "Schedule",
+        "archetype": "pleaser",
+        "area": "Fitness",
+        "whyItHelps": "Builds confidence in protecting personal fitness time from others' requests or interruptions."
+      },
+      {
+        "name": "Move Without Guilt",
+        "setting": "build",
+        "repeat": "day",
+        "label": "movements",
+        "referenceGoal": 1,
+        "color": "#92400E",
+        "location": "Exercise area",
+        "archetype": "pleaser",
+        "area": "Fitness",
+        "whyItHelps": "Practices taking fitness time without feeling selfish or guilty about not serving others first."
+      }
+    ],
+    "Focus": [
+      {
+        "name": "Focus on My Goals",
+        "setting": "build",
+        "repeat": "day",
+        "label": "sessions",
+        "referenceGoal": 1,
+        "color": "#3B82F6",
+        "location": "Personal workspace",
+        "archetype": "pleaser",
+        "area": "Focus",
+        "whyItHelps": "Dedicates mental energy to personal objectives instead of constantly helping others achieve theirs."
+      },
+      {
+        "name": "Ignore Interruptions",
+        "setting": "build",
+        "repeat": "day",
+        "label": "boundaries",
+        "referenceGoal": 2,
+        "color": "#2563EB",
+        "location": "Work time",
+        "archetype": "pleaser",
+        "area": "Focus",
+        "whyItHelps": "Protects focus time by not immediately responding to every request for attention or help."
+      },
+      {
+        "name": "Complete My Tasks",
+        "setting": "build",
+        "repeat": "day",
+        "label": "completions",
+        "referenceGoal": 1,
+        "color": "#1D4ED8",
+        "location": "Work space",
+        "archetype": "pleaser",
+        "area": "Focus",
+        "whyItHelps": "Prioritizes finishing personal work before helping others with their tasks or problems."
+      }
+    ],
+    "Energy": [
+      {
+        "name": "Protect My Energy",
+        "setting": "build",
+        "repeat": "day",
+        "label": "protections",
+        "referenceGoal": 2,
+        "color": "#EF4444",
+        "location": "Daily interactions",
+        "archetype": "pleaser",
+        "area": "Energy",
+        "whyItHelps": "Conserves energy for personal needs instead of giving everything away to please others."
+      },
+      {
+        "name": "Recharge Alone",
+        "setting": "build",
+        "repeat": "day",
+        "label": "minutes",
+        "referenceGoal": 30,
+        "color": "#DC2626",
+        "location": "Private space",
+        "archetype": "pleaser",
+        "area": "Energy",
+        "whyItHelps": "Takes solo time to restore energy without feeling guilty about not being available to others."
+      },
+      {
+        "name": "Notice Energy Drain",
+        "setting": "build",
+        "repeat": "day",
+        "label": "observations",
+        "referenceGoal": 1,
+        "color": "#B91C1C",
+        "location": "Social situations",
+        "archetype": "pleaser",
+        "area": "Energy",
+        "whyItHelps": "Develops awareness of which people and situations deplete energy for better boundary setting."
+      }
+    ],
+    "Sleep": [
+      {
+        "name": "Bedtime Boundary",
+        "setting": "build",
+        "repeat": "day",
+        "label": "checkmark",
+        "referenceGoal": 1,
+        "color": "#6366F1",
+        "location": "Bedroom",
+        "archetype": "pleaser",
+        "area": "Sleep",
+        "whyItHelps": "Protects sleep by saying no to late requests or conversations that delay rest."
+      },
+      {
+        "name": "Sleep Without Guilt",
+        "setting": "build",
+        "repeat": "day",
+        "label": "hours",
+        "referenceGoal": 7,
+        "color": "#4F46E5",
+        "location": "Bed",
+        "archetype": "pleaser",
+        "area": "Sleep",
+        "whyItHelps": "Values personal rest needs without feeling selfish about not being constantly available."
+      },
+      {
+        "name": "Turn Off for Others",
+        "setting": "build",
+        "repeat": "day",
+        "label": "disconnections",
+        "referenceGoal": 1,
+        "color": "#4338CA",
+        "location": "Phone",
+        "archetype": "pleaser",
+        "area": "Sleep",
+        "whyItHelps": "Creates boundaries by being unavailable for others' needs during personal sleep time."
+      }
+    ],
+    "Discipline": [
+      {
+        "name": "Keep Personal Promises",
+        "setting": "build",
+        "repeat": "day",
+        "label": "promises",
+        "referenceGoal": 1,
+        "color": "#7C3AED",
+        "location": "Self-accountability",
+        "archetype": "pleaser",
+        "area": "Discipline",
+        "whyItHelps": "Values commitments to self as importantly as promises made to others."
+      },
+      {
+        "name": "Say No Kindly",
+        "setting": "build",
+        "repeat": "day",
+        "label": "nos",
+        "referenceGoal": 1,
+        "color": "#6D28D9",
+        "location": "Request moments",
+        "archetype": "pleaser",
+        "area": "Discipline",
+        "whyItHelps": "Builds discipline around boundary setting while maintaining care for others' feelings."
+      },
+      {
+        "name": "Choose Me Sometimes",
+        "setting": "build",
+        "repeat": "day",
+        "label": "self-choices",
+        "referenceGoal": 1,
+        "color": "#5B21B6",
+        "location": "Decision points",
+        "archetype": "pleaser",
+        "area": "Discipline",
+        "whyItHelps": "Practices prioritizing personal needs sometimes instead of always putting others first."
+      }
+    ],
+    "Gratitude": [
+      {
+        "name": "Appreciate My Efforts",
+        "setting": "build",
+        "repeat": "day",
+        "label": "appreciations",
+        "referenceGoal": 1,
+        "color": "#EC4899",
+        "location": "Self-reflection",
+        "archetype": "pleaser",
+        "area": "Gratitude",
+        "whyItHelps": "Recognizes personal contributions and efforts instead of only seeing what others do."
+      },
+      {
+        "name": "Thank Myself",
+        "setting": "build",
+        "repeat": "day",
+        "label": "self-thanks",
+        "referenceGoal": 1,
+        "color": "#DB2777",
+        "location": "Personal time",
+        "archetype": "pleaser",
+        "area": "Gratitude",
+        "whyItHelps": "Builds self-appreciation instead of only expressing gratitude toward others."
+      },
+      {
+        "name": "Value My Needs",
+        "setting": "build",
+        "repeat": "day",
+        "label": "validations",
+        "referenceGoal": 1,
+        "color": "#BE185D",
+        "location": "Inner dialogue",
+        "archetype": "pleaser",
+        "area": "Gratitude",
+        "whyItHelps": "Appreciates personal needs and desires as valid and worthy of attention."
+      }
+    ],
+    "Relationships": [
+      {
+        "name": "Express My Needs",
+        "setting": "build",
+        "repeat": "day",
+        "label": "expressions",
+        "referenceGoal": 1,
+        "color": "#14B8A6",
+        "location": "Close relationships",
+        "archetype": "pleaser",
+        "area": "Relationships",
+        "whyItHelps": "Communicates personal needs instead of assuming others should just know or that needs don't matter."
+      },
+      {
+        "name": "Ask for Help",
+        "setting": "build",
+        "repeat": "day",
+        "label": "requests",
+        "referenceGoal": 1,
+        "color": "#0D9488",
+        "location": "Support network",
+        "archetype": "pleaser",
+        "area": "Relationships",
+        "whyItHelps": "Practices receiving support instead of always being the one who gives and helps others."
+      },
+      {
+        "name": "Set Kind Boundaries",
+        "setting": "build",
+        "repeat": "day",
+        "label": "boundaries",
+        "referenceGoal": 1,
+        "color": "#0F766E",
+        "location": "Social interactions",
+        "archetype": "pleaser",
+        "area": "Relationships",
+        "whyItHelps": "Protects relationships by preventing resentment from overgiving and underreceiving."
+      }
+    ],
+    "Spirituality": [
+      {
+        "name": "Connect with Inner Self",
+        "setting": "build",
+        "repeat": "day",
+        "label": "minutes",
+        "referenceGoal": 10,
+        "color": "#8B5CF6",
+        "location": "Quiet space",
+        "archetype": "pleaser",
+        "area": "Spirituality",
+        "whyItHelps": "Develops relationship with inner wisdom instead of only seeking validation from others."
+      },
+      {
+        "name": "Trust My Intuition",
+        "setting": "build",
+        "repeat": "day",
+        "label": "moments",
+        "referenceGoal": 1,
+        "color": "#7C3AED",
+        "location": "Decision making",
+        "archetype": "pleaser",
+        "area": "Spirituality",
+        "whyItHelps": "Values inner guidance alongside others' opinions instead of only trusting external approval."
+      },
+      {
+        "name": "Practice Self-Love",
+        "setting": "build",
+        "repeat": "day",
+        "label": "acts",
+        "referenceGoal": 1,
+        "color": "#6D28D9",
+        "location": "Self-care",
+        "archetype": "pleaser",
+        "area": "Spirituality",
+        "whyItHelps": "Develops unconditional self-acceptance instead of only feeling worthy when pleasing others."
+      }
+    ],
+    "Creativity": [
+      {
+        "name": "Create for Joy",
+        "setting": "build",
+        "repeat": "day",
+        "label": "minutes",
+        "referenceGoal": 15,
+        "color": "#F59E0B",
+        "location": "Creative space",
+        "archetype": "pleaser",
+        "area": "Creativity",
+        "whyItHelps": "Expresses authentic creativity without needing others' approval or trying to please through art."
+      },
+      {
+        "name": "Make Something Mine",
+        "setting": "build",
+        "repeat": "day",
+        "label": "creations",
+        "referenceGoal": 1,
+        "color": "#D97706",
+        "location": "Personal project",
+        "archetype": "pleaser",
+        "area": "Creativity",
+        "whyItHelps": "Creates something personally meaningful instead of only making things others will like."
+      },
+      {
+        "name": "Keep Creative Private",
+        "setting": "build",
+        "repeat": "day",
+        "label": "private works",
+        "referenceGoal": 1,
+        "color": "#92400E",
+        "location": "Secret project",
+        "archetype": "pleaser",
+        "area": "Creativity",
+        "whyItHelps": "Protects creative expression from others' opinions and expectations to maintain authenticity."
+      }
+    ],
+    "Productivity": [
+      {
+        "name": "Work on My Goals",
+        "setting": "build",
+        "repeat": "day",
+        "label": "minutes",
+        "referenceGoal": 30,
+        "color": "#3B82F6",
+        "location": "Personal workspace",
+        "archetype": "pleaser",
+        "area": "Productivity",
+        "whyItHelps": "Dedicates time to personal objectives instead of only working on what others want or need."
+      },
+      {
+        "name": "Finish My Tasks First",
+        "setting": "build",
+        "repeat": "day",
+        "label": "completions",
+        "referenceGoal": 1,
+        "color": "#2563EB",
+        "location": "Work area",
+        "archetype": "pleaser",
+        "area": "Productivity",
+        "whyItHelps": "Prioritizes personal responsibilities before helping others with their tasks or emergencies."
+      },
+      {
+        "name": "Say Busy When Busy",
+        "setting": "build",
+        "repeat": "day",
+        "label": "boundaries",
+        "referenceGoal": 1,
+        "color": "#1D4ED8",
+        "location": "Work time",
+        "archetype": "pleaser",
+        "area": "Productivity",
+        "whyItHelps": "Protects productivity by communicating availability instead of always dropping everything for others."
+      }
+    ],
+    "Confidence": [
+      {
+        "name": "Value My Opinion",
+        "setting": "build",
+        "repeat": "day",
+        "label": "expressions",
+        "referenceGoal": 1,
+        "color": "#EF4444",
+        "location": "Conversations",
+        "archetype": "pleaser",
+        "area": "Confidence",
+        "whyItHelps": "Shares personal thoughts and opinions instead of only agreeing to maintain others' approval."
+      },
+      {
+        "name": "Celebrate My Wins",
+        "setting": "build",
+        "repeat": "day",
+        "label": "celebrations",
+        "referenceGoal": 1,
+        "color": "#DC2626",
+        "location": "Achievement moments",
+        "archetype": "pleaser",
+        "area": "Confidence",
+        "whyItHelps": "Acknowledges personal accomplishments instead of minimizing them to avoid seeming boastful."
+      },
+      {
+        "name": "Trust My Choices",
+        "setting": "build",
+        "repeat": "day",
+        "label": "decisions",
+        "referenceGoal": 1,
+        "color": "#B91C1C",
+        "location": "Decision moments",
+        "archetype": "pleaser",
+        "area": "Confidence",
+        "whyItHelps": "Builds confidence in personal judgment instead of constantly seeking others' approval for decisions."
+      }
+    ],
+    "Time": [
+      {
+        "name": "Protect My Time",
+        "setting": "build",
+        "repeat": "day",
+        "label": "protections",
+        "referenceGoal": 2,
+        "color": "#6366F1",
+        "location": "Schedule",
+        "archetype": "pleaser",
+        "area": "Time",
+        "whyItHelps": "Values personal time as important and not automatically available for others' requests."
+      },
+      {
+        "name": "Schedule Me Time",
+        "setting": "build",
+        "repeat": "day",
+        "label": "appointments",
+        "referenceGoal": 1,
+        "color": "#4F46E5",
+        "location": "Calendar",
+        "archetype": "pleaser",
+        "area": "Time",
+        "whyItHelps": "Treats personal time as seriously as appointments with others, making it non-negotiable."
+      },
+      {
+        "name": "Say No to Overcommit",
+        "setting": "build",
+        "repeat": "day",
+        "label": "nos",
+        "referenceGoal": 1,
+        "color": "#4338CA",
+        "location": "Request moments",
+        "archetype": "pleaser",
+        "area": "Time",
+        "whyItHelps": "Protects time capacity by declining requests that would lead to overcommitment and stress."
+      }
+    ],
+    "Mood": [
+      {
+        "name": "Honor My Feelings",
+        "setting": "build",
+        "repeat": "day",
+        "label": "check-ins",
+        "referenceGoal": 2,
+        "color": "#EC4899",
+        "location": "Emotional awareness",
+        "archetype": "pleaser",
+        "area": "Mood",
+        "whyItHelps": "Validates personal emotions instead of suppressing them to avoid burdening or displeasing others."
+      },
+      {
+        "name": "Express Real Mood",
+        "setting": "build",
+        "repeat": "day",
+        "label": "expressions",
+        "referenceGoal": 1,
+        "color": "#DB2777",
+        "location": "Safe relationships",
+        "archetype": "pleaser",
+        "area": "Mood",
+        "whyItHelps": "Shares authentic feelings instead of always pretending to be happy to please others."
+      },
+      {
+        "name": "Care for My Mood",
+        "setting": "build",
+        "repeat": "day",
+        "label": "care acts",
+        "referenceGoal": 1,
+        "color": "#BE185D",
+        "location": "Self-care",
+        "archetype": "pleaser",
+        "area": "Mood",
+        "whyItHelps": "Takes action to improve personal mood instead of only focusing on others' emotional needs."
+      }
+    ],
+    "Purpose": [
+      {
+        "name": "Define My Mission",
+        "setting": "build",
+        "repeat": "day",
+        "label": "reflections",
+        "referenceGoal": 1,
+        "color": "#8B5CF6",
+        "location": "Personal reflection",
+        "archetype": "pleaser",
+        "area": "Purpose",
+        "whyItHelps": "Clarifies personal purpose beyond making others happy or meeting their expectations."
+      },
+      {
+        "name": "Follow My Values",
+        "setting": "build",
+        "repeat": "day",
+        "label": "alignments",
+        "referenceGoal": 1,
+        "color": "#7C3AED",
+        "location": "Decision making",
+        "archetype": "pleaser",
+        "area": "Purpose",
+        "whyItHelps": "Makes choices based on personal values instead of only considering what others want or expect."
+      },
+      {
+        "name": "Serve Authentically",
+        "setting": "build",
+        "repeat": "day",
+        "label": "authentic acts",
+        "referenceGoal": 1,
+        "color": "#6D28D9",
+        "location": "Service opportunities",
+        "archetype": "pleaser",
+        "area": "Purpose",
+        "whyItHelps": "Helps others from genuine desire instead of fear of disappointing or need for approval."
+      }
+    ]
+  },
+  "skeptic": {
+    "Health": [
+      {
+        "name": "Test Health Data",
+        "setting": "build",
+        "repeat": "day",
+        "label": "data points",
+        "referenceGoal": 1,
+        "color": "#10B981",
+        "location": "Health tracking",
+        "archetype": "skeptic",
+        "area": "Health",
+        "whyItHelps": "Provides concrete evidence about health status rather than relying on feelings or assumptions."
+      },
+      {
+        "name": "Track Real Results",
+        "setting": "build",
+        "repeat": "day",
+        "label": "measurements",
+        "referenceGoal": 1,
+        "color": "#059669",
+        "location": "Health metrics",
+        "archetype": "skeptic",
+        "area": "Health",
+        "whyItHelps": "Creates measurable proof of health improvements to validate that efforts actually work."
+      },
+      {
+        "name": "Question Health Claims",
+        "setting": "build",
+        "repeat": "day",
+        "label": "research checks",
+        "referenceGoal": 1,
+        "color": "#047857",
+        "location": "Information sources",
+        "archetype": "skeptic",
+        "area": "Health",
+        "whyItHelps": "Verifies health advice with evidence before accepting recommendations that might be ineffective."
+      }
+    ],
+    "Fitness": [
+      {
+        "name": "Measure Fitness Progress",
+        "setting": "build",
+        "repeat": "day",
+        "label": "metrics",
+        "referenceGoal": 1,
+        "color": "#F59E0B",
+        "location": "Workout tracking",
+        "archetype": "skeptic",
+        "area": "Fitness",
+        "whyItHelps": "Provides quantifiable evidence that fitness routines actually produce measurable improvements."
+      },
+      {
+        "name": "Test Exercise Claims",
+        "setting": "build",
+        "repeat": "day",
+        "label": "experiments",
+        "referenceGoal": 1,
+        "color": "#D97706",
+        "location": "Exercise routine",
+        "archetype": "skeptic",
+        "area": "Fitness",
+        "whyItHelps": "Validates fitness advice through personal experimentation rather than blind faith in trends."
+      },
+      {
+        "name": "Document What Works",
+        "setting": "build",
+        "repeat": "day",
+        "label": "notes",
+        "referenceGoal": 1,
+        "color": "#92400E",
+        "location": "Fitness log",
+        "archetype": "skeptic",
+        "area": "Fitness",
+        "whyItHelps": "Creates evidence-based record of effective exercises to build confidence in proven methods."
+      }
+    ],
+    "Focus": [
+      {
+        "name": "Test Focus Methods",
+        "setting": "build",
+        "repeat": "day",
+        "label": "trials",
+        "referenceGoal": 1,
+        "color": "#3B82F6",
+        "location": "Work environment",
+        "archetype": "skeptic",
+        "area": "Focus",
+        "whyItHelps": "Experiments with focus techniques to find evidence-based methods that actually improve concentration."
+      },
+      {
+        "name": "Track Productivity Data",
+        "setting": "build",
+        "repeat": "day",
+        "label": "metrics",
+        "referenceGoal": 1,
+        "color": "#2563EB",
+        "location": "Productivity tracking",
+        "archetype": "skeptic",
+        "area": "Focus",
+        "whyItHelps": "Measures actual output and quality to validate which focus strategies produce real results."
+      },
+      {
+        "name": "Question Focus Hype",
+        "setting": "build",
+        "repeat": "day",
+        "label": "evaluations",
+        "referenceGoal": 1,
+        "color": "#1D4ED8",
+        "location": "Method assessment",
+        "archetype": "skeptic",
+        "area": "Focus",
+        "whyItHelps": "Critically evaluates popular focus advice to separate effective techniques from marketing hype."
+      }
+    ],
+    "Energy": [
+      {
+        "name": "Monitor Energy Patterns",
+        "setting": "build",
+        "repeat": "day",
+        "label": "readings",
+        "referenceGoal": 3,
+        "color": "#EF4444",
+        "location": "Energy tracking",
+        "archetype": "skeptic",
+        "area": "Energy",
+        "whyItHelps": "Collects objective data about energy levels to identify what actually affects personal energy."
+      },
+      {
+        "name": "Test Energy Strategies",
+        "setting": "build",
+        "repeat": "day",
+        "label": "experiments",
+        "referenceGoal": 1,
+        "color": "#DC2626",
+        "location": "Daily routine",
+        "archetype": "skeptic",
+        "area": "Energy",
+        "whyItHelps": "Systematically tries energy interventions to find evidence-based methods that genuinely work."
+      },
+      {
+        "name": "Verify Energy Claims",
+        "setting": "build",
+        "repeat": "day",
+        "label": "fact checks",
+        "referenceGoal": 1,
+        "color": "#B91C1C",
+        "location": "Research time",
+        "archetype": "skeptic",
+        "area": "Energy",
+        "whyItHelps": "Researches scientific backing for energy advice before investing time in unproven methods."
+      }
+    ],
+    "Sleep": [
+      {
+        "name": "Track Sleep Quality",
+        "setting": "build",
+        "repeat": "day",
+        "label": "metrics",
+        "referenceGoal": 1,
+        "color": "#6366F1",
+        "location": "Sleep tracking",
+        "archetype": "skeptic",
+        "area": "Sleep",
+        "whyItHelps": "Measures actual sleep quality and duration to validate which sleep strategies produce real improvements."
+      },
+      {
+        "name": "Test Sleep Methods",
+        "setting": "build",
+        "repeat": "day",
+        "label": "trials",
+        "referenceGoal": 1,
+        "color": "#4F46E5",
+        "location": "Sleep environment",
+        "archetype": "skeptic",
+        "area": "Sleep",
+        "whyItHelps": "Experiments with sleep recommendations to find evidence-based techniques that actually work."
+      },
+      {
+        "name": "Question Sleep Advice",
+        "setting": "build",
+        "repeat": "day",
+        "label": "research",
+        "referenceGoal": 1,
+        "color": "#4338CA",
+        "location": "Information sources",
+        "archetype": "skeptic",
+        "area": "Sleep",
+        "whyItHelps": "Investigates scientific support for sleep recommendations before adopting new sleep practices."
+      }
+    ],
+    "Discipline": [
+      {
+        "name": "Measure Discipline Wins",
+        "setting": "build",
+        "repeat": "day",
+        "label": "completions",
+        "referenceGoal": 1,
+        "color": "#7C3AED",
+        "location": "Goal tracking",
+        "archetype": "skeptic",
+        "area": "Discipline",
+        "whyItHelps": "Creates concrete evidence of discipline success to build confidence in personal capability."
+      },
+      {
+        "name": "Test Habit Science",
+        "setting": "build",
+        "repeat": "day",
+        "label": "experiments",
+        "referenceGoal": 1,
+        "color": "#6D28D9",
+        "location": "Habit practice",
+        "archetype": "skeptic",
+        "area": "Discipline",
+        "whyItHelps": "Validates habit formation advice through personal experimentation with scientifically-backed methods."
+      },
+      {
+        "name": "Analyze What Fails",
+        "setting": "build",
+        "repeat": "day",
+        "label": "analyses",
+        "referenceGoal": 1,
+        "color": "#5B21B6",
+        "location": "Reflection time",
+        "archetype": "skeptic",
+        "area": "Discipline",
+        "whyItHelps": "Studies personal discipline failures objectively to identify patterns and improve future success."
+      }
+    ],
+    "Gratitude": [
+      {
+        "name": "Test Gratitude Effects",
+        "setting": "build",
+        "repeat": "day",
+        "label": "mood ratings",
+        "referenceGoal": 1,
+        "color": "#EC4899",
+        "location": "Mood tracking",
+        "archetype": "skeptic",
+        "area": "Gratitude",
+        "whyItHelps": "Measures actual mood and well-being changes from gratitude practice to validate its effectiveness."
+      },
+      {
+        "name": "Document Gratitude Data",
+        "setting": "build",
+        "repeat": "day",
+        "label": "entries",
+        "referenceGoal": 1,
+        "color": "#DB2777",
+        "location": "Gratitude log",
+        "archetype": "skeptic",
+        "area": "Gratitude",
+        "whyItHelps": "Creates evidence-based record of gratitude benefits rather than assuming positive effects."
+      },
+      {
+        "name": "Research Gratitude Science",
+        "setting": "build",
+        "repeat": "day",
+        "label": "studies",
+        "referenceGoal": 1,
+        "color": "#BE185D",
+        "location": "Research time",
+        "archetype": "skeptic",
+        "area": "Gratitude",
+        "whyItHelps": "Investigates scientific evidence supporting gratitude practices before fully committing to them."
+      }
+    ],
+    "Relationships": [
+      {
+        "name": "Track Relationship Quality",
+        "setting": "build",
+        "repeat": "day",
+        "label": "assessments",
+        "referenceGoal": 1,
+        "color": "#14B8A6",
+        "location": "Relationship review",
+        "archetype": "skeptic",
+        "area": "Relationships",
+        "whyItHelps": "Objectively evaluates relationship health and satisfaction to guide evidence-based improvements."
+      },
+      {
+        "name": "Test Communication Methods",
+        "setting": "build",
+        "repeat": "day",
+        "label": "experiments",
+        "referenceGoal": 1,
+        "color": "#0D9488",
+        "location": "Conversations",
+        "archetype": "skeptic",
+        "area": "Relationships",
+        "whyItHelps": "Tries different communication strategies to find evidence-based approaches that actually improve relationships."
+      },
+      {
+        "name": "Verify Relationship Advice",
+        "setting": "build",
+        "repeat": "day",
+        "label": "fact checks",
+        "referenceGoal": 1,
+        "color": "#0F766E",
+        "location": "Research time",
+        "archetype": "skeptic",
+        "area": "Relationships",
+        "whyItHelps": "Investigates relationship advice against psychological research before applying it in personal life."
+      }
+    ],
+    "Spirituality": [
+      {
+        "name": "Track Spiritual Effects",
+        "setting": "build",
+        "repeat": "day",
+        "label": "observations",
+        "referenceGoal": 1,
+        "color": "#8B5CF6",
+        "location": "Reflection time",
+        "archetype": "skeptic",
+        "area": "Spirituality",
+        "whyItHelps": "Monitors actual changes in well-being and perspective from spiritual practices to validate their value."
+      },
+      {
+        "name": "Test Meditation Science",
+        "setting": "build",
+        "repeat": "day",
+        "label": "sessions",
+        "referenceGoal": 1,
+        "color": "#7C3AED",
+        "location": "Meditation space",
+        "archetype": "skeptic",
+        "area": "Spirituality",
+        "whyItHelps": "Experiments with scientifically-studied meditation techniques to find evidence-based spiritual practices."
+      },
+      {
+        "name": "Question Spiritual Claims",
+        "setting": "build",
+        "repeat": "day",
+        "label": "evaluations",
+        "referenceGoal": 1,
+        "color": "#6D28D9",
+        "location": "Critical thinking",
+        "archetype": "skeptic",
+        "area": "Spirituality",
+        "whyItHelps": "Critically examines spiritual teachings and practices to separate evidence-based benefits from unfounded claims."
+      }
+    ],
+    "Creativity": [
+      {
+        "name": "Measure Creative Output",
+        "setting": "build",
+        "repeat": "day",
+        "label": "creations",
+        "referenceGoal": 1,
+        "color": "#F59E0B",
+        "location": "Creative workspace",
+        "archetype": "skeptic",
+        "area": "Creativity",
+        "whyItHelps": "Tracks actual creative productivity to validate which methods and conditions genuinely enhance creativity."
+      },
+      {
+        "name": "Test Creative Methods",
+        "setting": "build",
+        "repeat": "day",
+        "label": "experiments",
+        "referenceGoal": 1,
+        "color": "#D97706",
+        "location": "Creative practice",
+        "archetype": "skeptic",
+        "area": "Creativity",
+        "whyItHelps": "Systematically tries different creative techniques to find evidence-based approaches that actually work."
+      },
+      {
+        "name": "Research Creativity Science",
+        "setting": "build",
+        "repeat": "day",
+        "label": "studies",
+        "referenceGoal": 1,
+        "color": "#92400E",
+        "location": "Research time",
+        "archetype": "skeptic",
+        "area": "Creativity",
+        "whyItHelps": "Investigates scientific research on creativity enhancement before adopting new creative practices."
+      }
+    ],
+    "Productivity": [
+      {
+        "name": "Track Productivity Metrics",
+        "setting": "build",
+        "repeat": "day",
+        "label": "measurements",
+        "referenceGoal": 3,
+        "color": "#3B82F6",
+        "location": "Work tracking",
+        "archetype": "skeptic",
+        "area": "Productivity",
+        "whyItHelps": "Measures actual output and efficiency to validate which productivity methods produce real results."
+      },
+      {
+        "name": "Test Productivity Claims",
+        "setting": "build",
+        "repeat": "day",
+        "label": "trials",
+        "referenceGoal": 1,
+        "color": "#2563EB",
+        "location": "Work environment",
+        "archetype": "skeptic",
+        "area": "Productivity",
+        "whyItHelps": "Experiments with productivity advice to find evidence-based techniques that actually improve performance."
+      },
+      {
+        "name": "Analyze Productivity Data",
+        "setting": "build",
+        "repeat": "day",
+        "label": "analyses",
+        "referenceGoal": 1,
+        "color": "#1D4ED8",
+        "location": "Data review",
+        "archetype": "skeptic",
+        "area": "Productivity",
+        "whyItHelps": "Reviews productivity patterns objectively to identify what genuinely improves versus what feels good."
+      }
+    ],
+    "Confidence": [
+      {
+        "name": "Document Evidence of Growth",
+        "setting": "build",
+        "repeat": "day",
+        "label": "evidences",
+        "referenceGoal": 1,
+        "color": "#EF4444",
+        "location": "Achievement log",
+        "archetype": "skeptic",
+        "area": "Confidence",
+        "whyItHelps": "Creates concrete proof of personal progress and capability to build rational confidence."
+      },
+      {
+        "name": "Test Confidence Methods",
+        "setting": "build",
+        "repeat": "day",
+        "label": "experiments",
+        "referenceGoal": 1,
+        "color": "#DC2626",
+        "location": "Challenge situations",
+        "archetype": "skeptic",
+        "area": "Confidence",
+        "whyItHelps": "Tries confidence-building techniques to find evidence-based approaches that actually work."
+      },
+      {
+        "name": "Measure Confidence Changes",
+        "setting": "build",
+        "repeat": "day",
+        "label": "ratings",
+        "referenceGoal": 1,
+        "color": "#B91C1C",
+        "location": "Self-assessment",
+        "archetype": "skeptic",
+        "area": "Confidence",
+        "whyItHelps": "Tracks actual confidence levels objectively to validate which interventions produce real improvements."
+      }
+    ],
+    "Time": [
+      {
+        "name": "Track Time Usage Data",
+        "setting": "build",
+        "repeat": "day",
+        "label": "logs",
+        "referenceGoal": 1,
+        "color": "#6366F1",
+        "location": "Time tracking",
+        "archetype": "skeptic",
+        "area": "Time",
+        "whyItHelps": "Measures actual time allocation to identify where time really goes versus assumptions."
+      },
+      {
+        "name": "Test Time Management",
+        "setting": "build",
+        "repeat": "day",
+        "label": "methods",
+        "referenceGoal": 1,
+        "color": "#4F46E5",
+        "location": "Schedule testing",
+        "archetype": "skeptic",
+        "area": "Time",
+        "whyItHelps": "Experiments with time management techniques to find evidence-based approaches that actually improve efficiency."
+      },
+      {
+        "name": "Analyze Time Patterns",
+        "setting": "build",
+        "repeat": "day",
+        "label": "analyses",
+        "referenceGoal": 1,
+        "color": "#4338CA",
+        "location": "Data review",
+        "archetype": "skeptic",
+        "area": "Time",
+        "whyItHelps": "Studies time usage patterns objectively to make evidence-based improvements to scheduling."
+      }
+    ],
+    "Mood": [
+      {
+        "name": "Track Mood Data",
+        "setting": "build",
+        "repeat": "day",
+        "label": "ratings",
+        "referenceGoal": 3,
+        "color": "#EC4899",
+        "location": "Mood tracking",
+        "archetype": "skeptic",
+        "area": "Mood",
+        "whyItHelps": "Collects objective mood data to identify what actually affects emotional well-being versus assumptions."
+      },
+      {
+        "name": "Test Mood Interventions",
+        "setting": "build",
+        "repeat": "day",
+        "label": "experiments",
+        "referenceGoal": 1,
+        "color": "#DB2777",
+        "location": "Mood experiments",
+        "archetype": "skeptic",
+        "area": "Mood",
+        "whyItHelps": "Systematically tries mood improvement strategies to find evidence-based techniques that genuinely work."
+      },
+      {
+        "name": "Research Mood Science",
+        "setting": "build",
+        "repeat": "day",
+        "label": "studies",
+        "referenceGoal": 1,
+        "color": "#BE185D",
+        "location": "Research time",
+        "archetype": "skeptic",
+        "area": "Mood",
+        "whyItHelps": "Investigates scientific research on mood regulation before adopting new emotional strategies."
+      }
+    ],
+    "Purpose": [
+      {
+        "name": "Test Purpose Clarity",
+        "setting": "build",
+        "repeat": "day",
+        "label": "experiments",
+        "referenceGoal": 1,
+        "color": "#8B5CF6",
+        "location": "Purpose exploration",
+        "archetype": "skeptic",
+        "area": "Purpose",
+        "whyItHelps": "Tries different purpose-finding methods to discover evidence-based approaches that actually provide clarity."
+      },
+      {
+        "name": "Measure Purpose Impact",
+        "setting": "build",
+        "repeat": "day",
+        "label": "assessments",
+        "referenceGoal": 1,
+        "color": "#7C3AED",
+        "location": "Life evaluation",
+        "archetype": "skeptic",
+        "area": "Purpose",
+        "whyItHelps": "Evaluates how purpose-driven actions actually affect satisfaction and meaning versus theoretical benefits."
+      },
+      {
+        "name": "Question Purpose Advice",
+        "setting": "build",
+        "repeat": "day",
+        "label": "evaluations",
+        "referenceGoal": 1,
+        "color": "#6D28D9",
+        "location": "Critical analysis",
+        "archetype": "skeptic",
+        "area": "Purpose",
+        "whyItHelps": "Critically examines purpose and meaning advice to separate evidence-based guidance from empty platitudes."
+      }
+    ]
+  }
+}

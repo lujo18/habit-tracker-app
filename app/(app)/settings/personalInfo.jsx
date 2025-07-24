@@ -18,6 +18,7 @@ import tailwindConfig from "../../../tailwind.config";
 import { useMemo, useState } from "react";
 import BuildInput from "../../../components/BuildInput";
 import PopupModalBase from "../../../components/PopupModalBase";
+import BackArrow from "../../../components/BackArrow";
 
 const tailwindColors = tailwindConfig.theme.extend.colors;
 
@@ -95,7 +96,13 @@ const PersonalInfo = () => {
   return (
     <SafeAreaView className="flex-1 bg-background">
       <View className="flex-1 justify-start items-center p-4 gap-4">
-        <Header>Personal Info</Header>
+        <View className="flex-row w-full">
+          <View className="flex-1"><BackArrow/></View>
+          <View className="flex-1">
+            <Header>Personal Info</Header>
+          </View>
+          <View className="flex-1"></View>
+        </View>
         <View className="flex justify-between items-start w-full">
           <BasicContainer className="mb-4 gap-4">
             {tabs.map((tab, idx) => (
@@ -117,28 +124,7 @@ const PersonalInfo = () => {
               </TouchableOpacity>
             ))}
           </BasicContainer>
-          <Header>Account Details</Header>
-          <BasicContainer className="mb-4 gap-4">
-            <Link href={"/settings/personalInfo"}>
-              <Subheader>Personal Info</Subheader>
-            </Link>
-          </BasicContainer>
-          <Header>Help and Support</Header>
-          <BasicContainer className="gap-4">
-            <Link href={"persionalInfo"}>
-              <Subheader>Help Center</Subheader>
-            </Link>
-            <Link href={"persionalInfo"}>
-              <Subheader>FaQ</Subheader>
-            </Link>
-            <View className="flex-row">
-              <TextButton
-                type={"outline"}
-                text={"Sign Out"}
-                onPress={signout}
-              />
-            </View>
-          </BasicContainer>
+          
         </View>
       </View>
 

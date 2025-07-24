@@ -16,7 +16,7 @@ import icons from "../constants/icons";
 import tailwindConfig from "../tailwind.config";
 import ColorSwatch from "./ColorSwatch";
 
-import * as Haptics from 'expo-haptics'
+import * as Haptics from "expo-haptics";
 import {
   DevRepository,
   getHabitLabels,
@@ -96,7 +96,7 @@ const HabitCreator = ({ isVisible, onClose }) => {
   const [habitRepeat, setHabitRepeat] = useState("");
   const [habitLocation, setHabitLocation] = useState("");
 
-  const [habitMaxGoal, setHabitMaxGoal] = useState("")
+  const [habitMaxGoal, setHabitMaxGoal] = useState("");
 
   // Automatic Habit Data
   const [startTime, setStartTime] = useState(new Date());
@@ -108,7 +108,7 @@ const HabitCreator = ({ isVisible, onClose }) => {
   // 3. Habit Style Screen
   const [selectedColor, setSelectedColor] = useState("");
   /*habitColors[Object.keys(habitColors)[0]]*/
-  
+
   // 4. Habit Oath
   const [oathSigned, setOathSigned] = useState(false);
 
@@ -128,15 +128,13 @@ const HabitCreator = ({ isVisible, onClose }) => {
         forwardName: "Next",
         constraints:
           habitName.length < 1 ||
-
-          (habitSetting === 'dynamic' && habitMaxGoal === "") ||
-
-          ((habitSetting === 'dynamic' || habitSetting === 'build') && habitGoal === "") ||
-
-          (
-            (habitSetting === 'dynamic' || habitSetting === 'build' || habitSetting === 'tally') &&
-            (habitLabel === "" || habitRepeat === "" || habitLocation === "")
-          ),
+          (habitSetting === "dynamic" && habitMaxGoal === "") ||
+          ((habitSetting === "dynamic" || habitSetting === "build") &&
+            habitGoal === "") ||
+          ((habitSetting === "dynamic" ||
+            habitSetting === "build" ||
+            habitSetting === "tally") &&
+            (habitLabel === "" || habitRepeat === "" || habitLocation === "")),
         backAction: () => shiftCurrentPage(-1),
         forwardAction: () => shiftCurrentPage(),
       },
@@ -175,8 +173,8 @@ const HabitCreator = ({ isVisible, onClose }) => {
 
   useEffect(() => {
     if (!isVisible) {
-       setHabitSetting("");
-       setCurrentPage(0)
+      setHabitSetting("");
+      setCurrentPage(0);
     }
     setHabitName("");
     setHabitGoal("");
@@ -259,10 +257,10 @@ const HabitCreator = ({ isVisible, onClose }) => {
   };
 
   const setMaxGoal = (value) => {
-    console.log("DYNM", value)
-    setHabitMaxGoal(value)
+    console.log("DYNM", value);
+    setHabitMaxGoal(value);
     //changeHabitGoal(Math.max(Math.round(value * .10), 1))
-  }
+  };
 
   const setType = (value) => {
     setHabitLimit(value);
@@ -280,8 +278,8 @@ const HabitCreator = ({ isVisible, onClose }) => {
   };
 
   const setOath = (value) => {
-    setOathSigned(value)
-  }
+    setOathSigned(value);
+  };
 
   const setLocation = (value) => {
     setHabitLocation(value);
@@ -306,30 +304,27 @@ const HabitCreator = ({ isVisible, onClose }) => {
     retrieveOptions();
   };
 
-
   return (
     <Modal
       animationType="slide"
-      transparent={true}
       visible={isVisible}
       onDismiss={onClose}
+      presentationStyle="pageSheet"
     >
-      <SafeAreaView
-          className="w-full h-full relative flex items-center justify-end bg-background"
-          edges={isVisible ? ['bottom'] : null}
-
+      <SafeAreaView className="w-full h-full relative bg-background justify-end pt-2">
+        <KeyboardAvoidingView
+          behavior={Platform.OS === "ios" ? "padding" : "height"}
+          className="w-full h-full justify-center rounded-t-3xl"
         >
-      <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} className="w-full h-[90vh] justify-center rounded-t-3xl">
-        <TouchableWithoutFeedback
-          onPress={() => {
-            Keyboard.dismiss();
-            setOpenMenu(0);
-          }}
-          accessible={false}
-          className="flex-1 h-full w-full"
-        >
-        
-            <View className="h-full">
+          <TouchableWithoutFeedback
+            onPress={() => {
+              Keyboard.dismiss();
+              setOpenMenu(0);
+            }}
+            accessible={false}
+            className="flex-1 w-full"
+          >
+            <View className="flex-1">
               <View className="justify-center items-center">
                 <Header className="text-2xl">Create Habit</Header>
               </View>
@@ -367,94 +362,41 @@ const HabitCreator = ({ isVisible, onClose }) => {
                   // Quit data
                   startTime={startTime}
                   setStartTime={setQuitStart}
-        
                 />
-                <HabitStyle pageTitle={"Make It Yours"}
+                <HabitStyle
+                  pageTitle={"Make It Yours"}
                   selectedColor={selectedColor}
                   setColor={setColor}
                 />
-                <HabitDedication pageTitle={"Lock It In"} setOathSigned={setOath}/>
+                <HabitDedication
+                  pageTitle={"Lock It In"}
+                  setOathSigned={setOath}
+                />
               </ScrollingPager>
-              {/*
-                <View className="flex-1 h-[100vh] justify-start">
-                  <View className="my-6">
-                    <BuildInput
-                      value={habitName}
-                      handleChange={changeHabitName}
-                      placeholder="Your new habit"
-                      inputStyles="text-lg"
-                    />
-                  </View>
-                  <View className="gap-2">
-                    <Text className="text-md text-highlight-60 mb-2 border-b border-background-80">
-                      Habit Type
-                    </Text>
-                    <View className="flex-row gap-4">
-                      <TextButton
-                        text="Build"
-                        containerStyles={`${
-                          habitSetting === "build"
-                            ? "bg-habitColors-hBlue"
-                            : "bg-background-90 border-2 border-habitColors-hBlue"
-                        } flex-1`}
-                        onPress={() => handlePress("build")}
-                      />
-                      <TextButton
-                        text="Quit"
-                        containerStyles={`${
-                          habitSetting === "quit"
-                            ? "bg-habitColors-hRed"
-                            : "bg-background-90 border-2 border-habitColors-hRed"
-                        } flex-1`}
-                        onPress={() => handlePress("quit")}
-                      />
-                      <TextButton
-                        text="Tally"
-                        containerStyles={`${
-                          habitSetting === "tally"
-                            ? "bg-background-70"
-                            : "bg-background-90 border-2 border-background-70"
-                        } flex-1`}
-                        onPress={() => handlePress("tally")}
-                      />
-                    </View>
-        
-                  </View>
-                  <View>
-                    <RenderHabitSettingPage />
-                  </View>
-                  <Text className="text-md text-highlight-60 mb-2 border-b border-background-80">
-                    Color Theme
-                  </Text>
-                  <View className="">
-                    <ColorPicker
-                      habitColors={habitColors}
-                      setColor={setColor}
-                      selectedColor={selectedColor}
-                    />
-                  </View>
-                </View>
-              */}
               <View className="flex-row gap-4 p-4">
                 <TextButton
                   text={pageButtonContraints[currentPage].backName}
                   type={"outline"}
-                  onPress={() => {Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Rigid); pageButtonContraints[currentPage].backAction()}}
+                  onPress={() => {
+                    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Rigid);
+                    pageButtonContraints[currentPage].backAction();
+                  }}
                   containerStyles="flex-1 bg-background-80"
                 />
                 <TextButton
                   text={pageButtonContraints[currentPage].forwardName}
                   type={"solid"}
-                  onPress={() => {Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Soft); pageButtonContraints[currentPage].forwardAction()}}
+                  onPress={() => {
+                    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Soft);
+                    pageButtonContraints[currentPage].forwardAction();
+                  }}
                   containerStyles={`flex-1`}
-                  //specialStyles={{ backgroundColor: selectedColor }}
                   disabled={pageButtonContraints[currentPage].constraints}
                 />
               </View>
             </View>
-        
-        </TouchableWithoutFeedback>
-      </KeyboardAvoidingView>
+          </TouchableWithoutFeedback>
+        </KeyboardAvoidingView>
       </SafeAreaView>
     </Modal>
   );

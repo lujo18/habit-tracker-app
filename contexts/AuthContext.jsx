@@ -1,9 +1,19 @@
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useContext, useEffect, useState, useMemo } from "react";
 import { SafeAreaView, Text } from "react-native";
 import { account, config, databases, ID } from "../lib/appwriteConfig";
-import { checkForUserName, createUserProfile, getUserProfile } from "../lib/appwriteManager";
+import {
+  checkForUserName,
+  createUserProfile,
+  getUserProfile,
+} from "../lib/appwriteManager";
 import Header from "../components/Text/Header";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+
+// DO NOT REMOVE THE CODE COMMENTED HERE EVER
+// FIX ME: uncomment when ready to implement
+// import * as AppleAuthentication from "expo-apple-authentication";
+// import * as WebBrowser from "expo-web-browser";
+// import * as Linking from "expo-linking";
 
 export const AuthContext = createContext();
 
@@ -12,7 +22,6 @@ export const AuthProvider = ({ children }) => {
   const [session, setSession] = useState(null);
   const [user, setUser] = useState(null);
   const [userProfile, setUserProfile] = useState(null);
-  const [error, setError] = useState(null);
 
   useEffect(() => {
     init();
@@ -20,10 +29,6 @@ export const AuthProvider = ({ children }) => {
 
   const init = async () => {
     await checkAuth();
-  };
-
-  const clearError = () => {
-    setError(null);
   };
 
   const checkAuth = async () => {
@@ -36,27 +41,27 @@ export const AuthProvider = ({ children }) => {
 
       // Try to get user profile
 
-      console.log("r", responseUser.$id)
+      console.log("r", responseUser.$id);
       try {
         const responseUserProfile = await getUserProfile(responseUser.$id);
         setUserProfile(responseUserProfile);
 
-        const hasOnboarded = await AsyncStorage.getItem("hasOnboarded")
+        const hasOnboarded = await AsyncStorage.getItem("hasOnboarded");
 
-        if (hasOnboarded !== 'true') {
+        if (hasOnboarded !== "true") {
           if (responseUserProfile?.hasOnboarded === true) {
-            await AsyncStorage.setItem("hasOnboarded", 'true');
-          }
-          else {
-            await AsyncStorage.setItem("hasOnboarded", 'false');
+            await AsyncStorage.setItem("hasOnboarded", "true");
+          } else {
+            await AsyncStorage.setItem("hasOnboarded", "false");
           }
         }
-        
       } catch (profileError) {
-        console.log("No user profile found, this is normal for new users", profileError);
+        console.log(
+          "No user profile found, this is normal for new users",
+          profileError
+        );
       }
     } catch (error) {
-     
       setSession(null);
       setUser(null);
       setUserProfile(null);
@@ -64,18 +69,38 @@ export const AuthProvider = ({ children }) => {
     setIsLoading(false);
   };
 
+  // DO NOT REMOVE THE CODE COMMENTED HERE EVER
+  // FIX ME: uncomment when ready to implement
+  // useEffect(() => {
+  //   const sub = Linking.addEventListener("url", async ({ url }) => {
+  //     if (url.startsWith("noredo://auth")) {
+  //       try {
+  //         const responseSession = await account.getSession("current");
+  //         setSession(responseSession);
+
+  //         const responseUser = await account.get();
+  //         setUser(responseUser);
+
+  //         const responseUserProfile = await getUserProfile(responseUser.$id);
+  //         setUserProfile(responseUserProfile);
+  //       } catch (e) {
+  //         console.log("Error completing Apple login redirect", e);
+  //       }
+  //     }
+  //   });
+
+  //   return () => sub.remove();
+  // }, []);
+
   const signin = async ({ email, password }) => {
-    setIsLoading(true);
-    setError(null);
-    
     try {
       const responseSession = await account.createEmailPasswordSession(
         email,
         password
       );
-      console.log("SESSION", responseSession)
+      console.log("SESSION", responseSession);
       setSession(responseSession);
-      
+
       const responseUser = await account.get();
       setUser(responseUser);
 
@@ -88,44 +113,53 @@ export const AuthProvider = ({ children }) => {
         setUserProfile(null);
       }
     } catch (error) {
-      console.error("Failed to sign in user", error, error.code);
-      setError({
-        message: getErrorMessage(error),
-        target: "general",
-      });
+      //console.error("Failed to sign in user", JSON.stringify(error), error.message);
+
+      throw new Error(getErrorMessage(error));
     }
-    setIsLoading(false);
   };
 
   const signout = async () => {
     setIsLoading(true);
 
-    console.log("AUTHCONTEXT.JSX - signing out user")
-
+    console.log("AUTHCONTEXT.JSX - signing out user");
+    //await AsyncStorage.setItem("hasOnboarded", "false"); //FIX ME uncomment for testing onboarding screen
     setSession(null);
     setUser(null);
     setUserProfile(null);
-    setError(null);
 
     try {
       await account.deleteSession("current");
     } catch (error) {
       console.error("Error signing out:", error);
     }
-  
 
     setIsLoading(false);
   };
 
   const signup = async ({ username, email, password }) => {
-    setIsLoading(true);
-    setError(null);
-    
     const userId = ID.unique();
-    
+
     try {
-      // Create account
+      // Check if username is taken before proceeding
+      await checkForUserName(userId, username);
+
+      const regex =
+        /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[`!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?~]).*$/;
+      const safePassword = password.match(regex);
+
+      if (!safePassword) {
+        throw new Error(
+          "Password must include 1 upper case letter, 1 lower case letter, 1 number and 1 special character."
+        );
+      }
+
+      // Create account first, so we don't create a profile for a failed signup
       await account.create(userId, email, password);
+
+      // If account creation succeeds, create user profile
+      const userProfile = await createUserProfile(userId, username, "");
+      setUserProfile(userProfile);
 
       // Create session
       const responseSession = await account.createEmailPasswordSession(
@@ -134,70 +168,101 @@ export const AuthProvider = ({ children }) => {
       );
       setSession(responseSession);
 
-      console.log("SESSION", responseSession)
+      console.log("SESSION", responseSession);
 
       // Get user data
       const responseUser = await account.get();
       setUser(responseUser);
 
-      // Create user profile
-      try {
-        await checkForUserName(userId, username)
+      const userArchetypeString = await AsyncStorage.getItem("userArchetype");
+      const areaPreferencesString = await AsyncStorage.getItem(
+        "areaPreferences"
+      );
 
-        const userProfile = await createUserProfile(userId, username, "");
-        setUserProfile(userProfile);
-      } catch (profileError) {
-        console.error("Error creating user profile:", profileError);
-        
-        if (profileError.code === 409) {
-          setError({
-            message: "Username already in use",
-            target: "username",
-          });
-        } else if (profileError.message?.includes("Database not found")) {
-          setError({
-            message: "Database configuration error. Please contact support.",
-            target: "general",
-          });
-        } else {
-          setError({
-            message: "Failed to create user profile",
-            target: "general",
-          });
+      console.log(
+        "creating user, pref data",
+        userArchetypeString,
+        areaPreferencesString
+      );
+
+      const userArchetype = userArchetypeString || null;
+      const areaPreferences = areaPreferencesString
+        ? JSON.parse(areaPreferencesString)
+        : null;
+
+      console.log("ONBOARDING DATA", userArchetype, areaPreferences);
+
+      await databases.updateDocument(config.db, config.cols.users, userId, {
+        "hasOnboarded": true,
+        areaPreferences,
+        userArchetype,
+      });
+
+      await AsyncStorage.setItem("hasOnboarded", true);
+    } catch (error) {
+      //console.error("Signup error:", JSON.stringify(error));
+
+      throw new Error(getErrorMessage(error));
+    }
+  };
+
+  const signInWithApple = async () => {
+    try {
+      const credential = await AppleAuthentication.signInAsync({
+        requestedScopes: [
+          AppleAuthentication.AppleAuthenticationScope.FULL_NAME,
+          AppleAuthentication.AppleAuthenticationScope.EMAIL,
+        ],
+      });
+
+      const authUrl = account.createOAuth2Session(
+        "apple",
+        "noredo://auth",
+        "noredo://auth"
+      );
+
+      const result = await WebBrowser.openAuthSessionAsync(
+        authUrl,
+        "noredo://auth"
+      );
+
+      if (result.type === "success") {
+        // Wait for Appwrite to complete auth server-side
+        const responseSession = await account.getSession("current");
+        setSession(responseSession);
+
+        const responseUser = await account.get();
+        setUser(responseUser);
+
+        try {
+          const responseUserProfile = await getUserProfile(responseUser.$id);
+          setUserProfile(responseUserProfile);
+        } catch (profileError) {
+          console.log("No user profile found for Apple login.");
         }
       }
     } catch (error) {
-      console.error("Signup error:", error);
-      
-      if (error.code === 409) {
-        setError({
-          message: "Email already in use",
-          target: "email",
-        });
-      } else {
-        setError({
-          message: getErrorMessage(error),
-          target: "general",
-        });
-      }
+      console.log("Apple Sign-In Error:", error);
+      throw error;
     }
-    
-    setIsLoading(false);
   };
 
   const updateUsername = async (newUsername) => {
-    setError(null)
     if (!user) throw new Error("Not logged in");
 
     try {
-      await checkForUserName(user.$id, newUsername)
+      await checkForUserName(user.$id, newUsername);
 
-      const updated = await databases.updateDocument(config.db, config.cols.users, user.$id, {
-        username: newUsername,
-      });
+      const updated = await databases.updateDocument(
+        config.db,
+        config.cols.users,
+        user.$id,
+        {
+          username: newUsername,
+        }
+      );
       setUserProfile(updated);
     } catch (error) {
-      setError(error)
       throw error;
     }
   };
@@ -207,19 +272,11 @@ export const AuthProvider = ({ children }) => {
       const updated = await account.updateEmail(newEmail, password);
       setUser(updated);
     } catch (error) {
-      if (error.code === 401 || error.code === 400) {
-        setError({
-        message: "Incorrect password",
-        target: "password",
-      });
-      }
-
-      setError({
-        message: getErrorMessage(error),
-        target: "general",
-      });
       console.error("Error updating email:", error.code);
-      throw error;
+      if (error.code === 401 || error.code === 400) {
+        throw new Error("Incorrect password");
+      }
+      throw new Error(getErrorMessage(error));
     }
   };
 
@@ -233,44 +290,46 @@ export const AuthProvider = ({ children }) => {
   };
 
   const getErrorMessage = (error) => {
-    switch (error.code) {
-      case 409:
-        return "This email is already registered";
-      case 401:
-        return "Invalid email or password";
-      case 400:
-        return "Please check your input and try again";
-      case 429:
-        return "Too many attempts. Please try again later";
-      default:
-        if (error.message?.includes("Database not found")) {
-          return "Database configuration error. Please contact support.";
-        }
-        return error.message || "An unexpected error occurred";
+    if (error.code === 400) {
+      if (error.message?.includes("email")) {
+        return "You must enter a valid email";
+      } else if (error.message?.includes("password")) {
+        return "Password must be between 8 and 256 characters long.";
+      }
+    } else if (error.code === 409) {
+      if (error.message?.includes("email")) {
+        return "Email already in use";
+      } else {
+        return "Username already in use";
+      }
+    } else if (error.message?.includes("Database not found")) {
+      return "Database configuration error. Please contact support.";
+    } else {
+      throw new Error(error.message);
     }
   };
 
-  const contextData = {
-    session,
-    user,
-    userProfile,
-    isLoading,
-    error,
-    signin,
-    signup,
-    signout,
-    updateUsername,
-    updateEmail,
-    updatePassword,
-    clearError,
-  };
+  const contextData = useMemo(
+    () => ({
+      session,
+      user,
+      userProfile,
+      isLoading,
+      signin,
+      signup,
+      signout,
+      signInWithApple,
+      updateUsername,
+      updateEmail,
+      updatePassword,
+    }),
+    [session, user, userProfile, isLoading]
+  );
 
   return (
     <AuthContext.Provider value={contextData}>
       {isLoading ? (
-        <SafeAreaView className="flex-1 justify-center items-center bg-background">
-          
-        </SafeAreaView>
+        <SafeAreaView className="flex-1 justify-center items-center bg-background"></SafeAreaView>
       ) : (
         children
       )}

@@ -5,7 +5,7 @@ import Subheader from '../Text/Subheader'
 import * as Haptics from 'expo-haptics'
 
 const colorClasses = {
-  red: "border-habitColors-red-up bg-transparent",
+  red: "border-habitColors-red bg-transparent",
   purple: "border-habitColors-purple-up bg-transparent",
   blue: "border-habitColors-blue-up bg-transparent",
   orange: "border-habitColors-yellow-up bg-transparent"
@@ -37,8 +37,6 @@ const items = [
     type: 'tally'
   },
 ]
-
-console.log("Test", `border-${items[0].color}-900`)
 
 const HabitType = ({habitType, setHabitType}) => {
   return (

@@ -25,6 +25,7 @@ import arrowRight from "../assets/icons/arrow-right.png"
 import arrowRightSLine from "../assets/icons/arrow-right-s-line.png"
 import arrowLeftSLine from "../assets/icons/arrow-left-s-line.png"
 
+import deleteBin from "../assets/icons/delete-bin.png"
 
 
 
@@ -50,5 +51,6 @@ export default {
     shining,
     arrowRight,
     arrowRightSLine,
-    arrowLeftSLine
+    arrowLeftSLine,
+    deleteBin
 }

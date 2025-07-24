@@ -12,6 +12,7 @@ import OverviewPage from "../../../components/habitAnalytics/OverviewPage";
 import { HabitDataContext, StandardHabitDataContext } from "../../../contexts/HabitContexts";
 import Charts from "../../../components/habitAnalytics/Charts";
 import { useHabitUpdate } from "../../../contexts/HabitUpdateContext";
+import BackArrow from "../../../components/BackArrow";
 
 
 const habitAnalytics = () => {
@@ -70,9 +71,9 @@ const habitAnalytics = () => {
       <StandardHabitDataContext.Provider value={standardHabitData}>
         <SafeAreaView className="w-full h-full bg-background-90" edges={["top"]}>
           <View className="p-4 flex flex-row ">
-            <TouchableOpacity onPress={() => router.back()}>
-              <Text className="text-white">BACK</Text>
-            </TouchableOpacity>
+            <View>
+              <BackArrow />
+            </View>
             <View className="flex-1 flex items-center">
               <Text className="text-2xl text-white">{standardHabitData.name}</Text>
             </View>

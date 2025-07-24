@@ -9,12 +9,14 @@ export default {
     "newArchEnabled": true,
     "ios": {
       "supportsTablet": true,
+      
       "icon": {
         "light": "./assets/icons/app/ios-light.png",
         "dark": "./assets/icons/app/ios-dark.png",
         "tinted": "./assets/icons/app/ios-tinted.png"
       },
       "bundleIdentifier": "com.lujo.noredo",
+      "usesAppleSignIn": true,
       "infoPlist": {
         "ITSAppUsesNonExemptEncryption": false,
         "NSAppTransportSecurity": {

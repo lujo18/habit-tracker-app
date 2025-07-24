@@ -1,11 +1,5 @@
 import { View, Text, FlatList, TouchableOpacity, Image } from "react-native";
-import {
-  memo,
-  useMemo,
-  useCallback,
-  useEffect,
-  useState,
-} from "react";
+import { memo, useMemo, useCallback, useEffect, useState } from "react";
 import icons from "../../../constants/icons";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Habit from "../../../components/Habit";
@@ -29,6 +23,14 @@ import Header from "../../../components/Text/Header";
 import Subheader from "../../../components/Text/Subheader";
 import { useHabitBrief } from "../../../contexts/HabitBriefContext";
 import HabitBrief from "../../../components/HabitBrief";
+import Icon from "../../../components/Icon";
+import Animated, {
+  LinearTransition,
+  Easing,
+  FadeInDown,
+  FadeOut,
+} from "react-native-reanimated";
+import RadialGlow from "../../../components/RadialGlow";
 
 const tailwindColors = tailwindConfig.theme.extend.colors;
 
@@ -70,9 +72,9 @@ const Home = () => {
   const historyRepo = useMemo(() => new HabitHistoryRepository(), []); // DELETE THIS
   const devRepo = useMemo(() => new DevRepository(), []); //DELETE THIS
 
-  const {lastUpdateTimestamp, triggerUpdate} = useHabitUpdate();
-  const {habitBriefContent} = useHabitBrief();
-  const [habitBriefOpen, setHabitBriefOpen] = useState(true)
+  const { lastUpdateTimestamp, triggerUpdate } = useHabitUpdate();
+  const { habitBriefContent } = useHabitBrief();
+  const [habitBriefOpen, setHabitBriefOpen] = useState(true);
 
   const [history, setHistory] = useState();
 
@@ -119,21 +121,20 @@ const Home = () => {
 
   useEffect(() => {
     const fetchHistory = async () => {
-      showLoading()
+      showLoading();
       try {
         const result = await historyRepo.getAllHistory(1);
         setHistory(result);
       } finally {
-        setTimeout(() => hideLoading(), 150)
+        setTimeout(() => hideLoading(), 150);
       }
-      
     };
     fetchHistory();
   }, [selectedDate]);
 
   const onModalClose = async () => {
     setShowCreateHabit(false);
-    loadHabits()
+    loadHabits();
   };
 
   const onAddHabit = () => {
@@ -149,8 +150,8 @@ const Home = () => {
   };
 
   const closeHabitBrief = () => {
-    setHabitBriefOpen(false)
-  }
+    setHabitBriefOpen(false);
+  };
 
   return (
     <>
@@ -160,73 +161,81 @@ const Home = () => {
         className="bg-background h-full w-full flex-1"
         edges={["top"]}
       >
-        <View className="flex-row align-center  p-4">
-          <View>
-            <Text>Other Option</Text>
+      
+        <View className="flex-row justify-between p-4">
+          <View className="flex-1"></View>
+          <View className="flex-1 items-center">
+            <Header>NoRedo</Header>
           </View>
-          <View className="flex-1">
-            <Subheader>Habit Tracker</Subheader>
+          <View className="flex-1"></View>
+          {/* <TouchableOpacity
+            className="w-10 h-10 bg-red-50"
+            onPress={() => {
+              devRepo.DropTables();
+            }}
+          >
+            <Text>Drop Table</Text>
+          </TouchableOpacity> */}
+
+          <HabitCreator isVisible={showCreateHabit} onClose={onModalClose} />
+        </View>
+
+        <View>
+          <DateSelector start={oneYearAgo} end={oneYearAhead} />
+        </View>
+
+        {habits.length === 0 && quitHabits.length === 0 ? (
+          <View className="flex items-center justify-center h-1/2 gap-4">
+            <Header>Your legacy is about to begin.</Header>
+            <View className="flex items-center">
+              <Subheader>Click the plus in the top right corner</Subheader>
+              <Subheader>to create your first habit.</Subheader>
+            </View>
           </View>
+        ) : (
+          <FlatList
+            data={habitGroupsInfo}
+            keyExtractor={(item) => item.type}
+            renderItem={({ item: group }) => (
+              <HabitGroup
+                group={group}
+                habits={habits}
+                onTimerResetOpen={onTimerResetOpen}
+              />
+            )}
+            className="px-4"
+          />
+        )}
+
+        <Animated.View
+          className="absolute w-full items-center bottom-32 "
+          entering={FadeInDown.delay(300).duration(300).easing(Easing.cubic)}
+          exiting={FadeOut.duration(300).easing(Easing.inOut(Easing.quad))}
+        >
           <TouchableOpacity
-            className={`bg-background-80 p-4 rounded-full ${
+            className={`bg-background-90 p-6 rounded-full shadow-md shadow-black/70 ${
               showCreateHabit ? "opacity-0" : ""
             }`}
             onPress={() => onAddHabit()}
           >
-            <Image
-              source={icons.addBox}
-              className="w-9 h-9"
-              contentFit="cover"
-              tintColor={tailwindColors["highlight"]["90"]}
-            />
+            <Icon name={"addBox"} />
           </TouchableOpacity>
-          <TouchableOpacity
-            className="w-10 h-10 bg-red-50"
-            onPress={() => {
-                devRepo.DropTables();
-              }}
-              >
-              <Text>Drop Table</Text>
-              </TouchableOpacity>
+        </Animated.View>
 
-              <HabitCreator isVisible={showCreateHabit} onClose={onModalClose} />
-            </View>
+        <TimerResetModal
+          data={resetTimerModal}
+          onClose={onTimerResetClose}
+          showLoading={showLoading}
+          hideLoading={hideLoading}
+        />
 
-            <View>
-              <DateSelector start={oneYearAgo} end={oneYearAhead} />
-            </View>
+        {/* Slide-up Modal for Habit Brief */}
 
-              {
-              habits.length === 0 && quitHabits.length === 0 ? (
-                <View className="flex items-center justify-center h-1/2 gap-4">
-                <Header>Your legacy is about to begin.</Header>
-                <View className="flex items-center">
-                  <Subheader>Click the plus in the top right corner</Subheader>
-                  <Subheader>to create your first habit.</Subheader>
-                </View>
-                </View>
-              ) : (
-                <FlatList
-                data={habitGroupsInfo}
-                keyExtractor={(item) => item.type}
-                renderItem={({ item: group }) => <HabitGroup group={group} habits={habits} onTimerResetOpen={onTimerResetOpen} />}
-                className="px-4"
-                />
-              )
-              }
-
-            <TimerResetModal
-              data={resetTimerModal}
-              onClose={onTimerResetClose}
-              showLoading={showLoading}
-              hideLoading={hideLoading}
-            />
-
-            {/* Slide-up Modal for Habit Brief */}
-
-            <HabitBrief habitBriefOpen={habitBriefOpen} closeHabitBrief={closeHabitBrief} />
-            
-          </SafeAreaView>
+        <HabitBrief
+          habitBriefOpen={habitBriefOpen}
+          closeHabitBrief={closeHabitBrief}
+        />
+      </SafeAreaView>
     </>
   );
 };

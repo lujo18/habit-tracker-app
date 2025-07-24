@@ -18,20 +18,27 @@ import Subheader from "../../components/Text/Subheader";
 import { LinearGradient } from "expo-linear-gradient";
 
 const signup = () => {
-  const { signup, error, clearError } = useAuth();
+  const { signup, signInWithApple } = useAuth();
 
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
+  const [localError, setLocalError] = useState(null);
+
   useEffect(() => {
-    if (error) {
-      clearError();
+    if (localError) {
+      setLocalError(null);
     }
   }, [username, email, password]);
 
   const handleSignUp = async () => {
-    await signup({ username, email, password });
+    try {
+      await signup({ username, email, password });
+    } catch (err) {
+      console.log("Caught err", err);
+      setLocalError(err);
+    }
   };
 
   return (
@@ -56,6 +63,7 @@ const signup = () => {
                 onChangeText={setUsername}
                 autoCapitalize="none"
                 autoCorrect={false}
+                error={localError?.message.toLowerCase().includes("username")}
               />
               <BuildInput
                 placeholder={"Email"}
@@ -67,6 +75,7 @@ const signup = () => {
                 autoComplete="email"
                 textContentType={"username"}
                 importantForAutofill="yes"
+                error={localError?.message.toLowerCase().includes("email")}
               />
               <BuildInput
                 placeholder={"Password"}
@@ -78,10 +87,11 @@ const signup = () => {
                 autoComplete="password"
                 textContentType={"newPassword"}
                 importantForAutofill="yes"
+                error={localError?.message.toLowerCase().includes("password")}
               />
-              {error && (
+              {localError && (
                 <Text className="font-generalsans-medium text-habitColors-red-up">
-                  {error.message}
+                  {localError.message}
                 </Text>
               )}
               <View className="flex-row">
@@ -93,6 +103,17 @@ const signup = () => {
                 />
               </View>
             </View>
+            {/* 
+              // DO NOT REMOVE THE CODE COMMENTED HERE EVER
+              // FIX ME: uncomment when ready to implement
+            <View>
+               <TextButton
+                  type={"solid"}
+                  text={"Sign Up with Apple"}
+                  onPress={signInWithApple}
+                  
+                />
+            </View> */}
             <Link href={"/auth/signin"}>
               <Text className="text-highlight-60 font-generalsans-medium">
                 Have an account? Log in

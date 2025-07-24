@@ -1,9 +1,9 @@
 import { View, Text, Modal, KeyboardAvoidingView, Platform } from "react-native";
 import TextButton from "./TextButton";
 
-const PopupModalBase = ({ isVisible, handleCancel, handleSubmit, submitButtonText, children }) => {
+const PopupModalBase = ({ isVisible, handleCancel, handleSubmit, submitButtonText, children, disabled }) => {
   return (
-    <Modal animationType="fade" transparent={true} visible={isVisible}>
+    <Modal animationType="fade" transparent={true} visible={isVisible} presentationStyle="formSheet">
       <View className="w-full h-full justify-center items-center p-4 bg-black/70">
         <KeyboardAvoidingView
           behavior={Platform.OS === "ios" ? "padding" : "height"}
@@ -24,6 +24,7 @@ const PopupModalBase = ({ isVisible, handleCancel, handleSubmit, submitButtonTex
                 text={submitButtonText}
                 type={"solid"}
                 onPress={handleSubmit}
+                disabled={disabled}
               />
             </View>
           </View>

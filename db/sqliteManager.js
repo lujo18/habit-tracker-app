@@ -360,6 +360,18 @@ export class HabitsRepository extends BaseRepository {
         
       }*/
     }
+    
+  }
+
+  async deleteHabit(id) {
+    const query = `--sql
+      DELETE FROM Habits
+      WHERE id = ?
+    `
+
+    const params = [id]
+
+    return await this.executeQuery(query, params)
   }
 }
 
